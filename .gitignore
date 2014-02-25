@@ -1,5 +1,5 @@
-# API key (sorry, guys)
-apikey.txt
+# Any text file
+*.txt
 
 # Python Compiled files
 *.pyc

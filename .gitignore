@@ -1,0 +1,8 @@
+# API key (sorry, guys)
+apikey.txt
+
+# Python Compiled files
+*.pyc
+
+# Locally stored reports folder
+reports/

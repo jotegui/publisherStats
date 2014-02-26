@@ -7,7 +7,7 @@ import generateReports as gr
 
 def apikey():
     """Return credentials file as a JSON object."""
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'apikey.txt')
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'api.key')
     key = open(path, "r").read().rstrip()
     return key
 

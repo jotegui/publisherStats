@@ -1,5 +1,5 @@
-# Any text file
-*.txt
+# Any key file
+*.key
 
 # Python Compiled files
 *.pyc

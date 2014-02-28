@@ -172,4 +172,6 @@ def main(lapse = 'month', testing = False):
     created_at = datetime.now()
     reports = {}
     for pub in pubs:
-        reports[pub]={'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content':createReport(pubs, pub, lapse)}
+        reports[pub]={'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content_txt':createReport(pubs, pub, lapse, style='txt'), 'content_html':createReport(pubs, pub, lapse, style='html')}
+    
+    return reports

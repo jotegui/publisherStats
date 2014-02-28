@@ -5,9 +5,9 @@ import urllib2
 import requests
 import generateReports as gr
 
-def apikey():
+def apikey(filename):
     """Return credentials file as a JSON object."""
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'api.key')
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)
     key = open(path, "r").read().rstrip()
     return key
 
@@ -49,40 +49,64 @@ def getOrgRepo(report):
     
     return org, repo
     
-def putReportInRepo(report, pub, org, repo):
+def putReportInRepo(report, pub, org, repo, testing):
     """Upload a single report text to a github repository"""
     
     # Prepare variables
-    report_content = report['content']
+    report_content_txt = report['content_txt']
+    report_content_html = report['content_html']
     created_at = report['created_at']
     #path = 'reports/{0}_{1}.txt'.format(repo, created_at)
-    path = 'reports/{0}_{1}.txt'.format(pub.replace(' ','_'), created_at)
-    message = report_content.split("\n")[1] # Extract date from report
-    content = base64.b64encode(report_content) # Content has to be base64 encoded
+    path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ','_'), created_at)
+    path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ','_'), created_at)
+    message = report_content_txt.split("\n")[1] # Extract date from report
+    content_txt = base64.b64encode(report_content_txt) # Content has to be base64 encoded
+    content_html = base64.b64encode(report_content_html) # Content has to be base64 encoded
     commiter = {'name':'VertNet', 'email':'vertnetinfo@vertnet.org'} # I think API token overrides this
-    json_input = json.dumps({"message":message, "commiter":commiter, "content":content})
+    json_input_txt = json.dumps({"message":message, "commiter":commiter, "content":content_txt})
+    json_input_html = json.dumps({"message":message, "commiter":commiter, "content":content_html})
     
     # Build PUT request
-    key = apikey()
-    request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
+    if testing is True:
+        keyname = 'JOT.key'
+    else:
+        keyname = 'VN.key'
+    key = apikey(keyname)
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
+    request_url_txt = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_txt)
+    request_url_html = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_html)
     
-    print 'Requesting PUT for {0}:{1}'.format(org, repo)
-    r = requests.put(request_url, data=json_input, headers=headers)
+    print 'Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt)
+    r = requests.put(request_url_txt, data=json_input_txt, headers=headers)
     
     status_code = r.status_code
     response_content = json.loads(r.content)
     
     if status_code == 201:
         print 'SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha'])
-        git_url = response_content['content']['git_url']
-        sha = response_content['content']['sha']
+        git_url_txt = response_content['content']['git_url']
+        sha_txt = response_content['content']['sha']
     else:
         print 'ERROR: Status Code {0}. Message: {1}'.format(status_code, response_content['message'])
-        git_url = ''
-        sha = ''
+        git_url_txt = ''
+        sha_txt = ''
     
-    return path, sha, git_url
+    print 'Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html)
+    r = requests.put(request_url_html, data=json_input_html, headers=headers)
+    
+    status_code = r.status_code
+    response_content = json.loads(r.content)
+    
+    if status_code == 201:
+        print 'SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha'])
+        git_url_html = response_content['content']['git_url']
+        sha_html = response_content['content']['sha']
+    else:
+        print 'ERROR: Status Code {0}. Message: {1}'.format(status_code, response_content['message'])
+        git_url_html = ''
+        sha_html = ''
+    
+    return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
 def deleteFileInGithub(org, repo, path, sha):
     
@@ -106,10 +130,20 @@ def deleteFileInGithub(org, repo, path, sha):
     
     return
 
-def main(lapse = 'full', testing = False):
-        
-    reports = gr.main(lapse = lapse, testing = testing)
-    
+def deleteAll(git_urls):
+    for pub in git_urls:
+        org = git_urls[pub]['org']
+        repo = git_urls[pub]['repo']
+        path = git_urls[pub]['path_txt']
+        sha = git_urls[pub]['sha_txt']
+        deleteFileInGithub(org, repo, path, sha)
+        path = git_urls[pub]['path_html']
+        sha = git_urls[pub]['sha_html']
+        deleteFileInGithub(org, repo, path, sha)
+    print 'Finished deleting stats from github repos'
+    return
+
+def putAll(reports, testing):
     git_urls = {}
     
     pubs_to_check = reports.keys()
@@ -119,39 +153,53 @@ def main(lapse = 'full', testing = False):
         
         retry += 1
         error = False
-        pubs_to_check = []
+        #pubs_to_check = []
         
         for pub in reports:
-            report = reports[pub]
-            org, repo = getOrgRepo(report)
-            
-            # Testing values
-            if testing is True:
-                org = 'jotegui'
-                repo = 'statReports'
-            
-            path, sha, git_url = putReportInRepo(report, pub, org, repo)
-            
-            if sha == '':
-                errors = True
-                pubs_to_check.append(pub)
+            if pub in pubs_to_check:
+                pubs_to_check.pop(pubs_to_check.index(pub))
+                report = reports[pub]
+                org, repo = getOrgRepo(report)
                 
-            else:
-                git_urls[pub] = {
-                                  'org':org,
-                                  'repo':repo,
-                                  'path':path,
-                                  'sha':sha,
-                                  'git_url':git_url
-                                }
-        print 'Finished putting stats in github repos'
+                # Testing values
+                if testing is True:
+                    org = 'jotegui'
+                    repo = 'statReports'
+                
+                path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html = putReportInRepo(report, pub, org, repo, testing)
+                
+                if sha_txt == '' and sha_html != '':
+                    errors = True
+                    deleteFileInGithub(org, repo, path_txt, sha_txt)
+                    pubs_to_check.append(pub)
+                elif sha_html == '' and sha_txt != '':
+                    errors = True
+                    pubs_to_check.append(pub)
+                    deleteFileInGithub(org, repo, path_html, sha_html)
+                elif sha_txt == '' and sha_html == '':
+                    errors = True
+                    pubs_to_check.append(pub)
+                else:
+                    git_urls[pub] = {
+                                      'org':org,
+                                      'repo':repo,
+                                      'path_txt':path_txt,
+                                      'sha_txt':sha_txt,
+                                      'git_url_txt':git_url_txt,
+                                      'path_html':path_html,
+                                      'sha_html':sha_html,
+                                      'git_url_html':git_url_html
+                                    }
+    print 'Finished putting stats in github repos'
+    return git_urls
+
+def main(lapse = 'full', testing = False):
         
-    if testing is True:
-        for pub in git_urls:
-            org = git_urls[pub]['org']
-            repo = git_urls[pub]['repo']
-            path = git_urls[pub]['path']
-            sha = git_urls[pub]['sha']
-            deleteFileInGithub(org, repo, path, sha)
-        print 'Finished deleting stats from github repos'
+    reports = gr.main(lapse = lapse, testing = testing)
+    
+    git_urls = putAll(reports = reports, testing = testing)
+    
+    #if testing is True:
+    #    deleteAll(git_urls)
+    
     return

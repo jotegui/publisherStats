@@ -96,64 +96,6 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     
     return report
 
-def createReportOld(pubs, pub, lapse):
-    
-    # Header
-    if lapse == 'full':
-        timelapse = 'since February, 2014'
-    else:
-        this_year = datetime.now().year
-        this_month = datetime.now().month
-        if this_month == 1:
-            timelapse = 'for {0}'.format(datetime(this_year-1,12,1).strftime('%B, %Y'))
-        else:
-            timelapse = 'for {0}'.format(datetime(this_year,this_month-1,1).strftime('%B, %Y'))
-    report = "Report for Institution Code {0}, Resource {1}\nUsage stats {2}, generated on {3}\n\n".format(pubs[pub]['inst'], pubs[pub]['col'], timelapse, format(datetime.now(), '%Y/%m/%d'))
-    
-    # Downloads and records
-    downloads = len(pubs[pub]['download_files'])
-    unique_records = len(pubs[pub]['unique_records'])
-    avg_contrib = round(sum(pubs[pub]['avg_contrib'])*1.0/len(pubs[pub]['avg_contrib']), 2)
-    
-    report += "Number of download events that retrieved data from the resource: {0} (out of {1} download event in this period)\n".format(downloads, pubs[pub]['downloads_in_period'])
-    records = pubs[pub]['records_downloaded']
-    abs_tot_recs = pubs[pub]['abs_tot_recs']
-    report += "Total number of records downloaded: {0} (out of {1} records downloaded for all resources in this period)\n".format(records, abs_tot_recs)
-    report += "Total number of unique records downloaded: {0}\n".format(unique_records)
-    #report += "Average contribution to a download event: {0}%\n".format(avg_contrib)
-    
-    # Geography of the queries
-    report += "\nOrigin of the queries that retrieved data from the resource:\n"
-    countries = {}
-    for i in pubs[pub]['latlon']:
-        lat = i[0]
-        lon = i[1]
-        geonames_url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
-        country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
-        if country not in countries:
-            countries[country] = pubs[pub]['latlon'][i]
-        else:
-            countries[country] += pubs[pub]['latlon'][i]
-    for country in countries:
-        report += "\tCountry: {0} ; Number of times: {1}\n".format(country, countries[country])
-    
-    # Time of the queries
-    report += "\nDates of the queries that retrieved data from the resource:\n"
-    for i in pubs[pub]['created']:
-        report += "\tDate: {0} ; Number of times: {1}\n".format(format(datetime.strptime(i, '%Y-%m-%dT%H:%M:%SZ'), '%Y/%m/%d - %H:%M:%S'), pubs[pub]['created'][i])
-        
-    # List of queries
-    report += "\nList of queries that retrieved data from the resource:\n"
-    for i in pubs[pub]['query']:
-        report += "\tQuery: \"{0}\" ; Number of times: {1}\n".format(i, pubs[pub]['query'][i])
-    
-    # Store report in file
-    report += "\nEnd of report."
-    
-    # Return report string
-    print 'finished report for {0}'.format(pub)
-    return report
-
 def writeReport(report, pub, created_at):
     if not os.path.exists("./reports"):
         os.makedirs("./reports")

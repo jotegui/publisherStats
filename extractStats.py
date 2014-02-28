@@ -199,8 +199,8 @@ def main(lapse = 'month', testing = False):
     downloads_CDB = getCDBDownloads(lapse)
     file_list = getFileList(downloads_CDB)
     
-    if testing is True:
-        file_list = file_list[:10]
+#    if testing is True:
+#        file_list = file_list[:10]
     
     print 'getting data from Google Cloud Storage'
     pubs = getCountsForPublishers(file_list)

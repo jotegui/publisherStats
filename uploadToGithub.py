@@ -4,10 +4,15 @@ import json
 import urllib2
 import requests
 import generateReports as gr
+from datetime import datetime
 
-def apikey(filename):
+def apikey(testing):
     """Return credentials file as a JSON object."""
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)
+    if testing is True:
+        keyname = 'JOT.key'
+    else:
+        keyname = 'VN.key'
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), keyname)
     key = open(path, "r").read().rstrip()
     return key
 
@@ -67,11 +72,7 @@ def putReportInRepo(report, pub, org, repo, testing):
     json_input_html = json.dumps({"message":message, "commiter":commiter, "content":content_html})
     
     # Build PUT request
-    if testing is True:
-        keyname = 'JOT.key'
-    else:
-        keyname = 'VN.key'
-    key = apikey(keyname)
+    key = apikey(testing)
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
     request_url_txt = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_txt)
     request_url_html = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_html)
@@ -108,13 +109,13 @@ def putReportInRepo(report, pub, org, repo, testing):
     
     return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
-def deleteFileInGithub(org, repo, path, sha):
+def deleteFileInGithub(org, repo, path, sha, testing):
     
     message = "Deleting file {0}".format(path)
     commiter = {'name':'VertNet', 'email':'vertnetinfo@vertnet.org'}
     json_input = json.dumps({'message':message, 'commiter':commiter, 'sha':sha})
     
-    key = apikey()
+    key = apikey(testing)
     request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
     
@@ -130,16 +131,16 @@ def deleteFileInGithub(org, repo, path, sha):
     
     return
 
-def deleteAll(git_urls):
+def deleteAll(git_urls, testing):
     for pub in git_urls:
         org = git_urls[pub]['org']
         repo = git_urls[pub]['repo']
         path = git_urls[pub]['path_txt']
         sha = git_urls[pub]['sha_txt']
-        deleteFileInGithub(org, repo, path, sha)
+        deleteFileInGithub(org, repo, path, sha, testing)
         path = git_urls[pub]['path_html']
         sha = git_urls[pub]['sha_html']
-        deleteFileInGithub(org, repo, path, sha)
+        deleteFileInGithub(org, repo, path, sha, testing)
     print 'Finished deleting stats from github repos'
     return
 
@@ -170,12 +171,12 @@ def putAll(reports, testing):
                 
                 if sha_txt == '' and sha_html != '':
                     errors = True
-                    deleteFileInGithub(org, repo, path_txt, sha_txt)
+                    deleteFileInGithub(org, repo, path_txt, sha_txt, testing)
                     pubs_to_check.append(pub)
                 elif sha_html == '' and sha_txt != '':
                     errors = True
                     pubs_to_check.append(pub)
-                    deleteFileInGithub(org, repo, path_html, sha_html)
+                    deleteFileInGithub(org, repo, path_html, sha_html, testing)
                 elif sha_txt == '' and sha_html == '':
                     errors = True
                     pubs_to_check.append(pub)
@@ -193,13 +194,28 @@ def putAll(reports, testing):
     print 'Finished putting stats in github repos'
     return git_urls
 
-def main(lapse = 'full', testing = False):
+def main(lapse = 'full', testing = False, beta = False):
         
     reports = gr.main(lapse = lapse, testing = testing)
     
-    git_urls = putAll(reports = reports, testing = testing)
+    if beta is True:
+        reports2 = {}
+        testingInsts = open('./TestingInsts.txt', 'r').read().rstrip().split(' ')
+        for pub in reports:
+            icode = reports[pub]['inst']
+            if icode in testingInsts:
+                reports2[pub] = reports[pub]
+    else:
+        reports2 = reports
     
-    #if testing is True:
+    git_urls = putAll(reports = reports2, testing = testing)
+    
+    # Store git data on the generated reports locally
+    f = open('./statReports{0}.json'.format(format(datetime.now(), '%Y_%m_%d')),'w')
+    f.write(json.dumps(git_urls))
+    f.close()
+    
+    #if testing is True and beta is False:
     #    deleteAll(git_urls)
     
     return

@@ -106,9 +106,10 @@ def deleteFileInGithub(org, repo, path, sha):
     
     return
 
-def main(testing = False):
+def main(lapse = 'full', testing = False):
         
-    reports = gr.main(lapse = 'full', testing = testing)
+    reports = gr.main(lapse = lapse, testing = testing)
+    
     git_urls = {}
     
     pubs_to_check = reports.keys()

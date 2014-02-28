@@ -8,36 +8,36 @@
 <p>
 
 <div id="general_counts">
-Number of download events that retrieved data from the resource: {{downloads}} (out of {{total_downloads}} download event in this period)<br>
+Number of download events that retrieved data from the resource:{{downloads}} (out of {{total_downloads}} download event in this period)<br>
 Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)<br>
 Total number of unique records downloaded: {{unique_records}}<br>
 </div><p>
 
 <div id="geography">
 Origin of the queries that retrieved data from the resource:<br>
-<ul>
+<table border="1"><tr><td><b>Country</b></td><td><b>Number of times</b></td></tr>
 {% for country in countries %}
-	<li>Country: {{country}} ; Number of times: {{countries[country]}}</li>
+	<tr><td>{{country}}</td><td>{{countries[country]}}</td></tr>
 {% endfor %}
-</ul>
+</table>
 </div><p>
 
 <div id="time">
 Dates of the queries that retrieved data from the resource:
-<ul>
+<table border="1"><tr><td><b>Date</b></td><td><b>Number of times</b></td></tr>
 {% for query_date in query_dates %}
-	<li>Date: {{query_date}} ; Number of times: {{query_dates[query_date]}}</li>
+	<tr><td>{{query_date}}</td><td>{{query_dates[query_date]}}</td></tr>
 {% endfor %}
-</ul>
+</table>
 </div><p>
 
 <div id="queries">
 List of queries that retrieved data from the resource:
-<ul>
+<table border="1"><tr><td><b>Query</b></td><td><b>Number of times</b></td></tr>
 {% for query in queries %}
-	<li>Query: {{query}} ; Number of times: {{queries[query]}}</li>
+	<tr><td>{{query}}</td><td>{{queries[query]}}</td></tr>
 {% endfor %}
-</ul>
+</table>
 </div><p>
 
 End of report.

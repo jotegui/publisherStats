@@ -1,0 +1,17 @@
+{% autoescape true %}Report for Institution Code {{icode}}, Resource {{resname}}
+Usage stats {{time_lapse}}, generated on {{generated}}
+
+Number of download events that retrieved data from the resource: {{downloads}} (out of {{total_downloads}} download event in this period)
+Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)
+Total number of unique records downloaded: {{unique_records}}
+
+Origin of the queries that retrieved data from the resource: {% for country in countries %}
+	Country: {{country}} ; Number of times: {{countries[country]}}{% endfor %}
+
+Dates of the queries that retrieved data from the resource: {% for query_date in query_dates %}
+	Date: {{query_date}} ; Number of times: {{query_dates[query_date]}}{% endfor %}
+
+List of queries that retrieved data from the resource: {% for query in queries %}
+	Query: "{{query}}" ; Number of times: {{queries[query]}}{% endfor %}
+
+End of report.{% endautoescape %}

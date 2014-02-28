@@ -5,7 +5,7 @@ from datetime import datetime
 
 ini = datetime.now()
 
-up.main(lapse = 'month', testing = False)
+up.main(lapse = 'full', testing = True)
 
 end = datetime.now()
 dif = end - ini

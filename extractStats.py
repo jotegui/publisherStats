@@ -1,5 +1,6 @@
 import json
 import urllib2
+import logging
 from urllib import urlencode
 from datetime import datetime
 
@@ -99,11 +100,11 @@ def getCountsForPublishers(file_list):
     
     for f in file_list:
         b, o = parseDownloadName(f)
-        print 'downloading and parsing %s' % o
+        logging.info('downloading and parsing %s' % o)
         try:
             d = getObject(b, o)
         except:
-            print 'file not found. It might be creating at the moment. Skipping.'
+            logging.warning('file {0} not found. It might be creating at the moment. Skipping.'.format(o))
             continue
     
         # Remove headers
@@ -195,17 +196,17 @@ def getCDBStatsForPublishers(pubs, downloads_CDB):
 # Main function
 def main(lapse = 'month', testing = False):
         
-    print 'getting data from CartoDB'
+    logging.info('getting data from CartoDB')
     downloads_CDB = getCDBDownloads(lapse)
     file_list = getFileList(downloads_CDB)
     
-#    if testing is True:
-#        file_list = file_list[:10]
+    if testing is True:
+        file_list = file_list[:10]
     
-    print 'getting data from Google Cloud Storage'
+    logging.info('getting data from Google Cloud Storage')
     pubs = getCountsForPublishers(file_list)
     
-    print 'generating stats'
+    logging.info('generating stats')
     pubs = getCDBStatsForPublishers(pubs, downloads_CDB)
     
     return pubs

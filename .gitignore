@@ -4,8 +4,8 @@
 # Python Compiled files
 *.pyc
 
-# Logging file
-log.txt
+# Logging files
+*.log
 
 # Locally stored reports folder
 reports/

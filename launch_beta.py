@@ -3,12 +3,16 @@
 import uploadToGithub as up
 from datetime import datetime
 
-ini = datetime.now()
+import logging
+logging.basicConfig(filename='beta.log', format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
-up.main(lapse = 'full', testing = True, beta = True)
+ini = datetime.now()
+logging.info('Initiated at {0}'.format(ini))
+
+up.main(lapse = 'month', testing = False, beta = True)
 
 end = datetime.now()
 dif = end - ini
 
-print "elapsed: {0}".format(dif)
-print 'done'
+logging.info("elapsed: {0}".format(dif))
+logging.info('done')

@@ -2,6 +2,7 @@ import os
 import json
 import jinja2
 import urllib2
+import logging
 from datetime import datetime
 import extractStats as es
 
@@ -110,7 +111,7 @@ def main(lapse = 'month', testing = False):
     
     pubs = es.main(lapse = lapse, testing = testing)
     
-    print 'generating reports'
+    logging.info('generating reports')
     created_at = datetime.now()
     reports = {}
     for pub in pubs:

@@ -2,16 +2,14 @@ import os
 import base64
 import json
 import urllib2
+import logging
 import requests
 import generateReports as gr
 from datetime import datetime
 
-def apikey(testing):
+def apikey():
     """Return credentials file as a JSON object."""
-    if testing is True:
-        keyname = 'JOT.key'
-    else:
-        keyname = 'VN.key'
+    keyname = 'api.key'
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), keyname)
     key = open(path, "r").read().rstrip()
     return key
@@ -50,7 +48,7 @@ def getOrgRepo(report):
         repo = col.replace('_','-')
     else:
         repo = None
-        print 'Could not find repository name for Inst {0}, Col {1}'.format(inst, col)
+        logging.error('Could not find repository name for Inst {0}, Col {1}'.format(inst, col))
     
     return org, repo
     
@@ -72,38 +70,38 @@ def putReportInRepo(report, pub, org, repo, testing):
     json_input_html = json.dumps({"message":message, "commiter":commiter, "content":content_html})
     
     # Build PUT request
-    key = apikey(testing)
+    key = apikey()
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
     request_url_txt = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_txt)
     request_url_html = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_html)
     
-    print 'Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt)
+    logging.info('Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt))
     r = requests.put(request_url_txt, data=json_input_txt, headers=headers)
     
     status_code = r.status_code
     response_content = json.loads(r.content)
     
     if status_code == 201:
-        print 'SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha'])
+        logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_txt = response_content['content']['git_url']
         sha_txt = response_content['content']['sha']
     else:
-        print 'ERROR: Status Code {0}. Message: {1}'.format(status_code, response_content['message'])
+        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
         git_url_txt = ''
         sha_txt = ''
     
-    print 'Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html)
+    logging.info('Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html))
     r = requests.put(request_url_html, data=json_input_html, headers=headers)
     
     status_code = r.status_code
     response_content = json.loads(r.content)
     
     if status_code == 201:
-        print 'SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha'])
+        logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_html = response_content['content']['git_url']
         sha_html = response_content['content']['sha']
     else:
-        print 'ERROR: Status Code {0}. Message: {1}'.format(status_code, response_content['message'])
+        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
         git_url_html = ''
         sha_html = ''
     
@@ -115,7 +113,7 @@ def deleteFileInGithub(org, repo, path, sha, testing):
     commiter = {'name':'VertNet', 'email':'vertnetinfo@vertnet.org'}
     json_input = json.dumps({'message':message, 'commiter':commiter, 'sha':sha})
     
-    key = apikey(testing)
+    key = apikey()
     request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
     
@@ -125,9 +123,9 @@ def deleteFileInGithub(org, repo, path, sha, testing):
     response_content = json.loads(r.content)
     
     if status_code == 200:
-        print 'SUCCESS (Status Code {0}) - COMMIT SHA: {1}'.format(status_code, response_content['commit']['sha'])
+        logging.info('SUCCESS (Status Code {0}) - COMMIT SHA: {1}'.format(status_code, response_content['commit']['sha']))
     else:
-        print 'ERROR: Status Code {0}. Message: {1}'.format(status_code, response_content['message'])
+        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
     
     return
 
@@ -141,7 +139,7 @@ def deleteAll(git_urls, testing):
         path = git_urls[pub]['path_html']
         sha = git_urls[pub]['sha_html']
         deleteFileInGithub(org, repo, path, sha, testing)
-    print 'Finished deleting stats from github repos'
+    logging.info('Finished deleting stats from github repos')
     return
 
 def putAll(reports, testing):
@@ -191,10 +189,10 @@ def putAll(reports, testing):
                                       'sha_html':sha_html,
                                       'git_url_html':git_url_html
                                     }
-    print 'Finished putting stats in github repos'
+    logging.info('Finished putting stats in github repos')
     return git_urls
 
-def main(lapse = 'full', testing = False, beta = False):
+def main(lapse = 'month', testing = False, beta = False):
         
     reports = gr.main(lapse = lapse, testing = testing)
     
@@ -214,6 +212,7 @@ def main(lapse = 'full', testing = False, beta = False):
     f = open('./statReports{0}.json'.format(format(datetime.now(), '%Y_%m_%d')),'w')
     f.write(json.dumps(git_urls))
     f.close()
+    logging.info('GIT URLs stored in local file')
     
     #if testing is True and beta is False:
     #    deleteAll(git_urls)

@@ -52,7 +52,7 @@ def getOrgRepo(report):
     
     return org, repo
     
-def putReportInRepo(report, pub, org, repo, testing):
+def putReportInRepo(report, pub, org, repo):
     """Upload a single report text to a github repository"""
     
     # Prepare variables
@@ -107,7 +107,7 @@ def putReportInRepo(report, pub, org, repo, testing):
     
     return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
-def deleteFileInGithub(org, repo, path, sha, testing):
+def deleteFileInGithub(org, repo, path, sha):
     
     message = "Deleting file {0}".format(path)
     commiter = {'name':'VertNet', 'email':'vertnetinfo@vertnet.org'}
@@ -129,16 +129,16 @@ def deleteFileInGithub(org, repo, path, sha, testing):
     
     return
 
-def deleteAll(git_urls, testing):
+def deleteAll(git_urls):
     for pub in git_urls:
         org = git_urls[pub]['org']
         repo = git_urls[pub]['repo']
         path = git_urls[pub]['path_txt']
         sha = git_urls[pub]['sha_txt']
-        deleteFileInGithub(org, repo, path, sha, testing)
+        deleteFileInGithub(org, repo, path, sha)
         path = git_urls[pub]['path_html']
         sha = git_urls[pub]['sha_html']
-        deleteFileInGithub(org, repo, path, sha, testing)
+        deleteFileInGithub(org, repo, path, sha)
     logging.info('Finished deleting stats from github repos')
     return
 
@@ -165,16 +165,16 @@ def putAll(reports, testing):
                     org = 'jotegui'
                     repo = 'statReports'
                 
-                path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html = putReportInRepo(report, pub, org, repo, testing)
+                path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html = putReportInRepo(report, pub, org, repo)
                 
                 if sha_txt == '' and sha_html != '':
                     errors = True
-                    deleteFileInGithub(org, repo, path_txt, sha_txt, testing)
+                    deleteFileInGithub(org, repo, path_txt, sha_txt)
                     pubs_to_check.append(pub)
                 elif sha_html == '' and sha_txt != '':
                     errors = True
                     pubs_to_check.append(pub)
-                    deleteFileInGithub(org, repo, path_html, sha_html, testing)
+                    deleteFileInGithub(org, repo, path_html, sha_html)
                 elif sha_txt == '' and sha_html == '':
                     errors = True
                     pubs_to_check.append(pub)

@@ -14,5 +14,5 @@ up.main(lapse = 'month', testing = False, beta = True)
 end = datetime.now()
 dif = end - ini
 
-logging.info("elapsed: {0}".format(dif))
+logging.info("elapsed {0}".format(dif))
 logging.info('done')

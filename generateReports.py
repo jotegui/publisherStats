@@ -15,6 +15,18 @@ def unescape(s):
     s = s.replace("&amp;", "&")
     return s
 
+def getTimeLapse(lapse = 'month'):
+    if lapse == 'full':
+        time_lapse = 'since February, 2014'
+    else:
+        this_year = datetime.now().year
+        this_month = datetime.now().month
+        if this_month == 1:
+            time_lapse = 'for {0}'.format(datetime(this_year-1,12,1).strftime('%B, %Y'))
+        else:
+            time_lapse = 'for {0}'.format(datetime(this_year,this_month-1,1).strftime('%B, %Y'))
+    return time_lapse
+
 # Create the reports
 def createReport(pubs, pub, lapse, style = 'txt'):
     
@@ -26,15 +38,7 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     icode = pubs[pub]['inst']
     resname = pubs[pub]['col']
     
-    if lapse == 'full':
-        time_lapse = 'for February, 2014'
-    else:
-        this_year = datetime.now().year
-        this_month = datetime.now().month
-        if this_month == 1:
-            time_lapse = 'for {0}'.format(datetime(this_year-1,12,1).strftime('%B, %Y'))
-        else:
-            time_lapse = 'for {0}'.format(datetime(this_year,this_month-1,1).strftime('%B, %Y'))
+    time_lapse = getTimeLapse(lapse)
     
     generated = format(datetime.now(), '%Y/%m/%d')
     
@@ -58,7 +62,7 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     
     query_dates = {}
     for i in pubs[pub]['created']:
-        this_date = format(datetime.strptime(i, '%Y-%m-%dT%H:%M:%SZ'), '%Y/%m/%d - %H:%M:%S')
+        this_date = datetime.strptime(i, '%Y-%m-%d')
         this_times = pubs[pub]['created'][i]
         if this_date not in query_dates:
             query_dates[this_date] = this_times

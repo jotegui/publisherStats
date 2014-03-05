@@ -174,7 +174,7 @@ def getCDBStatsForPublishers(pubs, downloads_CDB):
             if dl['download'].split("/")[3] in pubs[pub]['download_files']:
                 
                 latlon = (dl['lat'],dl['lon'])
-                created = dl['created_at']
+                created = dl['created_at'].split('T')[0] # remove the time part
                 query = dl['query']
                 
                 if latlon not in pubs[pub]['latlon']:

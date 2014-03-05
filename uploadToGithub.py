@@ -58,8 +58,7 @@ def putReportInRepo(report, pub, org, repo):
     # Prepare variables
     report_content_txt = report['content_txt']
     report_content_html = report['content_html']
-    created_at = report['created_at']
-    #path = 'reports/{0}_{1}.txt'.format(repo, created_at)
+    created_at = format(report['created_at'],'%Y-%m-%d')
     path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ','_'), created_at)
     path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ','_'), created_at)
     message = report_content_txt.split("\n")[1] # Extract date from report

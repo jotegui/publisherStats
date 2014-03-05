@@ -88,6 +88,7 @@ def createReport(pubs, pub, lapse, style = 'txt'):
                          'records': records,
                          'total_records': total_records,
                          'unique_records': unique_records,
+                         'len_countries': len(countries),
                          'countries': countries,
                          'query_dates': query_dates,
                          'queries': queries

@@ -15,6 +15,7 @@ Total number of unique records downloaded: {{unique_records}}<br>
 
 <div id="geography">
 Origin of the queries that retrieved data from the resource:<br>
+Number of different countries: {{ len(countries) }}<br>
 <table border="1"><tr><td><b>Country</b></td><td><b>Number of times</b></td></tr>
 {% for country in countries %}
 	<tr><td>{{country}}</td><td>{{countries[country]}}</td></tr>

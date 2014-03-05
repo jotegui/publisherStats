@@ -106,19 +106,23 @@ def writeReport(report, pub, created_at):
         os.makedirs("./reports")
     file_name = "./reports/{0}_{1}.txt".format(pub.replace(" ","_"), created_at)
     f = open(file_name, 'w')
-    f.write(report)
+    f.write(json.dumps(report))
     f.close()
     
     return
 
-def main(lapse = 'month', testing = False):
+def main(lapse = 'month', testing = False, local = False):
     
     pubs = es.main(lapse = lapse, testing = testing)
     
     logging.info('generating reports')
-    created_at = datetime.now()
+    created_at = format(datetime.now(), '%Y_%m_%d')
     reports = {}
     for pub in pubs:
         reports[pub]={'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content_txt':createReport(pubs, pub, lapse, style='txt'), 'content_html':createReport(pubs, pub, lapse, style='html')}
+    
+    if local is True:
+        for pub in reports:
+            writeReport(reports[pub], pub, created_at)
     
     return reports

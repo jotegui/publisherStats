@@ -9,4 +9,4 @@
 *.out
 
 # Locally stored reports folder
-reports/
+reports*/

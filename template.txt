@@ -5,7 +5,8 @@ Number of download events that retrieved data from the resource: {{downloads}} (
 Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)
 Total number of unique records downloaded: {{unique_records}}
 
-Origin of the queries that retrieved data from the resource: {% for country in countries %}
+Origin of the queries that retrieved data from the resource:
+    Number of different countries: {{ len(countries) }} {% for country in countries %}
 	Country: {{country}} ; Number of times: {{countries[country]}}{% endfor %}
 
 Dates of the queries that retrieved data from the resource: {% for query_date in query_dates %}

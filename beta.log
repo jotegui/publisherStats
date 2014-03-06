@@ -1,0 +1,415 @@
+INFO:2014-03-04 17:04:31,688 Initiated at 2014-03-04 17:04:31.688326
+INFO:2014-03-04 17:04:31,688 getting data from CartoDB
+INFO:2014-03-04 17:04:32,284 getting data from Google Cloud Storage
+INFO:2014-03-04 17:04:32,284 downloading and parsing vertnet_1937_only-f6a37f0deb344ac781e5a3502dcb2887.txt
+INFO:2014-03-04 17:04:33,218 downloading and parsing MyResults-9b9744a677dc4e4c92783da1c8d4c69a.txt
+WARNING:2014-03-04 17:04:33,394 file MyResults-9b9744a677dc4e4c92783da1c8d4c69a.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:04:33,394 downloading and parsing resultados-ed0bd96eb31f45d3a45e09d72c1950cb.txt
+INFO:2014-03-04 17:04:35,339 downloading and parsing MyResults-84a2098b05d049fe9f7f15edd7b2b8d9.txt
+WARNING:2014-03-04 17:04:35,555 file MyResults-84a2098b05d049fe9f7f15edd7b2b8d9.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:04:35,556 downloading and parsing MyResults-e7ae82ccd3ea4be98bdbf01de8378cf4.txt
+WARNING:2014-03-04 17:04:35,734 file MyResults-e7ae82ccd3ea4be98bdbf01de8378cf4.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:04:35,734 downloading and parsing MyResults-cd1edc9a5ddd46ffba0ee0b12cd7a69d.txt
+WARNING:2014-03-04 17:04:35,914 file MyResults-cd1edc9a5ddd46ffba0ee0b12cd7a69d.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:04:35,914 downloading and parsing Pipistrellus_subflavus_vertnet_results-5c95963fadd3414b97058941cf96fe4b.txt
+INFO:2014-03-04 17:04:37,390 downloading and parsing Sciurus_carolinensis_AND_preparations:skull-fcf34979cbd043c88f74e159d486f5c0.txt
+INFO:2014-03-04 17:04:39,316 downloading and parsing MyResults-98ec9a3e84ac4d5cbb48da1076e88643.txt
+INFO:2014-03-04 17:28:23,088 downloading and parsing GHO-96a80e7837bc461d9a6a76a8b7215e3d.txt
+INFO:2014-03-04 17:28:25,283 downloading and parsing MyResults-9eeb9bf379a34434be046dca467fb7a3.txt
+WARNING:2014-03-04 17:28:25,481 file MyResults-9eeb9bf379a34434be046dca467fb7a3.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:25,481 downloading and parsing _"Sciurus_carolinensis"_AND_preparations:skeleton_vertnet140226-2dbdf9deaf994bd3b1919cab09c86491.txt
+INFO:2014-03-04 17:28:26,811 downloading and parsing MyResults-04de09e4dca04d8ba1a1ee8f6b73c5cc.txt
+WARNING:2014-03-04 17:28:27,061 file MyResults-04de09e4dca04d8ba1a1ee8f6b73c5cc.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:27,061 downloading and parsing MERL-a0218cc919f24f53b6e9d670080e740e.txt
+INFO:2014-03-04 17:28:28,048 downloading and parsing MyResults-856c80590b8c40508f6ed408e1901463.txt
+WARNING:2014-03-04 17:28:28,271 file MyResults-856c80590b8c40508f6ed408e1901463.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:28,271 downloading and parsing Baeolophus_ridgwayi_1078_14Feb2014-21cdba8908e443bf96c47b7fed27b009.txt
+INFO:2014-03-04 17:28:29,229 downloading and parsing MyResults-6095de5fce714cf4a0ded594201f13b2.txt
+WARNING:2014-03-04 17:28:29,449 file MyResults-6095de5fce714cf4a0ded594201f13b2.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:29,449 downloading and parsing MyResults-8565fe517e7e426b956ea2d33cc09a0f.txt
+WARNING:2014-03-04 17:28:29,717 file MyResults-8565fe517e7e426b956ea2d33cc09a0f.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:29,718 downloading and parsing Sciurus_carolinensis_AND_preparations:skull-1b81087aad4a425487e92c6f11861ac1.txt
+INFO:2014-03-04 17:28:31,531 downloading and parsing Baiomys_taylori-bcf82571381d4c728578835145cdd3d5.txt
+INFO:2014-03-04 17:28:33,137 downloading and parsing Sciurus_carolinensis_AND_preparations:Parensskull-b024dce3791d4388806039e309862837.txt
+INFO:2014-03-04 17:28:35,028 downloading and parsing vertnet_1951-1955-f9f22d446aa24feca6b22455467149f2.txt
+INFO:2014-03-04 17:28:36,405 downloading and parsing FOSP-b3733acbf9bb42b896e66e19d41e92fa.txt
+INFO:2014-03-04 17:28:42,641 downloading and parsing MamiferosTab-0c51efad160c4f75a36b658fb4ec1b53.txt
+INFO:2014-03-04 17:28:43,237 downloading and parsing vertnet2001-2010-1774a50d19b04af39107aa0941c4439a.txt
+INFO:2014-03-04 17:28:44,362 downloading and parsing carnivora-7a5b4a45d7b34fa9bf46f54ef749544f.txt
+INFO:2014-03-04 17:28:45,229 downloading and parsing Ursus_americanus_23Feb2014_VertNet-9681586b0d204ebea9977e4ef1aba317.txt
+INFO:2014-03-04 17:28:46,685 downloading and parsing aplodontia_vn_2-8657622ec71341f0b06b593576186ce6.txt
+INFO:2014-03-04 17:28:47,439 downloading and parsing aplodontia_vn-c710516c24344350929da772a96843e7.txt
+INFO:2014-03-04 17:28:48,376 downloading and parsing VertNet_Reptilia_Col-5a152b5fd28b48f2b4a98cafc6b44d6a.txt
+INFO:2014-03-04 17:28:49,811 downloading and parsing vertnet_bird-1b8df1501aa44b60b6d77458d2215198.txt
+WARNING:2014-03-04 17:28:49,987 file vertnet_bird-1b8df1501aa44b60b6d77458d2215198.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:49,987 downloading and parsing MyResults-d66c76d1db4c47529bae423e83893b43.txt
+WARNING:2014-03-04 17:28:50,200 file MyResults-d66c76d1db4c47529bae423e83893b43.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:50,201 downloading and parsing lasionycteris_noctivagans-d2bdea6689234f2a97ac6d44f032eb8e.txt
+INFO:2014-03-04 17:28:52,025 downloading and parsing resultadoss-d3367ba75089499c83b5bf54bed9935b.txt
+INFO:2014-03-04 17:28:53,793 downloading and parsing myotis-2658889f64cf4e138e3a4d7f19edacfa.txt
+INFO:2014-03-04 17:28:54,520 downloading and parsing vertnet_1945-1950-0cefc18a291d4dcf9727a09c02d4975c.txt
+INFO:2014-03-04 17:28:55,260 downloading and parsing Osgoodomys_banderanus-0293c0080c9c4b788ba0b2fe6b97e922.txt
+INFO:2014-03-04 17:28:55,967 downloading and parsing MyResults-b380abb125d74556ae3994b2dcf9dd0a.txt
+WARNING:2014-03-04 17:28:56,180 file MyResults-b380abb125d74556ae3994b2dcf9dd0a.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:56,180 downloading and parsing MyResults-febc7da6882841e7a023ee09cc78c111.txt
+WARNING:2014-03-04 17:28:56,438 file MyResults-febc7da6882841e7a023ee09cc78c111.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:56,438 downloading and parsing MyResults-4d99add5b3274278a73674f07ad2528e.txt
+WARNING:2014-03-04 17:28:56,652 file MyResults-4d99add5b3274278a73674f07ad2528e.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:28:56,652 downloading and parsing HOFI-74c139123fa148ba96b21ba78fe80270.txt
+INFO:2014-03-04 17:29:00,287 downloading and parsing Ochotona_princeps_23Feb14_VertNet-33b1096fb78c43aba0436ff4153eff29.txt
+INFO:2014-03-04 17:29:02,392 downloading and parsing vertnet_1938-1940-911a31f37c904326b0ccbbf00a31cc03.txt
+INFO:2014-03-04 17:29:03,462 downloading and parsing Odocoileus_virginianus_Mexico-fdfc66208e2443f2a5fcccd85b4de91e.txt
+INFO:2014-03-04 17:37:52,967 downloading and parsing MyResults-b3977b2fdc0c407fbd21466985f5a16b.txt
+WARNING:2014-03-04 17:37:53,184 file MyResults-b3977b2fdc0c407fbd21466985f5a16b.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:37:53,184 downloading and parsing EASO-93e606ee36cb4e3796a2571dbe143ac1.txt
+WARNING:2014-03-04 17:37:53,417 file EASO-93e606ee36cb4e3796a2571dbe143ac1.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:37:53,418 downloading and parsing MyResults-44fa15b5b6da4e7b9dedc0238c227e60.txt
+WARNING:2014-03-04 17:37:53,627 file MyResults-44fa15b5b6da4e7b9dedc0238c227e60.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:37:53,628 downloading and parsing vertnet_1961-1965-cf049406c3e74be5bd0ee6db02695723.txt
+INFO:2014-03-04 17:37:55,403 downloading and parsing mus_vertnet_data-af2e3f649e894688be99c5f65665eeb2.txt
+INFO:2014-03-04 17:38:19,017 downloading and parsing MyResults-3b1742e2db374fbe92a142bb54b6248a.txt
+WARNING:2014-03-04 17:38:19,239 file MyResults-3b1742e2db374fbe92a142bb54b6248a.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:19,239 downloading and parsing vertnet_1976-1980-ca0301df02f94b5fa971a247c417a00e.txt
+INFO:2014-03-04 17:38:21,998 downloading and parsing _"Sciurus_niger"_AND_preparations:skeleton_vertnet_140226-a36833cd6bc04ae2a616c7030b829453.txt
+INFO:2014-03-04 17:38:23,576 downloading and parsing VertNet_-_Northeast_US-1bec31c2cccf4a5babee3f0586c65879.txt
+INFO:2014-03-04 17:38:24,792 downloading and parsing TRSW-34a2749ed9094be0b1a2659dfd71628f.txt
+INFO:2014-03-04 17:38:26,275 downloading and parsing Canis_lupus-a9b78e39573449f9b94e54d27bf376b9.txt
+INFO:2014-03-04 17:38:31,775 downloading and parsing HOFI-2fefe0e541264931900b4dc435fa08d5.txt
+WARNING:2014-03-04 17:38:31,995 file HOFI-2fefe0e541264931900b4dc435fa08d5.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:31,995 downloading and parsing HOLA-55b86e9a9da84295af4da2df5649606d.txt
+INFO:2014-03-04 17:38:40,234 downloading and parsing CAGO-b2d07564098d40dab5fb389b982a5cfa.txt
+INFO:2014-03-04 17:38:44,049 downloading and parsing DOWO-7418f5e1be9e4f8a940a1ccecd63fdd3.txt
+INFO:2014-03-04 17:38:46,741 downloading and parsing ctenotus-all-6deeba58fcb34f128d17539797aec52b.txt
+INFO:2014-03-04 17:38:47,339 downloading and parsing MyResults-2a6ee9598c954f1588c768abfb37bc99.txt
+WARNING:2014-03-04 17:38:47,556 file MyResults-2a6ee9598c954f1588c768abfb37bc99.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:47,557 downloading and parsing MyResults-7f9486f7ff984257b7ec91fb5796ff6e.txt
+WARNING:2014-03-04 17:38:47,774 file MyResults-7f9486f7ff984257b7ec91fb5796ff6e.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:47,774 downloading and parsing MyResults-8fcef8d4b8354f6ca3ba00ed668eb117.txt
+WARNING:2014-03-04 17:38:48,020 file MyResults-8fcef8d4b8354f6ca3ba00ed668eb117.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:48,020 downloading and parsing silverhair-f75645b4ee5b4ef782bbf7c8b83b773e.txt
+INFO:2014-03-04 17:38:49,763 downloading and parsing MyResults-639f9b6008d84543b344fcc738b9d7a7.txt
+WARNING:2014-03-04 17:38:49,993 file MyResults-639f9b6008d84543b344fcc738b9d7a7.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:38:49,994 downloading and parsing Vertnet1981-1990-0311c93a05734a4fbe48a7f199a3d0e4.txt
+INFO:2014-03-04 17:38:56,986 downloading and parsing Sciurus_carolinensis_skull-773dd4ab7bab4f7494fe18e7c3fee0f6.txt
+INFO:2014-03-04 17:38:58,842 downloading and parsing vertnet_1931_only-c312353e3e624926b25b5b1051804120.txt
+INFO:2014-03-04 17:38:59,890 downloading and parsing MyResults-dceedb0e25144df0bdc05d881051a9d3.txt
+INFO:2014-03-04 17:39:06,128 downloading and parsing Snowshoe_Hare-b1cd81dfb0dc4f90ba51f71ff9563587.txt
+INFO:2014-03-04 17:39:07,338 downloading and parsing vertnet_1936_only-3f26f9a17a4140f5b583f8944e6a7206.txt
+INFO:2014-03-04 17:39:08,179 downloading and parsing STJA-9e5b1b27f2474ab9bc47fcba65a6126a.txt
+INFO:2014-03-04 17:39:14,185 downloading and parsing corynorhinus_townsendii-996daad292f94d27aad7dd207b796022.txt
+INFO:2014-03-04 17:39:15,545 downloading and parsing vertnet_1956-1960-26eed3307470424b92e58222bc09ad30.txt
+INFO:2014-03-04 17:39:17,094 downloading and parsing M_septen-5ee4af50b24c44a9925667865b1f85fc.txt
+INFO:2014-03-04 17:39:17,934 downloading and parsing MyResults-50de7e4c3b9b4ebeb057108070fdaf52.txt
+WARNING:2014-03-04 17:39:18,135 file MyResults-50de7e4c3b9b4ebeb057108070fdaf52.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:18,135 downloading and parsing Amphibia_Jalisco-ba23b0ba50f44d4697ee80569d222f4c.txt
+INFO:2014-03-04 17:39:22,256 downloading and parsing MyResults-d66c76d1db4c47529bae423e83893b43.txt
+WARNING:2014-03-04 17:39:22,436 file MyResults-d66c76d1db4c47529bae423e83893b43.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:22,437 downloading and parsing FOSP-d0cf00d2b52d4fdc924863d70cea88dd.txt
+INFO:2014-03-04 17:39:28,036 downloading and parsing MyResults-e7009112a91841099fdb4ad09e17c978.txt
+WARNING:2014-03-04 17:39:28,258 file MyResults-e7009112a91841099fdb4ad09e17c978.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:28,258 downloading and parsing rom_dowo-33176e5a5865493bb3d12ba3af6c9813.txt
+INFO:2014-03-04 17:39:29,201 downloading and parsing MyResults-19a60da768574765903d99309a54bc9c.txt
+INFO:2014-03-04 17:39:31,058 downloading and parsing MyResults-e18a2084f7854533b98206c28b73818a.txt
+WARNING:2014-03-04 17:39:31,279 file MyResults-e18a2084f7854533b98206c28b73818a.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:31,279 downloading and parsing Reptilia_Jalisco-690153059bcc4a57a6cae63b9e3c327e.txt
+INFO:2014-03-04 17:39:34,651 downloading and parsing VertNet_Amphibia_Col-ee496e66be754e18bed19d8adc58aef2.txt
+INFO:2014-03-04 17:39:35,705 downloading and parsing EASO-278b32e1a24f4eb18fe9b7e813bbb769.txt
+INFO:2014-03-04 17:39:39,548 downloading and parsing MyResults-4acaf780b06f4af3ad24687893adbaf1.txt
+WARNING:2014-03-04 17:39:39,769 file MyResults-4acaf780b06f4af3ad24687893adbaf1.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:39,769 downloading and parsing JOT_20140214_ErrorMessage2-58f6dc4d0e504666ab3c15648b52a6af.txt
+INFO:2014-03-04 17:39:43,608 downloading and parsing aplodontia_vn_3-ad5dd3d0e33648ec953bb3082b620d64.txt
+INFO:2014-03-04 17:39:44,273 downloading and parsing MyResults-e23d7b532d7f4e108a34071cb73a2ba4.txt
+WARNING:2014-03-04 17:39:44,553 file MyResults-e23d7b532d7f4e108a34071cb73a2ba4.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:44,553 downloading and parsing Zapus_hudsonius_23Feb2014_VertNet-d4825a28d9054974b4eba1eabd70353c.txt
+INFO:2014-03-04 17:39:47,693 downloading and parsing MyResults-33204cf911ae48b1806376f27f96dcdc.txt
+WARNING:2014-03-04 17:39:47,908 file MyResults-33204cf911ae48b1806376f27f96dcdc.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:47,908 downloading and parsing vertnet_1934_only-2d12cd85a2514b27bc3c9a2046d6d35b.txt
+INFO:2014-03-04 17:39:48,974 downloading and parsing vertnet_1971-1975-4dab6617d6b345318040d7ae6cbab0f6.txt
+INFO:2014-03-04 17:39:50,292 downloading and parsing Sciurus_carolinensis_ParensSkull-dac67e60dfe5433a8a415c3a6ad57b04.txt
+INFO:2014-03-04 17:39:52,766 downloading and parsing mvzall-ddffc64e071f440c86275986e083c131.txt
+WARNING:2014-03-04 17:39:53,007 file mvzall-ddffc64e071f440c86275986e083c131.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:53,007 downloading and parsing aplodontia_skulls_mvz-67d3dd9904dd44bda6f0da4a6aec201a.txt
+INFO:2014-03-04 17:39:53,701 downloading and parsing HOFI-500c5155757c4257823c88e1b3230824.txt
+WARNING:2014-03-04 17:39:53,954 file HOFI-500c5155757c4257823c88e1b3230824.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:39:53,955 downloading and parsing Sciurus_carolinensis_VertNet-9940371720b141739ecfa36a974a2ef7.txt
+INFO:2014-03-04 17:39:56,332 downloading and parsing LYNXSS-3ea51c3eae3d4076880999a46ba739ce.txt
+INFO:2014-03-04 17:39:57,590 downloading and parsing Sciurus_niger_AND_preparations:skeletons-64e2acd0aeee46efbde9f9179f37a4f7.txt
+INFO:2014-03-04 17:39:58,894 downloading and parsing vertnet_1966-1970-d8ff76c511f54b64879659c9a2e46ea5.txt
+INFO:2014-03-04 17:40:00,616 downloading and parsing Sciurus_carolinensis_AND_skeletons_only-b6cfec48acaa4aedbc9ef5c3d986d233.txt
+INFO:2014-03-04 17:40:01,276 downloading and parsing vertnet_1932_only-2bd45231027948e68d210854879a6312.txt
+INFO:2014-03-04 17:40:02,327 downloading and parsing EASO-65ec620c85654042a24f1189b5f9f4a2.txt
+WARNING:2014-03-04 17:40:02,506 file EASO-65ec620c85654042a24f1189b5f9f4a2.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:02,506 downloading and parsing MyResults-978316ff6d5240779e5d978c777482bc.txt
+WARNING:2014-03-04 17:40:02,708 file MyResults-978316ff6d5240779e5d978c777482bc.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:02,708 downloading and parsing MyResults-d09e85ec54aa43ceaf98dbafc2df1a7f.txt
+WARNING:2014-03-04 17:40:02,915 file MyResults-d09e85ec54aa43ceaf98dbafc2df1a7f.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:02,915 downloading and parsing Anoura_VertNet-abcc7c1b657549e09bda8d64fb1215c3.txt
+INFO:2014-03-04 17:40:05,235 downloading and parsing vertnet1991-2000-5831efff740942bea563c45929df4194.txt
+INFO:2014-03-04 17:40:07,955 downloading and parsing corynorhinus_townsendii-192920a5bfe64b60aa5aa3db82a961d8.txt
+INFO:2014-03-04 17:40:09,416 downloading and parsing JOT_20140213_TestDownloads-1e8d63e3e02b4fafbab99d71adf6a917.txt
+INFO:2014-03-04 17:40:16,322 downloading and parsing MyResults-c4fc1527b8414ac39b4403098f8ea4b4.txt
+WARNING:2014-03-04 17:40:16,559 file MyResults-c4fc1527b8414ac39b4403098f8ea4b4.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:16,559 downloading and parsing Sciurus_niger_VertNet-409042e7fe1a4f8e93217c773afdddc2.txt
+INFO:2014-03-04 17:40:19,733 downloading and parsing WTSP-816a623531a74d108abd17d9949c3c23.txt
+INFO:2014-03-04 17:40:28,952 downloading and parsing MyResults-0b3d4626500248da8398dec74697e277.txt
+INFO:2014-03-04 17:40:30,772 downloading and parsing MyResults-974327ca4f2942068b104f5b42b84e3a.txt
+WARNING:2014-03-04 17:40:31,034 file MyResults-974327ca4f2942068b104f5b42b84e3a.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:31,035 downloading and parsing KSTC_test-14287c7d09424dd08c97331c34c40967.txt
+INFO:2014-03-04 17:40:32,948 downloading and parsing MyResults-f91d9e3565594e7a947d487ab4e3128d.txt
+WARNING:2014-03-04 17:40:33,376 file MyResults-f91d9e3565594e7a947d487ab4e3128d.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:40:33,376 downloading and parsing JOT_20140213_TestingReports-d438dce88eb5441a860691d70b6ac994.txt
+INFO:2014-03-04 17:41:05,984 downloading and parsing JOT_20140214_ErrorMessage-a831d17dfa91471aa4e0e6a4242eda98.txt
+INFO:2014-03-04 17:41:12,649 downloading and parsing MyResults-865fa8da90d34232935065a72869f0b4.txt
+WARNING:2014-03-04 17:41:12,856 file MyResults-865fa8da90d34232935065a72869f0b4.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:41:12,856 downloading and parsing MyResults-6b8243ff447c4fc08ce78412d6ac5972.txt
+WARNING:2014-03-04 17:41:13,069 file MyResults-6b8243ff447c4fc08ce78412d6ac5972.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:41:13,070 downloading and parsing VESP-871f1eac8f2444cfa5000239ac4006d4.txt
+INFO:2014-03-04 17:41:15,966 downloading and parsing Cynomys_ludovicianus_23Feb2014_VertNet-c450f0b15db242d78ff39389e8629024.txt
+INFO:2014-03-04 17:41:17,358 downloading and parsing SAVSP-6cabf8906c1f4f5bbaea9a7ca9588688.txt
+INFO:2014-03-04 17:41:23,021 downloading and parsing vertnet_1941-1944-2ae20e68a4354654b0fbb06057bd6ddd.txt
+INFO:2014-03-04 17:41:24,076 downloading and parsing LASP-01e97108a34641beabfe147cf4948c8e.txt
+INFO:2014-03-04 17:41:26,707 downloading and parsing MyResults-2d18f1cbaea346fdae004be956e9c613.txt
+WARNING:2014-03-04 17:41:26,884 file MyResults-2d18f1cbaea346fdae004be956e9c613.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:41:26,884 downloading and parsing MyResults-e570f5ad71044da486b14f68df832f53.txt
+WARNING:2014-03-04 17:41:27,119 file MyResults-e570f5ad71044da486b14f68df832f53.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:41:27,120 downloading and parsing Ohio_Mammals-7146dcb15f8842e39465e6e787573bdf.txt
+INFO:2014-03-04 17:41:30,015 downloading and parsing vertnet_Amphibia-b9803b8d11de4a9798475afe6b44b104.txt
+WARNING:2014-03-04 17:41:30,267 file vertnet_Amphibia-b9803b8d11de4a9798475afe6b44b104.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-04 17:41:30,274 generating stats
+INFO:2014-03-04 17:41:30,297 generating reports
+INFO:2014-03-04 17:49:56,309 Requesting PUT txt for rom-vertnet:vertebratepalaeorecentskeletons:reports/ROM-vertebratepalaeorecentskeletons_2014-03-04.txt
+INFO:2014-03-04 17:49:56,362 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:49:56,930 "PUT /repos/rom-vertnet/vertebratepalaeorecentskeletons/contents/reports/ROM-vertebratepalaeorecentskeletons_2014-03-04.txt HTTP/1.1" 201 2190
+INFO:2014-03-04 17:49:56,931 SUCCESS (Status Code 201) - SHA: 7bb529a1b11f8a8277c0fde593382d38ae896219
+INFO:2014-03-04 17:49:56,932 Requesting PUT html for rom-vertnet:vertebratepalaeorecentskeletons:reports/ROM-vertebratepalaeorecentskeletons_2014-03-04.html
+INFO:2014-03-04 17:49:56,933 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:49:57,506 "PUT /repos/rom-vertnet/vertebratepalaeorecentskeletons/contents/reports/ROM-vertebratepalaeorecentskeletons_2014-03-04.html HTTP/1.1" 201 2196
+INFO:2014-03-04 17:49:57,509 SUCCESS (Status Code 201) - SHA: c93c69f20577ee5f0600e66e386d09b737cb555d
+INFO:2014-03-04 17:49:58,312 Requesting PUT txt for ummz-vertnet:ummz-mammals:reports/UMMZ-ummz_mammals_2014-03-04.txt
+INFO:2014-03-04 17:49:58,313 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:49:58,879 "PUT /repos/ummz-vertnet/ummz-mammals/contents/reports/UMMZ-ummz_mammals_2014-03-04.txt HTTP/1.1" 201 1884
+INFO:2014-03-04 17:49:58,880 SUCCESS (Status Code 201) - SHA: 28a710b79206b9fb5e85e9ec0b664a131f945a2a
+INFO:2014-03-04 17:49:58,880 Requesting PUT html for ummz-vertnet:ummz-mammals:reports/UMMZ-ummz_mammals_2014-03-04.html
+INFO:2014-03-04 17:49:58,881 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:49:59,445 "PUT /repos/ummz-vertnet/ummz-mammals/contents/reports/UMMZ-ummz_mammals_2014-03-04.html HTTP/1.1" 201 1890
+INFO:2014-03-04 17:49:59,447 SUCCESS (Status Code 201) - SHA: 00e8318855d5a1178984748ee47f0c007065ede0
+INFO:2014-03-04 17:50:00,246 Requesting PUT txt for dmns-vertnet:dmns-bird:reports/DMNS-dmns_bird_2014-03-04.txt
+INFO:2014-03-04 17:50:00,249 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:00,761 "PUT /repos/dmns-vertnet/dmns-bird/contents/reports/DMNS-dmns_bird_2014-03-04.txt HTTP/1.1" 201 1833
+INFO:2014-03-04 17:50:00,762 SUCCESS (Status Code 201) - SHA: 1875f2656aea9591991b0ad8678378f4506fb53c
+INFO:2014-03-04 17:50:00,762 Requesting PUT html for dmns-vertnet:dmns-bird:reports/DMNS-dmns_bird_2014-03-04.html
+INFO:2014-03-04 17:50:00,763 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:01,287 "PUT /repos/dmns-vertnet/dmns-bird/contents/reports/DMNS-dmns_bird_2014-03-04.html HTTP/1.1" 201 1839
+INFO:2014-03-04 17:50:01,295 SUCCESS (Status Code 201) - SHA: c36bd29e2cc6f91c22f41e2f881aba4c1c1a59d5
+INFO:2014-03-04 17:50:02,099 Requesting PUT txt for dmnh-vertnet:dmnh-birds:reports/DMNH-dmnh_birds_2014-03-04.txt
+INFO:2014-03-04 17:50:02,099 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:02,885 "PUT /repos/dmnh-vertnet/dmnh-birds/contents/reports/DMNH-dmnh_birds_2014-03-04.txt HTTP/1.1" 201 1850
+INFO:2014-03-04 17:50:02,886 SUCCESS (Status Code 201) - SHA: a2bacb69f58b5f99a69464ac9b1862d97066d949
+INFO:2014-03-04 17:50:02,886 Requesting PUT html for dmnh-vertnet:dmnh-birds:reports/DMNH-dmnh_birds_2014-03-04.html
+INFO:2014-03-04 17:50:02,887 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:03,470 "PUT /repos/dmnh-vertnet/dmnh-birds/contents/reports/DMNH-dmnh_birds_2014-03-04.html HTTP/1.1" 201 1856
+INFO:2014-03-04 17:50:03,473 SUCCESS (Status Code 201) - SHA: 234fceab75e1cba18e3f715a69cff4b397243cf7
+INFO:2014-03-04 17:50:04,300 Requesting PUT txt for ummz-vertnet:ummz-herps:reports/UMMZ-ummz_herps_2014-03-04.txt
+INFO:2014-03-04 17:50:04,301 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:04,824 "PUT /repos/ummz-vertnet/ummz-herps/contents/reports/UMMZ-ummz_herps_2014-03-04.txt HTTP/1.1" 201 1849
+INFO:2014-03-04 17:50:04,827 SUCCESS (Status Code 201) - SHA: 4f2e56ba569a82aeacdbfdc44febdf78dd92850b
+INFO:2014-03-04 17:50:04,827 Requesting PUT html for ummz-vertnet:ummz-herps:reports/UMMZ-ummz_herps_2014-03-04.html
+INFO:2014-03-04 17:50:04,829 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:05,370 "PUT /repos/ummz-vertnet/ummz-herps/contents/reports/UMMZ-ummz_herps_2014-03-04.html HTTP/1.1" 201 1856
+INFO:2014-03-04 17:50:05,378 SUCCESS (Status Code 201) - SHA: db47daa350a4d8c57a0532b1ad289049c2ba4e20
+INFO:2014-03-04 17:50:06,185 Requesting PUT txt for ubcbbm-vertnet:ubc-bbm-ctc-birds:reports/UBCBBM-ubc_bbm_ctc_birds_2014-03-04.txt
+INFO:2014-03-04 17:50:06,189 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:06,716 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-birds/contents/reports/UBCBBM-ubc_bbm_ctc_birds_2014-03-04.txt HTTP/1.1" 201 2003
+INFO:2014-03-04 17:50:06,719 SUCCESS (Status Code 201) - SHA: 1fdd3dfce3bf259d57c9939ac31aa33d43360fc7
+INFO:2014-03-04 17:50:06,719 Requesting PUT html for ubcbbm-vertnet:ubc-bbm-ctc-birds:reports/UBCBBM-ubc_bbm_ctc_birds_2014-03-04.html
+INFO:2014-03-04 17:50:06,722 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:07,241 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-birds/contents/reports/UBCBBM-ubc_bbm_ctc_birds_2014-03-04.html HTTP/1.1" 201 2009
+INFO:2014-03-04 17:50:07,243 SUCCESS (Status Code 201) - SHA: e94d7bf8579d90473bad8018443d9b4d5a0bab00
+INFO:2014-03-04 17:50:08,043 Requesting PUT txt for mvz-vertnet:mvz-egg:reports/MVZ-mvz_egg_2014-03-04.txt
+INFO:2014-03-04 17:50:08,044 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:08,565 "PUT /repos/mvz-vertnet/mvz-egg/contents/reports/MVZ-mvz_egg_2014-03-04.txt HTTP/1.1" 201 1782
+INFO:2014-03-04 17:50:08,567 SUCCESS (Status Code 201) - SHA: becdfe991482a1f2ede1c7cd194effd790978469
+INFO:2014-03-04 17:50:08,567 Requesting PUT html for mvz-vertnet:mvz-egg:reports/MVZ-mvz_egg_2014-03-04.html
+INFO:2014-03-04 17:50:08,570 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:09,138 "PUT /repos/mvz-vertnet/mvz-egg/contents/reports/MVZ-mvz_egg_2014-03-04.html HTTP/1.1" 201 1788
+INFO:2014-03-04 17:50:09,140 SUCCESS (Status Code 201) - SHA: 3046aff46a58a32f0b0b504a2c0cceb2cf90d371
+INFO:2014-03-04 17:50:09,965 Requesting PUT txt for mlz-vertnet:mlz-bird:reports/MLZ-mlz_bird_2014-03-04.txt
+INFO:2014-03-04 17:50:09,967 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:10,487 "PUT /repos/mlz-vertnet/mlz-bird/contents/reports/MLZ-mlz_bird_2014-03-04.txt HTTP/1.1" 201 1798
+INFO:2014-03-04 17:50:10,488 SUCCESS (Status Code 201) - SHA: bbd7d769fcf3cdba57098f5271dc88f9cd260c5b
+INFO:2014-03-04 17:50:10,488 Requesting PUT html for mlz-vertnet:mlz-bird:reports/MLZ-mlz_bird_2014-03-04.html
+INFO:2014-03-04 17:50:10,489 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:11,015 "PUT /repos/mlz-vertnet/mlz-bird/contents/reports/MLZ-mlz_bird_2014-03-04.html HTTP/1.1" 201 1805
+INFO:2014-03-04 17:50:11,022 SUCCESS (Status Code 201) - SHA: 9ea4923232d3ed7da9fc74072215283e57ef65af
+INFO:2014-03-04 17:50:11,815 Requesting PUT txt for rom-vertnet:fishes:reports/ROM-fishes_2014-03-04.txt
+INFO:2014-03-04 17:50:11,818 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:12,325 "PUT /repos/rom-vertnet/fishes/contents/reports/ROM-fishes_2014-03-04.txt HTTP/1.1" 201 1764
+INFO:2014-03-04 17:50:12,326 SUCCESS (Status Code 201) - SHA: a0f1fe68e6a7e1c7bd45a53300c949f47cd3df68
+INFO:2014-03-04 17:50:12,327 Requesting PUT html for rom-vertnet:fishes:reports/ROM-fishes_2014-03-04.html
+INFO:2014-03-04 17:50:12,329 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:12,858 "PUT /repos/rom-vertnet/fishes/contents/reports/ROM-fishes_2014-03-04.html HTTP/1.1" 201 1771
+INFO:2014-03-04 17:50:12,861 SUCCESS (Status Code 201) - SHA: e1217895c8925dd10d95b85f4fbc3566cb4fb717
+INFO:2014-03-04 17:50:13,647 Requesting PUT txt for wfvz-vertnet:wfvz-birds:reports/WFVZ-wfvz_birds_2014-03-04.txt
+INFO:2014-03-04 17:50:13,648 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:14,183 "PUT /repos/wfvz-vertnet/wfvz-birds/contents/reports/WFVZ-wfvz_birds_2014-03-04.txt HTTP/1.1" 201 1850
+INFO:2014-03-04 17:50:14,185 SUCCESS (Status Code 201) - SHA: 74df4af76597c6b581f0630991dc2f056469aef8
+INFO:2014-03-04 17:50:14,185 Requesting PUT html for wfvz-vertnet:wfvz-birds:reports/WFVZ-wfvz_birds_2014-03-04.html
+INFO:2014-03-04 17:50:14,187 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:14,715 "PUT /repos/wfvz-vertnet/wfvz-birds/contents/reports/WFVZ-wfvz_birds_2014-03-04.html HTTP/1.1" 201 1856
+INFO:2014-03-04 17:50:14,720 SUCCESS (Status Code 201) - SHA: f135ec652c8d707aaf155c9d13005707b77a6d57
+INFO:2014-03-04 17:50:15,510 Requesting PUT txt for ubcbbm-vertnet:ubc-bbm-ctc-mammals:reports/UBCBBM-ubc_bbm_ctc_mammals_2014-03-04.txt
+INFO:2014-03-04 17:50:15,511 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:16,047 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-mammals/contents/reports/UBCBBM-ubc_bbm_ctc_mammals_2014-03-04.txt HTTP/1.1" 201 2037
+INFO:2014-03-04 17:50:16,049 SUCCESS (Status Code 201) - SHA: 473ec63bd4e78afc445a91a88fb50714af454a74
+INFO:2014-03-04 17:50:16,049 Requesting PUT html for ubcbbm-vertnet:ubc-bbm-ctc-mammals:reports/UBCBBM-ubc_bbm_ctc_mammals_2014-03-04.html
+INFO:2014-03-04 17:50:16,051 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:16,612 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-mammals/contents/reports/UBCBBM-ubc_bbm_ctc_mammals_2014-03-04.html HTTP/1.1" 201 2043
+INFO:2014-03-04 17:50:16,616 SUCCESS (Status Code 201) - SHA: b69456e437986b78bc3bad7cb5dccac49a182cdd
+INFO:2014-03-04 17:50:17,395 Requesting PUT txt for mvz-vertnet:mvz-mammal:reports/MVZ-mvz_mammal_2014-03-04.txt
+INFO:2014-03-04 17:50:17,397 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:17,946 "PUT /repos/mvz-vertnet/mvz-mammal/contents/reports/MVZ-mvz_mammal_2014-03-04.txt HTTP/1.1" 201 1833
+INFO:2014-03-04 17:50:17,946 SUCCESS (Status Code 201) - SHA: eb02ca6e0747cc9767f5937cd44d17ff0f967bae
+INFO:2014-03-04 17:50:17,946 Requesting PUT html for mvz-vertnet:mvz-mammal:reports/MVZ-mvz_mammal_2014-03-04.html
+INFO:2014-03-04 17:50:17,947 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:18,518 "PUT /repos/mvz-vertnet/mvz-mammal/contents/reports/MVZ-mvz_mammal_2014-03-04.html HTTP/1.1" 201 1839
+INFO:2014-03-04 17:50:18,522 SUCCESS (Status Code 201) - SHA: f0a97452d0d28d9a03bed389449df05da21e4a8b
+INFO:2014-03-04 17:50:19,303 Requesting PUT txt for ummz-vertnet:ummz-birds:reports/UMMZ-ummz_birds_2014-03-04.txt
+INFO:2014-03-04 17:50:19,304 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:19,841 "PUT /repos/ummz-vertnet/ummz-birds/contents/reports/UMMZ-ummz_birds_2014-03-04.txt HTTP/1.1" 201 1850
+INFO:2014-03-04 17:50:19,842 SUCCESS (Status Code 201) - SHA: a7d4d5eab638109bc32cb5457cac779493cea5f9
+INFO:2014-03-04 17:50:19,842 Requesting PUT html for ummz-vertnet:ummz-birds:reports/UMMZ-ummz_birds_2014-03-04.html
+INFO:2014-03-04 17:50:19,844 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:20,396 "PUT /repos/ummz-vertnet/ummz-birds/contents/reports/UMMZ-ummz_birds_2014-03-04.html HTTP/1.1" 201 1856
+INFO:2014-03-04 17:50:20,399 SUCCESS (Status Code 201) - SHA: b7c3cac4404b94deef5535c7057d08e90ead9c14
+INFO:2014-03-04 17:50:21,181 Requesting PUT txt for dmns-vertnet:dmns-mamm:reports/DMNS-dmns_mamm_2014-03-04.txt
+INFO:2014-03-04 17:50:21,182 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:21,702 "PUT /repos/dmns-vertnet/dmns-mamm/contents/reports/DMNS-dmns_mamm_2014-03-04.txt HTTP/1.1" 201 1833
+INFO:2014-03-04 17:50:21,703 SUCCESS (Status Code 201) - SHA: 1d5b41d0ee5231e565e9df524f362be452361ebf
+INFO:2014-03-04 17:50:21,703 Requesting PUT html for dmns-vertnet:dmns-mamm:reports/DMNS-dmns_mamm_2014-03-04.html
+INFO:2014-03-04 17:50:21,705 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:22,240 "PUT /repos/dmns-vertnet/dmns-mamm/contents/reports/DMNS-dmns_mamm_2014-03-04.html HTTP/1.1" 201 1839
+INFO:2014-03-04 17:50:22,243 SUCCESS (Status Code 201) - SHA: dc84648dc5c29898ba93abf2f91ffce6507eb482
+INFO:2014-03-04 17:50:23,095 Requesting PUT txt for pmns-vertnet:perot-verts:reports/PMNS-perot_verts_2014-03-04.txt
+INFO:2014-03-04 17:50:23,096 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:23,645 "PUT /repos/pmns-vertnet/perot-verts/contents/reports/PMNS-perot_verts_2014-03-04.txt HTTP/1.1" 201 1867
+INFO:2014-03-04 17:50:23,646 SUCCESS (Status Code 201) - SHA: 6d014a234fb40c029537486efdcacf67271054cd
+INFO:2014-03-04 17:50:23,646 Requesting PUT html for pmns-vertnet:perot-verts:reports/PMNS-perot_verts_2014-03-04.html
+INFO:2014-03-04 17:50:23,647 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:24,158 "PUT /repos/pmns-vertnet/perot-verts/contents/reports/PMNS-perot_verts_2014-03-04.html HTTP/1.1" 201 1873
+INFO:2014-03-04 17:50:24,163 SUCCESS (Status Code 201) - SHA: 30c5fc7aea1fdec5b23b5f8a7ff40a187991bcf8
+INFO:2014-03-04 17:50:24,974 Requesting PUT txt for ttrs-vertnet:ttrs-birds:reports/TTRS-ttrs_birds_2014-03-04.txt
+INFO:2014-03-04 17:50:24,978 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:25,480 "PUT /repos/ttrs-vertnet/ttrs-birds/contents/reports/TTRS-ttrs_birds_2014-03-04.txt HTTP/1.1" 201 1849
+INFO:2014-03-04 17:50:25,481 SUCCESS (Status Code 201) - SHA: 25471f5a791e333f09246519abdb887bf7135ccb
+INFO:2014-03-04 17:50:25,482 Requesting PUT html for ttrs-vertnet:ttrs-birds:reports/TTRS-ttrs_birds_2014-03-04.html
+INFO:2014-03-04 17:50:25,484 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:25,995 "PUT /repos/ttrs-vertnet/ttrs-birds/contents/reports/TTRS-ttrs_birds_2014-03-04.html HTTP/1.1" 201 1856
+INFO:2014-03-04 17:50:25,998 SUCCESS (Status Code 201) - SHA: 1239abf5eb6d55dfc2a6fb01169db8ed9d7861ff
+INFO:2014-03-04 17:50:26,792 Requesting PUT txt for cuml-vertnet:cuml-sound-film:reports/CUML-cuml_sound_film_2014-03-04.txt
+INFO:2014-03-04 17:50:26,793 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:27,374 "PUT /repos/cuml-vertnet/cuml-sound-film/contents/reports/CUML-cuml_sound_film_2014-03-04.txt HTTP/1.1" 201 1935
+INFO:2014-03-04 17:50:27,375 SUCCESS (Status Code 201) - SHA: cf4cdb66e7b7e27e9f9112603af425adb514caf5
+INFO:2014-03-04 17:50:27,375 Requesting PUT html for cuml-vertnet:cuml-sound-film:reports/CUML-cuml_sound_film_2014-03-04.html
+INFO:2014-03-04 17:50:27,376 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:27,925 "PUT /repos/cuml-vertnet/cuml-sound-film/contents/reports/CUML-cuml_sound_film_2014-03-04.html HTTP/1.1" 201 1941
+INFO:2014-03-04 17:50:27,928 SUCCESS (Status Code 201) - SHA: d3e2ed0da96b53336e0f168540e89481a8f8850e
+INFO:2014-03-04 17:50:28,718 Requesting PUT txt for mvz-vertnet:mvz-hild:reports/MVZ-mvz_hild_2014-03-04.txt
+INFO:2014-03-04 17:50:28,720 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:29,232 "PUT /repos/mvz-vertnet/mvz-hild/contents/reports/MVZ-mvz_hild_2014-03-04.txt HTTP/1.1" 201 1798
+INFO:2014-03-04 17:50:29,233 SUCCESS (Status Code 201) - SHA: 349f409ca9143cb0c064385b2928a45b316fc789
+INFO:2014-03-04 17:50:29,233 Requesting PUT html for mvz-vertnet:mvz-hild:reports/MVZ-mvz_hild_2014-03-04.html
+INFO:2014-03-04 17:50:29,233 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:29,758 "PUT /repos/mvz-vertnet/mvz-hild/contents/reports/MVZ-mvz_hild_2014-03-04.html HTTP/1.1" 201 1805
+INFO:2014-03-04 17:50:29,766 SUCCESS (Status Code 201) - SHA: fb2ed3ccb42e2b5a43d9005ff9cd62d8aa7d7ed9
+INFO:2014-03-04 17:50:30,553 Requesting PUT txt for rom-vertnet:birdspasserines:reports/ROM-birdspasserines_2014-03-04.txt
+INFO:2014-03-04 17:50:30,556 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:31,083 "PUT /repos/rom-vertnet/birdspasserines/contents/reports/ROM-birdspasserines_2014-03-04.txt HTTP/1.1" 201 1918
+INFO:2014-03-04 17:50:31,083 SUCCESS (Status Code 201) - SHA: 7dcea43dcfbdff64e71fdcde8d5ca01216314cd5
+INFO:2014-03-04 17:50:31,084 Requesting PUT html for rom-vertnet:birdspasserines:reports/ROM-birdspasserines_2014-03-04.html
+INFO:2014-03-04 17:50:31,085 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:31,659 "PUT /repos/rom-vertnet/birdspasserines/contents/reports/ROM-birdspasserines_2014-03-04.html HTTP/1.1" 201 1924
+INFO:2014-03-04 17:50:31,667 SUCCESS (Status Code 201) - SHA: 550a63502cfcf135954f0112dbb3e94435ce7b2a
+INFO:2014-03-04 17:50:32,457 Requesting PUT txt for ubcbbm-vertnet:ubc-bbm-ctc-herps:reports/UBCBBM-ubc_bbm_ctc_herps_2014-03-04.txt
+INFO:2014-03-04 17:50:32,458 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:32,944 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-herps/contents/reports/UBCBBM-ubc_bbm_ctc_herps_2014-03-04.txt HTTP/1.1" 201 2002
+INFO:2014-03-04 17:50:32,945 SUCCESS (Status Code 201) - SHA: 1092b14ff1bd948d8a8812c90b1437d9e14cdc35
+INFO:2014-03-04 17:50:32,945 Requesting PUT html for ubcbbm-vertnet:ubc-bbm-ctc-herps:reports/UBCBBM-ubc_bbm_ctc_herps_2014-03-04.html
+INFO:2014-03-04 17:50:32,946 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:33,451 "PUT /repos/ubcbbm-vertnet/ubc-bbm-ctc-herps/contents/reports/UBCBBM-ubc_bbm_ctc_herps_2014-03-04.html HTTP/1.1" 201 2009
+INFO:2014-03-04 17:50:33,453 SUCCESS (Status Code 201) - SHA: d6bd842cc6f470afc2cafa871f1b98b0a940817b
+INFO:2014-03-04 17:50:34,240 Requesting PUT txt for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.txt
+INFO:2014-03-04 17:50:34,242 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:34,731 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.txt HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:34,733 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:34,733 Requesting PUT html for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.html
+INFO:2014-03-04 17:50:34,735 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:35,237 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.html HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:35,245 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:36,028 Requesting PUT txt for rom-vertnet:mammalogyspecimens:reports/ROM-mammalogyspecimens_2014-03-04.txt
+INFO:2014-03-04 17:50:36,032 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:36,582 "PUT /repos/rom-vertnet/mammalogyspecimens/contents/reports/ROM-mammalogyspecimens_2014-03-04.txt HTTP/1.1" 201 1969
+INFO:2014-03-04 17:50:36,584 SUCCESS (Status Code 201) - SHA: db816903299b496fc6019e4032279446ed071e36
+INFO:2014-03-04 17:50:36,585 Requesting PUT html for rom-vertnet:mammalogyspecimens:reports/ROM-mammalogyspecimens_2014-03-04.html
+INFO:2014-03-04 17:50:36,587 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:37,128 "PUT /repos/rom-vertnet/mammalogyspecimens/contents/reports/ROM-mammalogyspecimens_2014-03-04.html HTTP/1.1" 201 1975
+INFO:2014-03-04 17:50:37,133 SUCCESS (Status Code 201) - SHA: 5cb1529176a6f2f8be4ebd363f3aae9885bf8623
+INFO:2014-03-04 17:50:37,914 Requesting PUT txt for rom-vertnet:birdsnonpasserines:reports/ROM-birdsnonpasserines_2014-03-04.txt
+INFO:2014-03-04 17:50:37,918 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:38,467 "PUT /repos/rom-vertnet/birdsnonpasserines/contents/reports/ROM-birdsnonpasserines_2014-03-04.txt HTTP/1.1" 201 1969
+INFO:2014-03-04 17:50:38,469 SUCCESS (Status Code 201) - SHA: 7505974d6f9230a06946747a60f603616f903d09
+INFO:2014-03-04 17:50:38,470 Requesting PUT html for rom-vertnet:birdsnonpasserines:reports/ROM-birdsnonpasserines_2014-03-04.html
+INFO:2014-03-04 17:50:38,473 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:39,009 "PUT /repos/rom-vertnet/birdsnonpasserines/contents/reports/ROM-birdsnonpasserines_2014-03-04.html HTTP/1.1" 201 1975
+INFO:2014-03-04 17:50:39,012 SUCCESS (Status Code 201) - SHA: def8d2c1b8f3c163b62e327cae2595803675d9d1
+INFO:2014-03-04 17:50:39,797 Requesting PUT txt for mlz-vertnet:mlz-mamm:reports/MLZ-mlz_mamm_2014-03-04.txt
+INFO:2014-03-04 17:50:39,800 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:40,322 "PUT /repos/mlz-vertnet/mlz-mamm/contents/reports/MLZ-mlz_mamm_2014-03-04.txt HTTP/1.1" 201 1799
+INFO:2014-03-04 17:50:40,325 SUCCESS (Status Code 201) - SHA: 5409590e38dc5ad8c6f9092eff226a82778f16eb
+INFO:2014-03-04 17:50:40,325 Requesting PUT html for mlz-vertnet:mlz-mamm:reports/MLZ-mlz_mamm_2014-03-04.html
+INFO:2014-03-04 17:50:40,328 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:40,854 "PUT /repos/mlz-vertnet/mlz-mamm/contents/reports/MLZ-mlz_mamm_2014-03-04.html HTTP/1.1" 201 1805
+INFO:2014-03-04 17:50:40,856 SUCCESS (Status Code 201) - SHA: c1ef6b39ff0c376871e217e90b04607a52df7f9a
+INFO:2014-03-04 17:50:41,635 Requesting PUT txt for ttrs-vertnet:ttrs-mammals:reports/TTRS-ttrs_mammals_2014-03-04.txt
+INFO:2014-03-04 17:50:41,636 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:42,149 "PUT /repos/ttrs-vertnet/ttrs-mammals/contents/reports/TTRS-ttrs_mammals_2014-03-04.txt HTTP/1.1" 201 1884
+INFO:2014-03-04 17:50:42,150 SUCCESS (Status Code 201) - SHA: b8750813af5a3956589eee85b3f5d39121d77660
+INFO:2014-03-04 17:50:42,151 Requesting PUT html for ttrs-vertnet:ttrs-mammals:reports/TTRS-ttrs_mammals_2014-03-04.html
+INFO:2014-03-04 17:50:42,153 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:42,671 "PUT /repos/ttrs-vertnet/ttrs-mammals/contents/reports/TTRS-ttrs_mammals_2014-03-04.html HTTP/1.1" 201 1890
+INFO:2014-03-04 17:50:42,674 SUCCESS (Status Code 201) - SHA: 44cbca8e5390b17f956da088afcb05ebcbd81ce5
+INFO:2014-03-04 17:50:43,460 Requesting PUT txt for mvz-vertnet:mvz-bird:reports/MVZ-mvz_bird_2014-03-04.txt
+INFO:2014-03-04 17:50:43,462 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:44,019 "PUT /repos/mvz-vertnet/mvz-bird/contents/reports/MVZ-mvz_bird_2014-03-04.txt HTTP/1.1" 201 1799
+INFO:2014-03-04 17:50:44,020 SUCCESS (Status Code 201) - SHA: ef65726f4c10cd4783e5b7387d65e6f7e3d1e50d
+INFO:2014-03-04 17:50:44,020 Requesting PUT html for mvz-vertnet:mvz-bird:reports/MVZ-mvz_bird_2014-03-04.html
+INFO:2014-03-04 17:50:44,021 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:44,635 "PUT /repos/mvz-vertnet/mvz-bird/contents/reports/MVZ-mvz_bird_2014-03-04.html HTTP/1.1" 201 1805
+INFO:2014-03-04 17:50:44,642 SUCCESS (Status Code 201) - SHA: 195e23a66b36bf078d7411bc7c4efc007177cd71
+INFO:2014-03-04 17:50:45,542 Requesting PUT txt for mvz-vertnet:mvz-herp:reports/MVZ-mvz_herp_2014-03-04.txt
+INFO:2014-03-04 17:50:45,543 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:46,088 "PUT /repos/mvz-vertnet/mvz-herp/contents/reports/MVZ-mvz_herp_2014-03-04.txt HTTP/1.1" 201 1799
+INFO:2014-03-04 17:50:46,091 SUCCESS (Status Code 201) - SHA: d62b6db4fd15360e278ca003675bd027e577c559
+INFO:2014-03-04 17:50:46,091 Requesting PUT html for mvz-vertnet:mvz-herp:reports/MVZ-mvz_herp_2014-03-04.html
+INFO:2014-03-04 17:50:46,094 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:46,629 "PUT /repos/mvz-vertnet/mvz-herp/contents/reports/MVZ-mvz_herp_2014-03-04.html HTTP/1.1" 201 1805
+INFO:2014-03-04 17:50:46,632 SUCCESS (Status Code 201) - SHA: 6ef83d27684abd12ee151208c0515a143e9b5e0b
+INFO:2014-03-04 17:50:47,415 Requesting PUT txt for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.txt
+INFO:2014-03-04 17:50:47,418 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:47,895 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.txt HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:47,895 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:47,895 Requesting PUT html for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.html
+INFO:2014-03-04 17:50:47,896 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:48,396 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.html HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:48,400 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:49,184 Requesting PUT txt for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.txt
+INFO:2014-03-04 17:50:49,186 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:49,680 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.txt HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:49,681 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:49,681 Requesting PUT html for rom-vertnet:herpetology:reports/ROM-herpetology_2014-03-04.html
+INFO:2014-03-04 17:50:49,684 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-04 17:50:50,161 "PUT /repos/rom-vertnet/herpetology/contents/reports/ROM-herpetology_2014-03-04.html HTTP/1.1" 409 159
+ERROR:2014-03-04 17:50:50,167 Status Code 409. Message: refs/heads/master expected to be at 90c79a174e69594c99d9337b845721cfd0c278d6
+INFO:2014-03-04 17:50:50,171 Finished putting stats in github repos
+INFO:2014-03-04 17:50:50,172 GIT URLs stored in local file
+INFO:2014-03-04 17:50:50,173 elapsed 0:46:18.485189
+INFO:2014-03-04 17:50:50,173 done

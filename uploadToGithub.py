@@ -9,14 +9,15 @@ from datetime import datetime
 
 def apikey():
     """Return credentials file as a JSON object."""
-    keyname = 'api.key'
+    #keyname = 'api.key'
+    keyname = 'JOT.key'
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), keyname)
     key = open(path, "r").read().rstrip()
     return key
 
 def getOrg(icode):
     """Extract organization name for given institutioncode"""
-    if icode == 'MVZOBS':
+    if icode.upper() == 'MVZOBS':
         org = 'mvz-vertnet'
     else:
         query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20distinct%20github_orgname%20from%20resource_staging%20where%20icode=%27{0}%27'.format(icode)
@@ -58,7 +59,7 @@ def putReportInRepo(report, pub, org, repo):
     # Prepare variables
     report_content_txt = report['content_txt']
     report_content_html = report['content_html']
-    created_at = format(report['created_at'],'%Y-%m-%d')
+    created_at = report['created_at']
     path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ','_'), created_at)
     path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ','_'), created_at)
     message = report_content_txt.split("\n")[1] # Extract date from report
@@ -81,11 +82,11 @@ def putReportInRepo(report, pub, org, repo):
     response_content = json.loads(r.content)
     
     if status_code == 201:
-        logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
+        #logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_txt = response_content['content']['git_url']
         sha_txt = response_content['content']['sha']
     else:
-        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
+        logging.error('PUT {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path_txt, status_code, response_content['message']))
         git_url_txt = ''
         sha_txt = ''
     
@@ -96,11 +97,11 @@ def putReportInRepo(report, pub, org, repo):
     response_content = json.loads(r.content)
     
     if status_code == 201:
-        logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
+        #logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_html = response_content['content']['git_url']
         sha_html = response_content['content']['sha']
     else:
-        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
+        logging.error('PUT {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path_html, status_code, response_content['message']))
         git_url_html = ''
         sha_html = ''
     
@@ -116,6 +117,7 @@ def deleteFileInGithub(org, repo, path, sha):
     request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
     headers = {'User-Agent':'VertNet', 'Authorization': 'token {0}'.format(key)}
     
+    logging.info('Requesting DELETE for {0}:{1}:{2}'.format(org, repo, path))
     r = requests.delete(request_url, data=json_input, headers=headers)
     
     status_code = r.status_code
@@ -124,7 +126,7 @@ def deleteFileInGithub(org, repo, path, sha):
     if status_code == 200:
         logging.info('SUCCESS (Status Code {0}) - COMMIT SHA: {1}'.format(status_code, response_content['commit']['sha']))
     else:
-        logging.error('Status Code {0}. Message: {1}'.format(status_code, response_content['message']))
+        logging.error('DELETE {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path, status_code, response_content['message']))
     
     return
 
@@ -147,7 +149,7 @@ def putAll(reports, testing):
     pubs_to_check = reports.keys()
     retry = 0
     
-    while len(pubs_to_check) > 0 and retry < 3:
+    while len(pubs_to_check) > 0 and retry < 5:
         
         retry += 1
         error = False
@@ -168,14 +170,17 @@ def putAll(reports, testing):
                 
                 if sha_txt == '' and sha_html != '':
                     errors = True
-                    deleteFileInGithub(org, repo, path_txt, sha_txt)
+                    logging.warning('File {0} failed to upload, deleting {1}'.format(path_txt, path_html))
+                    deleteFileInGithub(org, repo, path_html, sha_html)
                     pubs_to_check.append(pub)
                 elif sha_html == '' and sha_txt != '':
                     errors = True
                     pubs_to_check.append(pub)
-                    deleteFileInGithub(org, repo, path_html, sha_html)
+                    logging.warning('File {0} failed to upload, deleting {1}'.format(path_html, path_txt))
+                    deleteFileInGithub(org, repo, path_txt, sha_txt)
                 elif sha_txt == '' and sha_html == '':
                     errors = True
+                    logging.warning('Both files {0} and {1} failed to upload, deleting'.format(path_txt, path_html))
                     pubs_to_check.append(pub)
                 else:
                     git_urls[pub] = {
@@ -188,12 +193,23 @@ def putAll(reports, testing):
                                       'sha_html':sha_html,
                                       'git_url_html':git_url_html
                                     }
+        #if error is False:
+        #    break
     logging.info('Finished putting stats in github repos')
     return git_urls
 
-def main(lapse = 'month', testing = False, beta = False):
-        
-    reports = gr.main(lapse = lapse, testing = testing)
+def main(lapse = 'month', testing = False, beta = False, local = False):
+    
+    if local is False:
+        reports = gr.main(lapse = lapse, testing = testing)
+    else:
+        reports = {}
+        reports_folder = 'reports2014_03_05'
+        files = os.listdir('./{0}/'.format(reports_folder))
+        for i in files:
+            d = json.loads(open('./{0}/{1}'.format(reports_folder, i),'r').read().rstrip())
+            pub = '{0}-{1}'.format(d['inst'], d['col'].replace('_','-'))
+            reports[pub] = d
     
     if beta is True:
         reports2 = {}

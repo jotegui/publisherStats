@@ -59,15 +59,25 @@ def createReport(pubs, pub, lapse, style = 'txt'):
             countries[country] = pubs[pub]['latlon'][i]
         else:
             countries[country] += pubs[pub]['latlon'][i]
+    or_countries = countries.keys()
+    or_countries.sort()
+    q_countries = []
+    for i in or_countries:
+        q_countries.append([i, countries[i]])
     
     query_dates = {}
     for i in pubs[pub]['created']:
-        this_date = datetime.strptime(i, '%Y-%m-%d')
+        this_date = i
         this_times = pubs[pub]['created'][i]
         if this_date not in query_dates:
             query_dates[this_date] = this_times
         else:
             query_dates[this_date] += this_times
+    or_query_dates = query_dates.keys()
+    or_query_dates.sort()
+    q_dates = []
+    for i in or_query_dates:
+        q_dates.append([i,query_dates[i]])
     
     queries = {}
     for i in pubs[pub]['query']:
@@ -89,8 +99,8 @@ def createReport(pubs, pub, lapse, style = 'txt'):
                          'total_records': total_records,
                          'unique_records': unique_records,
                          'len_countries': len(countries),
-                         'countries': countries,
-                         'query_dates': query_dates,
+                         'countries': q_countries,
+                         'query_dates': q_dates,
                          'queries': queries
                       }
     
@@ -103,16 +113,16 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     return report
 
 def writeReport(report, pub, created_at):
-    if not os.path.exists("./reports"):
-        os.makedirs("./reports")
-    file_name = "./reports/{0}_{1}.txt".format(pub.replace(" ","_"), created_at)
+    if not os.path.exists("./reports{0}".format(created_at)):
+        os.makedirs("./reports{0}".format(created_at))
+    file_name = "./reports{1}/{0}_{1}.txt".format(pub.replace(" ","_"), created_at)
     f = open(file_name, 'w')
     f.write(json.dumps(report))
     f.close()
     
     return
 
-def main(lapse = 'month', testing = False, local = False):
+def main(lapse = 'month', testing = False):
     
     pubs = es.main(lapse = lapse, testing = testing)
     
@@ -122,8 +132,7 @@ def main(lapse = 'month', testing = False, local = False):
     for pub in pubs:
         reports[pub]={'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content_txt':createReport(pubs, pub, lapse, style='txt'), 'content_html':createReport(pubs, pub, lapse, style='html')}
     
-    if local is True:
-        for pub in reports:
-            writeReport(reports[pub], pub, created_at)
+    for pub in reports:
+        writeReport(reports[pub], pub, created_at)
     
     return reports

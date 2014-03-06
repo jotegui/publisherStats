@@ -1,0 +1,111 @@
+INFO:2014-03-05 16:59:46,516 Initiated at 2014-03-05 16:59:46.516427
+INFO:2014-03-05 16:59:46,516 getting data from CartoDB
+INFO:2014-03-05 16:59:47,784 getting data from Google Cloud Storage
+INFO:2014-03-05 16:59:47,784 downloading and parsing VESP-871f1eac8f2444cfa5000239ac4006d4.txt
+INFO:2014-03-05 16:59:49,981 downloading and parsing vertnet_1945-1950-0cefc18a291d4dcf9727a09c02d4975c.txt
+INFO:2014-03-05 16:59:50,816 downloading and parsing resultadoss-d3367ba75089499c83b5bf54bed9935b.txt
+INFO:2014-03-05 16:59:52,810 downloading and parsing MyResults-6095de5fce714cf4a0ded594201f13b2.txt
+WARNING:2014-03-05 16:59:53,015 file MyResults-6095de5fce714cf4a0ded594201f13b2.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-05 16:59:53,015 downloading and parsing Osgoodomys_banderanus-0293c0080c9c4b788ba0b2fe6b97e922.txt
+INFO:2014-03-05 16:59:53,883 downloading and parsing Odocoileus_virginianus_Mexico-fdfc66208e2443f2a5fcccd85b4de91e.txt
+WARNING:2014-03-05 17:00:33,778 file Odocoileus_virginianus_Mexico-fdfc66208e2443f2a5fcccd85b4de91e.txt not found. It might be creating at the moment. Skipping.
+INFO:2014-03-05 17:00:33,778 downloading and parsing vertnet_1938-1940-911a31f37c904326b0ccbbf00a31cc03.txt
+INFO:2014-03-05 17:00:34,991 downloading and parsing Sciurus_niger_AND_preparations:skeletons-64e2acd0aeee46efbde9f9179f37a4f7.txt
+INFO:2014-03-05 17:00:35,784 downloading and parsing CAGO-b2d07564098d40dab5fb389b982a5cfa.txt
+INFO:2014-03-05 17:00:38,328 downloading and parsing resultados-ed0bd96eb31f45d3a45e09d72c1950cb.txt
+INFO:2014-03-05 17:00:40,068 generating stats
+INFO:2014-03-05 17:00:40,074 generating reports
+INFO:2014-03-05 17:01:36,762 Requesting PUT txt for jotegui:statReports:reports/MVZ-mvz_egg_2014_03_05.txt
+INFO:2014-03-05 17:01:36,770 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:37,265 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_egg_2014_03_05.txt HTTP/1.1" 201 1793
+INFO:2014-03-05 17:01:37,267 Requesting PUT html for jotegui:statReports:reports/MVZ-mvz_egg_2014_03_05.html
+INFO:2014-03-05 17:01:37,269 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:37,788 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_egg_2014_03_05.html HTTP/1.1" 201 1800
+INFO:2014-03-05 17:01:38,580 Requesting PUT txt for jotegui:statReports:reports/ROM-vertebratepalaeorecentskeletons_2014_03_05.txt
+INFO:2014-03-05 17:01:38,581 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:39,072 "PUT /repos/jotegui/statReports/contents/reports/ROM-vertebratepalaeorecentskeletons_2014_03_05.txt HTTP/1.1" 201 1937
+INFO:2014-03-05 17:01:39,073 Requesting PUT html for jotegui:statReports:reports/ROM-vertebratepalaeorecentskeletons_2014_03_05.html
+INFO:2014-03-05 17:01:39,074 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:39,558 "PUT /repos/jotegui/statReports/contents/reports/ROM-vertebratepalaeorecentskeletons_2014_03_05.html HTTP/1.1" 201 1944
+INFO:2014-03-05 17:01:40,345 Requesting PUT txt for jotegui:statReports:reports/UMMZ-ummz_birds_2014_03_05.txt
+INFO:2014-03-05 17:01:40,348 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:40,873 "PUT /repos/jotegui/statReports/contents/reports/UMMZ-ummz_birds_2014_03_05.txt HTTP/1.1" 201 1817
+INFO:2014-03-05 17:01:40,874 Requesting PUT html for jotegui:statReports:reports/UMMZ-ummz_birds_2014_03_05.html
+INFO:2014-03-05 17:01:40,876 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:41,418 "PUT /repos/jotegui/statReports/contents/reports/UMMZ-ummz_birds_2014_03_05.html HTTP/1.1" 201 1824
+INFO:2014-03-05 17:01:42,438 Requesting PUT txt for jotegui:statReports:reports/ROM-birdsnonpasserines_2014_03_05.txt
+INFO:2014-03-05 17:01:42,439 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:42,929 "PUT /repos/jotegui/statReports/contents/reports/ROM-birdsnonpasserines_2014_03_05.txt HTTP/1.1" 201 1859
+INFO:2014-03-05 17:01:42,930 Requesting PUT html for jotegui:statReports:reports/ROM-birdsnonpasserines_2014_03_05.html
+INFO:2014-03-05 17:01:42,931 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:43,469 "PUT /repos/jotegui/statReports/contents/reports/ROM-birdsnonpasserines_2014_03_05.html HTTP/1.1" 201 1866
+INFO:2014-03-05 17:01:44,277 Requesting PUT txt for jotegui:statReports:reports/DMNS-dmns_mamm_2014_03_05.txt
+INFO:2014-03-05 17:01:44,277 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:44,782 "PUT /repos/jotegui/statReports/contents/reports/DMNS-dmns_mamm_2014_03_05.txt HTTP/1.1" 201 1811
+INFO:2014-03-05 17:01:44,783 Requesting PUT html for jotegui:statReports:reports/DMNS-dmns_mamm_2014_03_05.html
+INFO:2014-03-05 17:01:44,784 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:45,282 "PUT /repos/jotegui/statReports/contents/reports/DMNS-dmns_mamm_2014_03_05.html HTTP/1.1" 201 1818
+INFO:2014-03-05 17:01:46,076 Requesting PUT txt for jotegui:statReports:reports/ROM-mammalogyspecimens_2014_03_05.txt
+INFO:2014-03-05 17:01:46,077 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:46,561 "PUT /repos/jotegui/statReports/contents/reports/ROM-mammalogyspecimens_2014_03_05.txt HTTP/1.1" 201 1859
+INFO:2014-03-05 17:01:46,562 Requesting PUT html for jotegui:statReports:reports/ROM-mammalogyspecimens_2014_03_05.html
+INFO:2014-03-05 17:01:46,563 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:47,072 "PUT /repos/jotegui/statReports/contents/reports/ROM-mammalogyspecimens_2014_03_05.html HTTP/1.1" 201 1866
+INFO:2014-03-05 17:01:47,857 Requesting PUT txt for jotegui:statReports:reports/UMMZ-ummz_mammals_2014_03_05.txt
+INFO:2014-03-05 17:01:47,861 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:48,365 "PUT /repos/jotegui/statReports/contents/reports/UMMZ-ummz_mammals_2014_03_05.txt HTTP/1.1" 201 1829
+INFO:2014-03-05 17:01:48,365 Requesting PUT html for jotegui:statReports:reports/UMMZ-ummz_mammals_2014_03_05.html
+INFO:2014-03-05 17:01:48,366 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:48,881 "PUT /repos/jotegui/statReports/contents/reports/UMMZ-ummz_mammals_2014_03_05.html HTTP/1.1" 201 1836
+INFO:2014-03-05 17:01:49,674 Requesting PUT txt for jotegui:statReports:reports/MVZ-mvz_mammal_2014_03_05.txt
+INFO:2014-03-05 17:01:49,678 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:50,161 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_mammal_2014_03_05.txt HTTP/1.1" 201 1812
+INFO:2014-03-05 17:01:50,164 Requesting PUT html for jotegui:statReports:reports/MVZ-mvz_mammal_2014_03_05.html
+INFO:2014-03-05 17:01:50,167 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:50,689 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_mammal_2014_03_05.html HTTP/1.1" 201 1818
+INFO:2014-03-05 17:01:51,526 Requesting PUT txt for jotegui:statReports:reports/CUML-cuml_sound_film_2014_03_05.txt
+INFO:2014-03-05 17:01:51,527 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:52,030 "PUT /repos/jotegui/statReports/contents/reports/CUML-cuml_sound_film_2014_03_05.txt HTTP/1.1" 201 1847
+INFO:2014-03-05 17:01:52,031 Requesting PUT html for jotegui:statReports:reports/CUML-cuml_sound_film_2014_03_05.html
+INFO:2014-03-05 17:01:52,032 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:52,543 "PUT /repos/jotegui/statReports/contents/reports/CUML-cuml_sound_film_2014_03_05.html HTTP/1.1" 201 1854
+INFO:2014-03-05 17:01:53,340 Requesting PUT txt for jotegui:statReports:reports/DMNH-dmnh_birds_2014_03_05.txt
+INFO:2014-03-05 17:01:53,343 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:53,851 "PUT /repos/jotegui/statReports/contents/reports/DMNH-dmnh_birds_2014_03_05.txt HTTP/1.1" 201 1817
+INFO:2014-03-05 17:01:53,852 Requesting PUT html for jotegui:statReports:reports/DMNH-dmnh_birds_2014_03_05.html
+INFO:2014-03-05 17:01:53,854 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:54,344 "PUT /repos/jotegui/statReports/contents/reports/DMNH-dmnh_birds_2014_03_05.html HTTP/1.1" 201 1824
+INFO:2014-03-05 17:01:55,135 Requesting PUT txt for jotegui:statReports:reports/MLZ-mlz_mamm_2014_03_05.txt
+INFO:2014-03-05 17:01:55,137 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:55,656 "PUT /repos/jotegui/statReports/contents/reports/MLZ-mlz_mamm_2014_03_05.txt HTTP/1.1" 201 1799
+INFO:2014-03-05 17:01:55,658 Requesting PUT html for jotegui:statReports:reports/MLZ-mlz_mamm_2014_03_05.html
+INFO:2014-03-05 17:01:55,660 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:56,180 "PUT /repos/jotegui/statReports/contents/reports/MLZ-mlz_mamm_2014_03_05.html HTTP/1.1" 201 1806
+INFO:2014-03-05 17:01:56,971 Requesting PUT txt for jotegui:statReports:reports/MVZ-mvz_bird_2014_03_05.txt
+INFO:2014-03-05 17:01:56,973 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:57,493 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_bird_2014_03_05.txt HTTP/1.1" 201 1800
+INFO:2014-03-05 17:01:57,495 Requesting PUT html for jotegui:statReports:reports/MVZ-mvz_bird_2014_03_05.html
+INFO:2014-03-05 17:01:57,497 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:58,015 "PUT /repos/jotegui/statReports/contents/reports/MVZ-mvz_bird_2014_03_05.html HTTP/1.1" 201 1806
+INFO:2014-03-05 17:01:58,824 Requesting PUT txt for jotegui:statReports:reports/ROM-birdspasserines_2014_03_05.txt
+INFO:2014-03-05 17:01:58,826 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:59,337 "PUT /repos/jotegui/statReports/contents/reports/ROM-birdspasserines_2014_03_05.txt HTTP/1.1" 201 1841
+INFO:2014-03-05 17:01:59,339 Requesting PUT html for jotegui:statReports:reports/ROM-birdspasserines_2014_03_05.html
+INFO:2014-03-05 17:01:59,342 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:01:59,984 "PUT /repos/jotegui/statReports/contents/reports/ROM-birdspasserines_2014_03_05.html HTTP/1.1" 201 1848
+INFO:2014-03-05 17:02:00,774 Requesting PUT txt for jotegui:statReports:reports/UBCBBM-ubc_bbm_ctc_mammals_2014_03_05.txt
+INFO:2014-03-05 17:02:00,778 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:02:01,279 "PUT /repos/jotegui/statReports/contents/reports/UBCBBM-ubc_bbm_ctc_mammals_2014_03_05.txt HTTP/1.1" 201 1883
+INFO:2014-03-05 17:02:01,280 Requesting PUT html for jotegui:statReports:reports/UBCBBM-ubc_bbm_ctc_mammals_2014_03_05.html
+INFO:2014-03-05 17:02:01,281 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:02:01,871 "PUT /repos/jotegui/statReports/contents/reports/UBCBBM-ubc_bbm_ctc_mammals_2014_03_05.html HTTP/1.1" 201 1890
+INFO:2014-03-05 17:02:02,682 Requesting PUT txt for jotegui:statReports:reports/WFVZ-wfvz_birds_2014_03_05.txt
+INFO:2014-03-05 17:02:02,685 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:02:03,195 "PUT /repos/jotegui/statReports/contents/reports/WFVZ-wfvz_birds_2014_03_05.txt HTTP/1.1" 201 1817
+INFO:2014-03-05 17:02:03,196 Requesting PUT html for jotegui:statReports:reports/WFVZ-wfvz_birds_2014_03_05.html
+INFO:2014-03-05 17:02:03,198 Starting new HTTPS connection (1): api.github.com
+DEBUG:2014-03-05 17:02:03,696 "PUT /repos/jotegui/statReports/contents/reports/WFVZ-wfvz_birds_2014_03_05.html HTTP/1.1" 201 1824
+INFO:2014-03-05 17:02:03,712 Finished putting stats in github repos
+INFO:2014-03-05 17:02:03,714 GIT URLs stored in local file
+INFO:2014-03-05 17:02:03,714 elapsed 0:02:17.198445
+INFO:2014-03-05 17:02:03,714 done

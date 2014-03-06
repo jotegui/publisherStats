@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import generateReports as gr
+import uploadToGithub as up
 from datetime import datetime
 
 import logging
@@ -9,7 +9,7 @@ logging.basicConfig(filename='local.log', format='%(levelname)s:%(asctime)s %(me
 ini = datetime.now()
 logging.info('Initiated at {0}'.format(ini))
 
-gr.main(lapse = 'month', testing = False, local = True)
+up.main(lapse = 'month', testing = True, beta = True, local = False)
 
 end = datetime.now()
 dif = end - ini

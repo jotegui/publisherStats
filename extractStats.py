@@ -6,19 +6,8 @@ from datetime import datetime
 
 # Global variables
 base_url = 'https://www.googleapis.com/storage/v1beta2'
-data_bucket = 'vn-staging'
-downloads_bucket = 'vn-downloads'
-fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights", "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode", "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld", "datageneralizations", "dynamicproperties", "occurrenceid", "catalognumber", "occurrenceremarks", "recordnumber", "recordedby", "individualid", "individualcount", "sex", "lifestage", "reproductivecondition", "behavior", "establishmentmeans", "occurrencestatus", "preparations", "disposition", "othercatalognumbers", "previousidentifications", "associatedmedia", "associatedreferences", "associatedoccurrences", "associatedsequences", "associatedtaxa", "eventid", "samplingprotocol", "samplingeffort", "eventdate", "eventtime", "startdayofyear", "enddayofyear", "year", "month", "day", "verbatimeventdate", "habitat", "fieldnumber", "fieldnotes", "eventremarks", "locationid", "highergeographyid", "highergeography", "continent", "waterbody", "islandgroup", "island", "country", "countrycode", "stateprovince", "county", "municipality", "locality", "verbatimlocality", "verbatimelevation", "minimumelevationinmeters", "maximumelevationinmeters", "verbatimdepth", "minimumdepthinmeters", "maximumdepthinmeters", "minimumdistanceabovesurfaceinmeters", "maximumdistanceabovesurfaceinmeters", "locationaccordingto", "locationremarks", "verbatimcoordinates", "verbatimlatitude", "verbatimlongitude", "verbatimcoordinatesystem", "verbatimsrs", "decimallatitude", "decimallongitude", "geodeticdatum", "coordinateuncertaintyinmeters", "coordinateprecision", "pointradiusspatialfit", "footprintwkt", "footprintsrs", "footprintspatialfit", "georeferencedby", "georeferenceddate", "georeferenceprotocol", "georeferencesources", "georeferenceverificationstatus", "georeferenceremarks", "geologicalcontextid", "earliesteonorlowesteonothem", "latesteonorhighesteonothem", "earliesteraorlowesterathem", "latesteraorhighesterathem", "earliestperiodorlowestsystem", "latestperiodorhighestsystem", "earliestepochorlowestseries", "latestepochorhighestseries", "earliestageorloweststage", "latestageorhigheststage", "lowestbiostratigraphiczone", "highestbiostratigraphiczone", "lithostratigraphicterms", "group", "formation", "member", "bed", "identificationid", "identifiedby", "dateidentified", "identificationreferences", "identificationverificationstatus", "identificationremarks", "identificationqualifier", "typestatus", "taxonid", "scientificnameid", "acceptednameusageid", "parentnameusageid", "originalnameusageid", "nameaccordingtoid", "namepublishedinid", "taxonconceptid", "scientificname", "acceptednameusage", "parentnameusage", "originalnameusage", "nameaccordingto", "namepublishedin", "namepublishedinyear", "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus", "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship", "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
-# Extract list of files in bucket
-def getObjectList(bucket_name):
-    url = '/'.join([base_url, 'b', bucket_name, 'o'])
-    url_optim = '?'.join([url, urlencode({'fields':'items(name)'})])
-    raw = json.loads(urllib2.urlopen(url_optim).read())
-    l = []
-    for i in raw['items']:
-        l.append(i['name'])
-    return l
+fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights", "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode", "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld", "datageneralizations", "dynamicproperties", "occurrenceid", "catalognumber", "occurrenceremarks", "recordnumber", "recordedby", "individualid", "individualcount", "sex", "lifestage", "reproductivecondition", "behavior", "establishmentmeans", "occurrencestatus", "preparations", "disposition", "othercatalognumbers", "previousidentifications", "associatedmedia", "associatedreferences", "associatedoccurrences", "associatedsequences", "associatedtaxa", "eventid", "samplingprotocol", "samplingeffort", "eventdate", "eventtime", "startdayofyear", "enddayofyear", "year", "month", "day", "verbatimeventdate", "habitat", "fieldnumber", "fieldnotes", "eventremarks", "locationid", "highergeographyid", "highergeography", "continent", "waterbody", "islandgroup", "island", "country", "countrycode", "stateprovince", "county", "municipality", "locality", "verbatimlocality", "verbatimelevation", "minimumelevationinmeters", "maximumelevationinmeters", "verbatimdepth", "minimumdepthinmeters", "maximumdepthinmeters", "minimumdistanceabovesurfaceinmeters", "maximumdistanceabovesurfaceinmeters", "locationaccordingto", "locationremarks", "verbatimcoordinates", "verbatimlatitude", "verbatimlongitude", "verbatimcoordinatesystem", "verbatimsrs", "decimallatitude", "decimallongitude", "geodeticdatum", "coordinateuncertaintyinmeters", "coordinateprecision", "pointradiusspatialfit", "footprintwkt", "footprintsrs", "footprintspatialfit", "georeferencedby", "georeferenceddate", "georeferenceprotocol", "georeferencesources", "georeferenceverificationstatus", "georeferenceremarks", "geologicalcontextid", "earliesteonorlowesteonothem", "latesteonorhighesteonothem", "earliesteraorlowesterathem", "latesteraorhighesterathem", "earliestperiodorlowestsystem", "latestperiodorhighestsystem", "earliestepochorlowestseries", "latestepochorhighestseries", "earliestageorloweststage", "latestageorhigheststage", "lowestbiostratigraphiczone", "highestbiostratigraphiczone", "lithostratigraphicterms", "group", "formation", "member", "bed", "identificationid", "identifiedby", "dateidentified", "identificationreferences", "identificationverificationstatus", "identificationremarks", "identificationqualifier", "typestatus", "taxonid", "scientificnameid", "acceptednameusageid", "parentnameusageid", "originalnameusageid", "nameaccordingtoid", "namepublishedinid", "taxonconceptid", "scientificname", "acceptednameusage", "parentnameusage", "originalnameusage", "nameaccordingto", "namepublishedin", "namepublishedinyear", "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus", "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship", "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
 # Get raw content of object in bucket and parse to record-type object
 def getObject(bucket_name, object_name):
@@ -96,7 +85,8 @@ def parseDownloadName(download):
 # Extract institutioncodes and counts for download files in GCS
 def getCountsForPublishers(file_list):
     pubs = {}
-    abs_tot_recs = 0
+    
+    tot_recs = 0 # Total downloaded records in the whole network
     
     for f in file_list:
         b, o = parseDownloadName(f)
@@ -111,12 +101,9 @@ def getCountsForPublishers(file_list):
         if d[0][0] == fieldList[0]:
             d = d[1:]
         
-        tot_recs = 0
-        
         for rec in d:
             
             tot_recs += 1
-            abs_tot_recs += 1
             
             # Option 1 - store by resource
             this_ins = rec[fieldList.index('institutioncode')]
@@ -130,41 +117,51 @@ def getCountsForPublishers(file_list):
             #if this_pub == "Royal Ontario Museum: ROM":
             #    this_pub = "ROM"
             
+            # Build UUIDs to calculate unique_records
             this_icode = rec[fieldList.index('institutioncode')]
             this_ccode = rec[fieldList.index('collectioncode')]
             this_cnumb = rec[fieldList.index('catalognumber')]
             this_uuid = '{0}/{1}/{2}'.format(this_icode, this_ccode, this_cnumb)
             
             if this_pub not in pubs:
+                # Initialize stats for resource if resource does not exist yet
                 pubs[this_pub] = {
                                     'inst':this_ins,
                                     'col':this_col,
-                                    'download_files':[o],
+                                    'download_files':[o], # Array of individual files
                                     'records_downloaded':1,
                                     'unique_records':[this_uuid],
                                     'latlon':{},
                                     'query':{},
                                     'created':{},
                                     'downloads_in_period':len(file_list),
-                                    'this_contrib': 1,
-                                    'avg_contrib': []
+                                    'this_contrib_count': 1,
+                                    'this_contrib': []
                                   }
             else:
+                # If resource exists, add 1 to the record count
                 pubs[this_pub]['records_downloaded'] += 1
                 
+                # If new download file, append file name and restart this_contrib_count
                 if o not in pubs[this_pub]['download_files']:
                     pubs[this_pub]['download_files'].append(o)
-                    pubs[this_pub]['this_contrib'] = 1
+                    pubs[this_pub]['this_contrib_count'] = 1
+                # If same download file, just add 1 to this_contrib_count
                 else:
-                    pubs[this_pub]['this_contrib'] += 1
+                    pubs[this_pub]['this_contrib_count'] += 1
                 
+                # If UUID not in list of UUIDs, add it
                 if this_uuid not in pubs[this_pub]['unique_records']:
                     pubs[this_pub]['unique_records'].append(this_uuid)
         
+        # Once all records from file have been parsed, store this_contrib_count in this_contrib
         for pub in pubs:
-            pubs[pub]['avg_contrib'].append(pubs[pub]['this_contrib']*100.0/tot_recs)
+            pubs[pub]['this_contrib'].append(pubs[pub]['this_contrib_count'])
+    
+    # Once all files have been parsed, store tot_recs
     for pub in pubs:
-        pubs[pub]['abs_tot_recs'] = abs_tot_recs
+        pubs[pub]['tot_recs'] = tot_recs
+    
     return pubs
 
 # Match GCS files with CDB rows
@@ -176,6 +173,7 @@ def getCDBStatsForPublishers(pubs, downloads_CDB):
                 latlon = (dl['lat'],dl['lon'])
                 created = dl['created_at'].split('T')[0] # remove the time part
                 query = dl['query']
+                idx = pubs[pub]['download_files'].index(dl['download'].split("/")[3])
                 
                 if latlon not in pubs[pub]['latlon']:
                     pubs[pub]['latlon'][latlon] = 1
@@ -188,9 +186,9 @@ def getCDBStatsForPublishers(pubs, downloads_CDB):
                     pubs[pub]['created'][created] += 1
                 
                 if query not in pubs[pub]['query']:
-                    pubs[pub]['query'][query] = 1
+                    pubs[pub]['query'][query] = [1,pubs[pub]['this_contrib'][idx]]
                 else:
-                    pubs[pub]['query'][query] += 1
+                    pubs[pub]['query'][query][0] += 1
     return pubs
 
 # Main function

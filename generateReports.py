@@ -46,7 +46,7 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     total_downloads = pubs[pub]['downloads_in_period']
     
     records = pubs[pub]['records_downloaded']
-    total_records = pubs[pub]['abs_tot_recs']
+    total_records = pubs[pub]['tot_recs']
     unique_records = len(pubs[pub]['unique_records'])
     
     countries = {}
@@ -82,11 +82,13 @@ def createReport(pubs, pub, lapse, style = 'txt'):
     queries = {}
     for i in pubs[pub]['query']:
         this_query = i
-        this_times = pubs[pub]['query'][i]
+        this_values = pubs[pub]['query'][i]
+        this_times = this_values[0]
+        this_records = this_values[1]
         if this_query not in queries:
-            queries[this_query] = this_times
+            queries[this_query] = [this_times, this_records]
         else:
-            queries[this_query] += this_times
+            queries[this_query][0] += this_times
     
     template_values = {
                          'icode': icode,

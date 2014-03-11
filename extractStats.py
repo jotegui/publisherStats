@@ -111,6 +111,7 @@ def getCountsForPublishers(file_list):
                 this_ins = "ROM"
             this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
             this_pub = '{0}-{1}'.format(this_ins, this_col)
+            #this_url = rec[fieldList.index('datasource_and_rights')]
             
             # Option 2 - store by institution
             #this_pub = rec[fieldList.index('institutioncode')]
@@ -126,6 +127,7 @@ def getCountsForPublishers(file_list):
             if this_pub not in pubs:
                 # Initialize stats for resource if resource does not exist yet
                 pubs[this_pub] = {
+                                    #'url':this_url,
                                     'inst':this_ins,
                                     'col':this_col,
                                     'download_files':[o], # Array of individual files

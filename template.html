@@ -3,8 +3,8 @@
 <html><head>
 <title>Monthly VertNet Data Use Report</title>
 </head><body>
-<h2>Report for Institution Code {{icode}}, Resource {{resname}}</h2>
-<i>Usage stats {{time_lapse}}, generated on {{generated}}</i>
+<h2>Report for Institution Code {{inst}}, Resource {{resname}}</h2>
+<i>Usage stats for {{time_lapse}}, generated on {{generated}}</i>
 <p>
 
 <div id="general_counts">
@@ -40,6 +40,18 @@ List of queries that retrieved data from the resource:
 {% endfor %}
 </table>
 </div><p>
+
+<div id="year">
+<h3>Cumulative values for this year</h3>
+Number of download events that retrieved data from the resource: {{year_downloads}}<br>
+Total number of records downloaded: {{year_records}}<br>
+</div></p>
+
+<div id="history">
+<h3>Cumulative values since the beginning</h3>
+Number of download events that retrieved data from the resource: {{history_downloads}}<br>
+Total number of records downloaded: {{history_records}}<br>
+</div></p>
 
 End of report.
 <p><p>

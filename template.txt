@@ -1,5 +1,5 @@
-{% autoescape true %}Report for Institution Code {{icode}}, Resource {{resname}}
-Usage stats {{time_lapse}}, generated on {{generated}}
+{% autoescape true %}Report for Institution Code {{inst}}, Resource {{resname}}
+Usage stats for {{time_lapse}}, generated on {{generated}}
 
 Number of download events that retrieved data from the resource: {{downloads}} (out of {{total_downloads}} download events in this period)
 Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)
@@ -14,6 +14,17 @@ Dates of the queries that retrieved data from the resource: {% for query_date in
 
 List of queries that retrieved data from the resource: {% for query in queries %}
 	Query: "{{query}}" ; Times: {{queries[query][0]}} ; Records each time: {{queries[query][1]}} {% endfor %}
+
+Cumulative values for this year:
+
+Number of download events that retrieved data from the resource: {{year_downloads}}
+Total number of records downloaded: {{year_records}}
+
+Cumulative values since the beginning:
+
+Number of download events that retrieved data from the resource: {{history_downloads}}
+Total number of records downloaded: {{history_records}}
+
 
 End of report.
 

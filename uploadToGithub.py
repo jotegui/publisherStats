@@ -15,12 +15,12 @@ def apikey():
     key = open(path, "r").read().rstrip()
     return key
 
-def getOrg(icode):
+def getOrg(inst):
     """Extract organization name for given institutioncode"""
-    if icode.upper() == 'MVZOBS':
+    if inst.upper() == 'MVZOBS':
         org = 'mvz-vertnet'
     else:
-        query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20distinct%20github_orgname%20from%20resource_staging%20where%20icode=%27{0}%27'.format(icode)
+        query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20distinct%20github_orgname%20from%20resource_staging%20where%20icode=%27{0}%27'.format(inst)
         org = json.loads(urllib2.urlopen(query_url).read())['rows'][0]['github_orgname']
     return org
     
@@ -201,7 +201,7 @@ def putAll(reports, testing):
 def main(lapse = 'month', testing = False, beta = False, local = False):
     
     if local is False:
-        reports = gr.main(lapse = lapse, testing = testing)
+        reports, models = gr.main(lapse = lapse, testing = testing)
     else:
         reports = {}
         reports_folder = 'reports2014_03_05'
@@ -213,13 +213,18 @@ def main(lapse = 'month', testing = False, beta = False, local = False):
     
     if beta is True:
         reports2 = {}
+        models2 = {}
         testingInsts = open('./TestingInsts.txt', 'r').read().rstrip().split(' ')
         for pub in reports:
-            icode = reports[pub]['inst']
-            if icode in testingInsts:
+            inst = reports[pub]['inst']
+            if inst in testingInsts:
                 reports2[pub] = reports[pub]
+                models2[pub] = models[pub]
     else:
         reports2 = reports
+        models2 = models
+    
+    
     
     git_urls = putAll(reports = reports2, testing = testing)
     

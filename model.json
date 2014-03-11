@@ -10,7 +10,26 @@
         "records": 40631,
         "records_period": 1274846,
         "records_unique": 29437,
-        "countries_list": ["United States", "Canada", "Spain", "Mexico"]
+        "countries_list": ["United States", "Canada", "Spain", "Mexico"],
+        "countries": [
+            {"country": "United States", "times": 47},
+            {"country": "Canada", "times": 4},
+            {"country": "Spain", "times": 3},
+            {"country": "Mexico", "times": 3},
+        ],
+        
+        "dates": [
+            {"date":"2014-02-19", "times":5},
+            {"date":"2014-02-24", "times":4},
+            {"date":"2014-02-23", "times":6}
+        ],
+        
+        "queries": [
+            {"query":"mammal* ohio", "times":1, "records":40000},
+            {"query":"\"Sciurus niger\" AND preparations:skeleton type:specimen", "times":1, "records":600},
+            {"query":"mammalia mus eventdate > 1937-1-1 eventdate < 1941-1-1", "times":1, "records":30},
+            {"query":"tamiasciurus hudsonicus distance(location,geopoint(42.22200908140189,-75.596923828125))<409104.35159555933", "times":1, "records":1}
+        ]
     },
     
     "year": {
@@ -18,7 +37,26 @@
         "dowloads_period": 131,
         "records": 40631,
         "records_period": 1274846,
-        "countries_list": ["United States", "Canada", "Spain", "Mexico"]
+        "countries_list": ["United States", "Canada", "Spain", "Mexico"],
+        "countries": [
+            {"country": "United States", "times": 47},
+            {"country": "Canada", "times": 4},
+            {"country": "Spain", "times": 3},
+            {"country": "Mexico", "times": 3},
+        ],
+        
+        "dates": [
+            {"date":"2014-02-19", "times":5},
+            {"date":"2014-02-24", "times":4},
+            {"date":"2014-02-23", "times":6}
+        ],
+        
+        "queries": [
+            {"query":"mammal* ohio", "times":1, "records":40000},
+            {"query":"\"Sciurus niger\" AND preparations:skeleton type:specimen", "times":1, "records":600},
+            {"query":"mammalia mus eventdate > 1937-1-1 eventdate < 1941-1-1", "times":1, "records":30},
+            {"query":"tamiasciurus hudsonicus distance(location,geopoint(42.22200908140189,-75.596923828125))<409104.35159555933", "times":1, "records":1}
+        ]
     },
     
     "history": {
@@ -26,27 +64,26 @@
         "dowloads_period": 131,
         "records": 40631,
         "records_period": 1274846,
-        "countries_list": ["United States", "Canada", "Spain", "Mexico"]
-    },
-    
-    "countries": [
-        {"country": "United States", "times": 47},
-        {"country": "Canada", "times": 4},
-        {"country": "Spain", "times": 3},
-        {"country": "Mexico", "times": 3},
-    ],
-    
-    "dates": [
-        {"date":"2014-02-19", "times":5},
-        {"date":"2014-02-24", "times":4},
-        {"date":"2014-02-23", "times":6}
-    ],
-    
-    "queries": [
-        {"query":"mammal* ohio", "times":1, "records":40000},
-        {"query":"\"Sciurus niger\" AND preparations:skeleton type:specimen", "times":1, "records":600},
-        {"query":"mammalia mus eventdate > 1937-1-1 eventdate < 1941-1-1", "times":1, "records":30},
-        {"query":"tamiasciurus hudsonicus distance(location,geopoint(42.22200908140189,-75.596923828125))<409104.35159555933", "times":1, "records":1}
-    ]
+        "countries_list": ["United States", "Canada", "Spain", "Mexico"],
+        "countries": [
+            {"country": "United States", "times": 47},
+            {"country": "Canada", "times": 4},
+            {"country": "Spain", "times": 3},
+            {"country": "Mexico", "times": 3},
+        ],
+        
+        "dates": [
+            {"date":"2014-02-19", "times":5},
+            {"date":"2014-02-24", "times":4},
+            {"date":"2014-02-23", "times":6}
+        ],
+        
+        "queries": [
+            {"query":"mammal* ohio", "times":1, "records":40000},
+            {"query":"\"Sciurus niger\" AND preparations:skeleton type:specimen", "times":1, "records":600},
+            {"query":"mammalia mus eventdate > 1937-1-1 eventdate < 1941-1-1", "times":1, "records":30},
+            {"query":"tamiasciurus hudsonicus distance(location,geopoint(42.22200908140189,-75.596923828125))<409104.35159555933", "times":1, "records":1}
+        ]
+    }
     
 }

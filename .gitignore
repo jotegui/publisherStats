@@ -5,8 +5,11 @@
 *.pyc
 
 # Logging and output files
-*.log.*
+*.log*
 *.out
 
 # Locally stored reports folder
 reports*/
+
+# Other stuff
+.idea/

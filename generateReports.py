@@ -31,6 +31,7 @@ def getTimeLapse(lapse = 'month'):
 def buildModel(pubs, pub, lapse):
     
     model = {
+        "url": "",
         "inst": "",
         "col": "",
         "github_org": "",
@@ -50,8 +51,10 @@ def buildModel(pubs, pub, lapse):
         }
     }
     
+    url = pubs[pub]['url']
     inst = pubs[pub]['inst']
     col = pubs[pub]['col']
+    model['url'] = url
     model['inst'] = inst
     model['col'] = col
     
@@ -243,7 +246,7 @@ def main(lapse = 'month', testing = False):
         report_txt, report_html = createReport(model)
         
         models[pub] = model
-        reports[pub]={'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content_txt':report_txt, 'content_html':report_html}
+        reports[pub]={'url':pubs[pub]['url'], 'inst':pubs[pub]['inst'], 'col':pubs[pub]['col'], 'created_at':created_at, 'content_txt':report_txt, 'content_html':report_html}
     
     #for pub in reports:
     #    writeReport(reports[pub], pub, created_at)

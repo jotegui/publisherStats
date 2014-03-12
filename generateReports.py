@@ -6,8 +6,9 @@ import logging
 from datetime import datetime
 import extractStats as es
 
-# Jinja2 is html-oriented, so characters such as < or > appear html-encoded. This function decodes he string when the output is not html, but txt
 def unescape(s):
+    """Jinja2 is html-oriented, so characters such as < or > appear html-encoded.
+This function decodes he string when the output is not html, but txt."""
     s = s.replace("&lt;", "<")
     s = s.replace("&gt;", ">")
     s = s.replace("&#34;", "\"")

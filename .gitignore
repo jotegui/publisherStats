@@ -11,5 +11,10 @@
 # Locally stored reports folder
 reports*/
 
+# All JSON files
+*.json
+# except the model
+!model.json
+
 # Other stuff
 .idea/

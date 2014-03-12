@@ -44,6 +44,7 @@ def getObject(bucket_name, object_name):
             line1.append("")
             d.append(line1)
             line2 = lines[pos+1].split("\t")[(160-len(splitline)):-1]+lines[pos+2].split("\t")
+            d.append(line2)
             pos += 2
 
         pos += 1

@@ -6,6 +6,7 @@ import logging
 import requests
 import generateReports as gr
 from datetime import datetime
+from generateReports import getTimeLapse
 
 
 def apikey():
@@ -55,8 +56,8 @@ def sanityCheck(url):
 #    return repo_list
 
 def getOrgRepoByURL(url):
-    url = sanityCheck(url)
     """Extract github organization and repository by datasource url"""
+    url = sanityCheck(url)
     query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20github_orgname,%20github_reponame%20from%20resource_staging%20where%20url=%27{0}%27'.format(
         url)
     try:
@@ -168,7 +169,6 @@ def deleteFileInGithub(org, repo, path, sha):
     else:
         logging.error('DELETE {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path, status_code,
                                                                                         response_content['message']))
-
     return
 
 
@@ -203,7 +203,6 @@ def putAll(reports, testing):
                 pubs_to_check.pop(pubs_to_check.index(pub))
                 report = reports[pub]
                 org, repo = getOrgRepoByURL(report['url'])
-                print report['url'], org, repo
 
                 # Testing values
                 if testing is True:
@@ -244,6 +243,91 @@ def putAll(reports, testing):
     return git_urls
 
 
+def createIssue(git_url, testing=False):
+    org = git_url['org']
+    repo = git_url['repo']
+
+    created = getTimeLapse()
+
+    link_txt = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_txt'])
+    link_html = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_html'])
+    link_pretty_html = 'http://htmlpreview.github.io/?' + link_html
+
+    title = 'Monthly VertNet data use report {0}, resource {1}'.format(created, repo)
+    body = ("Your monthly VertNet data use report is ready!\n"
+            "\n"
+            "You can see and download the report in GitHub as a raw text file ({0}) or as a raw HTML file ({1}), or you can see the rendered HTML version of the report through this link: {2}.\n"
+            "\n"
+            "To download the report, please log in to your GitHub account and view either the text or html document linked above.  Next, click the \"Raw\" button to save the page.  You can also right-click on \"Raw\" and use the \"Save link as...\" option. The txt file can be opened with any text editor. To correctly view the HTML file, you will need to open it with a web browser.\n"
+            "\n"
+            "Please post any comments or questions to http://www.vertnet.org/feedback/contact.html.\n"
+            "\n"
+            "Thank you for being a part of VertNet."
+    ).format(link_txt, link_html, link_pretty_html)
+    labels = ['report']
+
+    if testing is True:
+        org = 'jotegui'
+        repo = 'statReports'
+
+    key = apikey()
+    headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
+    url = 'https://api.github.com/repos/{0}/{1}/issues'.format(org, repo)
+    data = json.dumps({'title': title, 'body': body, 'labels': labels})
+    r = requests.post(url, headers=headers, data=data)
+
+    status_code = r.status_code
+    response_content = json.loads(r.content)
+
+    if status_code == 201:
+        logging.info('SUCCESS - Issue created for resource {0}'.format(repo))
+    else:
+        logging.error('ISSUE CREATION FAILED for resource {0}'.format(repo))
+
+    return r
+
+
+def createIssues(git_urls, testing=False):
+    issues = {}
+    for git_url in git_urls:
+        r = createIssue(git_urls[git_url], testing)
+        issues[git_url] = json.loads(r.content)
+
+    return issues
+
+
+def storeModels(models, testing=False):
+
+    if testing is True:
+        org = 'jotegui'
+        repo = 'statReports'
+    else:
+        org = 'jotegui'
+        repo = 'statReports'
+
+    for model in models:
+        created_at = models[model]['created_at'].replace('/', '_')
+        message = 'Putting JSON data on {0} for {1}, {2}'.format(models[model]['report_month'], models[model]['github_org'], models[model]['github_repo'])
+        commiter = {'name': 'VertNet', 'email': 'vertnetinfo@vertnet.org'}
+        content = base64.b64encode(json.dumps(models[model]))
+        path = 'data/{0}_{1}.json'.format(model.replace(' ', '_'), created_at)
+
+        key = apikey()
+        headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
+        request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
+        json_input = json.dumps({"message": message, "commiter": commiter, "content": content})
+
+        r = requests.put(request_url, data=json_input, headers=headers)
+        status_code = r.status_code
+        response_content = json.loads(r.content)
+
+        if status_code == 201:
+            logging.info('SUCCESS - Data model stored for resource {0}'.format(repo))
+        else:
+            logging.error('DATA MODEL CREATION FAILED for resource {0}'.format(repo))
+    return
+
+
 def main(lapse='month', testing=False, beta=False, local=False):
     if local is False:
         reports, models = gr.main(lapse=lapse, testing=testing)
@@ -269,15 +353,32 @@ def main(lapse='month', testing=False, beta=False, local=False):
         reports2 = reports
         models2 = models
 
-    git_urls = putAll(reports=reports2, testing=testing)
+    # Add org and repo to models
+    for i in models2:
+        org, repo = getOrgRepoByURL(models2[i]['url'])
+        models2[i]['github_org'] = org
+        models2[i]['github_repo'] = repo
 
-    # Store monthly values locally (or maybe not?)
+    # Put all reports in github
+    git_urls = putAll(reports=reports2, testing=testing)
 
     # Store git data on the generated reports locally
     f = open('./statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
     f.write(json.dumps(git_urls))
     f.close()
     logging.info('GIT URLs stored in local file')
+
+    # Create issues in github
+    issues = createIssues(git_urls=git_urls, testing=testing)
+
+    # Store git data on the generated issues locally
+    g = open('./issueReports{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
+    g.write(json.dumps(issues))
+    g.close()
+    logging.info('GIT ISSUES stored in local file')
+
+    # Put all models in github
+    storeModels(models=models2, testing=testing)
 
     #if testing is True and beta is False:
     #    deleteAll(git_urls)

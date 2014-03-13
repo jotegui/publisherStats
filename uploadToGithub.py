@@ -165,7 +165,10 @@ def deleteFileInGithub(org, repo, path, sha):
 
     if status_code == 200:
         logging.info(
-            'SUCCESS (Status Code {0}) - COMMIT SHA: {1}'.format(status_code, response_content['commit']['sha']))
+            'SUCCESS DELETING {2} (Status Code {0}) - COMMIT SHA: {1}'.format(
+                status_code, response_content['commit']['sha'], path
+            )
+        )
     else:
         logging.error('DELETE {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path, status_code,
                                                                                         response_content['message']))
@@ -366,7 +369,7 @@ def main(lapse='month', testing=False, beta=False, local=False):
     f = open('./statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
     f.write(json.dumps(git_urls))
     f.close()
-    logging.info('GIT URLs stored in local file')
+    logging.info('GIT URLs stored in local file statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')))
 
     # Create issues in github
     issues = createIssues(git_urls=git_urls, testing=testing)
@@ -375,7 +378,7 @@ def main(lapse='month', testing=False, beta=False, local=False):
     g = open('./issueReports{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
     g.write(json.dumps(issues))
     g.close()
-    logging.info('GIT ISSUES stored in local file')
+    logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')))
 
     # Put all models in github
     storeModels(models=models2, testing=testing)

@@ -4,7 +4,7 @@ import logging
 import monthlyStatReports
 from datetime import datetime
 
-logging.basicConfig(filename='test.log', format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='logs/test_{0}.log'.format(format(datetime.now(), '%Y_%m_%d')), format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 ini = datetime.now()
 logging.info('Initiated at {0}'.format(ini))

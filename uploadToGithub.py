@@ -1,3 +1,4 @@
+import time
 import base64
 import json
 import urllib2
@@ -184,8 +185,8 @@ def putReportInRepo(report, pub, org, repo, key):
     request_url_txt = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_txt)
     request_url_html = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_html)
 
-    logging.info('Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt))
-    r = requests.put(request_url_txt, data=json_input_txt, headers=headers)
+    #logging.info('Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt))
+    r = requests.put(request_url_txt, data = json_input_txt, headers = headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -199,9 +200,10 @@ def putReportInRepo(report, pub, org, repo, key):
                                                                                      response_content['message']))
         git_url_txt = ''
         sha_txt = ''
+    time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
 
-    logging.info('Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html))
-    r = requests.put(request_url_html, data=json_input_html, headers=headers)
+    #logging.info('Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html))
+    r = requests.put(request_url_html, data = json_input_html, headers = headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -215,7 +217,7 @@ def putReportInRepo(report, pub, org, repo, key):
                                                                                      response_content['message']))
         git_url_html = ''
         sha_html = ''
-
+    time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
     return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
 
@@ -223,7 +225,7 @@ def putAndStoreReports(reports, key, testing = False):
     """Main process to put all reports in GitHub and store the git_urls locally"""
 
     # Put all reports in GitHub
-    git_urls = putAll(reports=reports, key=key, testing=testing)
+    git_urls = putAll(reports = reports, key = key, testing = testing)
 
     # Store git data on the generated reports locally
     f = open('./statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
@@ -244,7 +246,7 @@ def deleteFileInGithub(org, repo, path, sha, key):
     headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
 
     logging.info('Requesting DELETE for {0}:{1}:{2}'.format(org, repo, path))
-    r = requests.delete(request_url, data=json_input, headers=headers)
+    r = requests.delete(request_url, data = json_input, headers = headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -258,6 +260,7 @@ def deleteFileInGithub(org, repo, path, sha, key):
     else:
         logging.error('DELETE {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path, status_code,
                                                                                         response_content['message']))
+    time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
     return
 
 
@@ -276,18 +279,19 @@ def deleteAll(git_urls, key):
     return
 
 
-def storeModels(models, key, testing=False):
-
+def storeModels(models, key, testing = False):
     if testing is True:
         org = 'jotegui'
         repo = 'statReports'
     else:
-        org = 'jotegui' # Change to VertNet org
-        repo = 'statReports' # Change to VertNet repo
+        org = 'jotegui'  # Change to VertNet org
+        repo = 'statReports'  # Change to VertNet repo
 
     for model in models:
         created_at = models[model]['created_at'].replace('/', '_')
-        message = 'Putting JSON data on {0} for {1}, {2}'.format(models[model]['report_month'], models[model]['github_org'], models[model]['github_repo'])
+        message = 'Putting JSON data on {0} for {1}, {2}'.format(models[model]['report_month'],
+                                                                 models[model]['github_org'],
+                                                                 models[model]['github_repo'])
         commiter = {'name': 'VertNet', 'email': 'vertnetinfo@vertnet.org'}
         content = base64.b64encode(json.dumps(models[model]))
         path = 'data/{0}_{1}.json'.format(model.replace(' ', '_'), created_at)
@@ -296,20 +300,20 @@ def storeModels(models, key, testing=False):
         request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
         json_input = json.dumps({"message": message, "commiter": commiter, "content": content})
 
-        r = requests.put(request_url, data=json_input, headers=headers)
+        r = requests.put(request_url, data = json_input, headers = headers)
         status_code = r.status_code
 
         if status_code == 201:
             logging.info('SUCCESS - Data model stored for resource {0}'.format(repo))
         else:
             logging.error('DATA MODEL CREATION FAILED for resource {0}'.format(repo))
+        time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
     return
 
 
 def main(reports, models, key, testing = False, beta = False):
-
     # Limit to betatesters
-    reports, models = betaTesting(reports=reports, models=models, beta=beta)
+    reports, models = betaTesting(reports = reports, models = models, beta = beta)
 
     # Add org and repo to models
     models = addOrgRepoToModels(models)
@@ -318,6 +322,6 @@ def main(reports, models, key, testing = False, beta = False):
     git_urls = putAndStoreReports(reports = reports, key = key, testing = testing)
 
     # Put all models in github
-    storeModels(models=models, key=key, testing=testing)
+    storeModels(models = models, key = key, testing = testing)
 
     return git_urls

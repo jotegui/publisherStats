@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 import logging
-import uploadToGithub as up
-import deleteBetaReports as db
+import monthlyStatReports
 from datetime import datetime
 
 logging.basicConfig(filename='beta.log', format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
@@ -19,7 +18,7 @@ try:
 except:
     logging.warning('File not found, avoiding deletion.')
 
-up.main(lapse='month', testing=False, beta=True)
+monthlyStatReports.main(lapse='month', testing=True)
 
 end = datetime.now()
 dif = end - ini

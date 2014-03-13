@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
+import logging
 import monthlyStatReports
 from datetime import datetime
 
-import logging
 logging.basicConfig(filename='test.log', format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 ini = datetime.now()

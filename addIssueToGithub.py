@@ -27,7 +27,9 @@ def createIssue(git_url, key, testing=False):
             "\n"
             "Please post any comments or questions to http://www.vertnet.org/feedback/contact.html.\n"
             "\n"
-            "Thank you for being a part of VertNet."
+            "Thank you for being a part of VertNet.\n"
+            "\n"
+            "IMPORTANT NOTICE: The report generating system is currently in beta. You will likely receive more than one report for this month. This message will no longer appear when we leave the beta status. Thanks for your patience."
     ).format(link_txt, link_html, link_pretty_html)
     labels = ['report']
 

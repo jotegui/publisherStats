@@ -5,6 +5,7 @@
 *.pyc
 
 # Logging and output files
+logs/
 *.log*
 *.out
 

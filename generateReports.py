@@ -4,7 +4,6 @@ import jinja2
 import urllib2
 import logging
 from datetime import datetime
-#import extractStats as es
 
 
 def unescape(s):
@@ -31,10 +30,8 @@ def getTimeLapse(lapse = 'month'):
     return time_lapse
 
 
-# Build the JSON model
 def buildModel(pubs, pub, lapse):
     """Build the JSON model with data about the month for the resource"""
-    # TODO: Clean the commented lines once proven to work
 
     model = {
         "url": "",
@@ -94,11 +91,9 @@ def buildModel(pubs, pub, lapse):
             countries[country] += pubs[pub]['latlon'][i]
     or_countries = countries.keys()
     or_countries.sort()
-    #q_countries = []
     for i in or_countries:
         model['month']['countries_list'].append(i)
         model['month']['countries'].append({"country": i, "times": countries[i]})
-        #q_countries.append([i, countries[i]])
 
     query_dates = {}
     for i in pubs[pub]['created']:
@@ -110,10 +105,8 @@ def buildModel(pubs, pub, lapse):
             query_dates[this_date] += this_times
     or_query_dates = query_dates.keys()
     or_query_dates.sort()
-    #q_dates = []
     for i in or_query_dates:
         model['month']['dates'].append({"date": i, "times": query_dates[i]})
-        #q_dates.append([i,query_dates[i]])
 
     queries = {}
     for i in pubs[pub]['query']:
@@ -169,7 +162,6 @@ def addHistoryToModel(model):
     return model
 
 
-# Create the reports
 def createReport(model):
     """Create txt and html reports based on model values"""
     JINJA_ENVIRONMENT = jinja2.Environment(
@@ -234,20 +226,7 @@ def createReport(model):
     return report_txt, report_html
 
 
-# TODO: remove when proven unnecessary
-#def writeReport(report, pub, created_at):
-#    if not os.path.exists("./reports{0}".format(created_at)):
-#        os.makedirs("./reports{0}".format(created_at))
-#    file_name = "./reports{1}/{0}_{1}.txt".format(pub.replace(" ", "_"), created_at)
-#    f = open(file_name, 'w')
-#    f.write(json.dumps(report))
-#    f.close()
-#
-#    return
-
-
 def main(pubs, lapse):
-    #pubs = es.main(lapse = lapse, testing = testing)
 
     logging.info('generating reports')
     created_at = format(datetime.now(), '%Y_%m_%d')

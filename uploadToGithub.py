@@ -5,48 +5,7 @@ import urllib2
 import logging
 import requests
 from datetime import datetime
-import addIssueToGithub as addIssues
 
-# TODO: Remove when successfully tested
-#def getOrg(inst):
-#    """Extract organization name for given institutioncode"""
-#    if inst.upper() == 'MVZOBS':
-#        org = 'mvz-vertnet'
-#    else:
-#        query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20distinct%20github_orgname%20from%20resource_staging%20where%20icode=%27{0}%27'.format(inst)
-#        org = json.loads(urllib2.urlopen(query_url).read())['rows'][0]['github_orgname']
-#    return org
-#
-#
-#def getRepoList(org):
-#    """Extract list of available repositories for a given github organization"""
-#    repo_list = []
-#    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20github_reponame%20from%20resource_staging%20where%20github_orgname=%27{0}%27'.format(org)
-#    d0 = json.loads(urllib2.urlopen(query_url).read())['rows']
-#    for i in d0:
-#        repo_list.append(i['github_reponame'])
-#    return repo_list
-#
-#
-#def getOrgRepo(report):
-#
-#    inst = report['inst']
-#    col = report['col']
-#
-#    try:
-#        org = getOrg(inst)
-#    except IndexError:
-#        org = getOrg(col.split('_')[0].upper())
-#
-#    repo_list = getRepoList(org)
-#
-#    if col.replace('_','-') in repo_list:
-#        repo = col.replace('_','-')
-#    else:
-#        repo = None
-#        logging.error('Could not find repository name for Inst {0}, Col {1}'.format(inst, col))
-#
-#    return org, repo
 
 def betaTesting(reports, models, beta = False):
     """Store data on betatesters only if in beta mode"""
@@ -114,7 +73,7 @@ def sanityCheck(url):
 
 def putAll(reports, key, testing = False):
     """Iterate through all reports and store them in GitHub"""
-    # TODO: Review the iteration to check for errors
+    # Review the iteration to check for errors -- Looks like there's no issue if wait between two PUTs
 
     git_urls = {}
     pubs_to_check = reports.keys()
@@ -284,6 +243,9 @@ def storeModels(models, key, testing = False):
         org = 'jotegui'
         repo = 'statReports'
     else:
+        from monthlyStatReports import apikey  # Remove when repo changed to VertNet
+
+        key = apikey(True)  # Remove when repo changed to VertNet
         org = 'jotegui'  # Change to VertNet org
         repo = 'statReports'  # Change to VertNet repo
 

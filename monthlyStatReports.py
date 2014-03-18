@@ -5,6 +5,7 @@ import uploadToGithub
 import addIssueToGithub
 
 __author__ = 'jotegui'
+# TODO: Replace all calls to datetime for single call in this file
 
 def apikey(testing):
     """Return credentials file as a JSON object."""

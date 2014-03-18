@@ -239,6 +239,12 @@ def deleteAll(git_urls, key):
 
 
 def storeModels(models, key, testing = False):
+
+    try:
+        model_urls = json.loads(open('./modelURLs.json', 'r').read().rstrip())
+    except:
+        model_urls = {}
+
     if testing is True:
         org = 'jotegui'
         repo = 'statReports'
@@ -250,13 +256,13 @@ def storeModels(models, key, testing = False):
         repo = 'statReports'  # Change to VertNet repo
 
     for model in models:
-        created_at = models[model]['created_at'].replace('/', '_')
+        #created_at = models[model]['created_at'].replace('/', '_')
         message = 'Putting JSON data on {0} for {1}, {2}'.format(models[model]['report_month'],
                                                                  models[model]['github_org'],
                                                                  models[model]['github_repo'])
         commiter = {'name': 'VertNet', 'email': 'vertnetinfo@vertnet.org'}
         content = base64.b64encode(json.dumps(models[model]))
-        path = 'data/{0}_{1}.json'.format(model.replace(' ', '_'), created_at)
+        path = 'data/{0}_{1}.json'.format(model.replace(' ', '_'), models[model]['report_month'].replace('/', '_'))
 
         headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
         request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
@@ -270,6 +276,18 @@ def storeModels(models, key, testing = False):
         else:
             logging.error('DATA MODEL CREATION FAILED for resource {0}'.format(repo))
         time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
+
+        if model not in model_urls:
+            model_urls[model] = [request_url]
+        else:
+            model_urls[model].append(request_url)
+
+    # Store urls on the generated models
+    f = open('./modelURLs.json', 'w')
+    f.write(json.dumps(model_urls))
+    f.close()
+    logging.info('MODEL URLs stored in local file modelURLs.json')
+
     return
 
 

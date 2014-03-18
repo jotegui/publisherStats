@@ -1,7 +1,12 @@
 {
+    "url": "http://ipt.vertnet.org:8080/ipt/resource.do?r=mvz_mammal",
+    "inst": "MVZ",
+    "col": "mammal",
     "github_org": "mvz-vertnet",
     "github_repo": "mvz-mammal",
-    "report_month": "February, 2014",
+    "report_month_string": "February, 2014",
+    "report_month": "2014/02",
+    "last_report_url": "",
     "created_at": "2014/03/04",
     
     "month": {

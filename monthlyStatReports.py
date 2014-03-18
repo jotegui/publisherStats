@@ -7,6 +7,7 @@ import addIssueToGithub
 __author__ = 'jotegui'
 # TODO: Replace all calls to datetime for single call in this file
 
+
 def apikey(testing):
     """Return credentials file as a JSON object."""
     if testing is False:
@@ -18,7 +19,7 @@ def apikey(testing):
     return key
 
 
-def main(lapse='month', testing=False, beta=False, local=False, local_folder = None):
+def main(today, lapse='month', testing=False, beta=False):  # , local=False, local_folder=None):
     """Main function"""
     # TODO: Implement reading from local files
 #    if local is False:
@@ -36,16 +37,15 @@ def main(lapse='month', testing=False, beta=False, local=False, local_folder = N
     key = apikey(testing=testing)
 
     # Extract downloads data
-    pubs = extractStats.main(lapse = lapse, testing = testing)
+    pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
 
     # Generate reports and models
-    reports, models = generateReports.main(pubs, lapse)
+    reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)
 
     # Put reports and models in GitHub
-    git_urls = uploadToGithub.main(reports=reports, models=models, key = key, testing=testing, beta=beta)
+    git_urls = uploadToGithub.main(reports=reports, models=models, key=key, today=today, testing=testing, beta=beta)
 
     # Create issues to notify users
-    addIssueToGithub.main(git_urls = git_urls, key=key, testing = testing)
+    addIssueToGithub.main(git_urls=git_urls, key=key, today=today, testing=testing)
 
     return
-

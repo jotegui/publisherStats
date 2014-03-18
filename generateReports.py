@@ -19,13 +19,13 @@ This function decodes he string when the output is not html, but txt."""
     return s
 
 
-def getTimeLapse(lapse = 'month'):
+def getTimeLapse(today, lapse='month'):
     if lapse == 'full':
         report_month_string = 'ever since February, 2014'
         report_month = '2014/02'
     else:
-        this_year = datetime.now().year
-        this_month = datetime.now().month
+        this_year = today.year
+        this_month = today.month
         if this_month == 1:
             report_month_string = '{0}'.format(datetime(this_year - 1, 12, 1).strftime('%B, %Y'))
             report_month = '{0}'.format(datetime(this_year - 1, 12, 1).strftime('%Y/%m'))
@@ -38,13 +38,14 @@ def getTimeLapse(lapse = 'month'):
 def findLastReport(inst, col):
     pub = '-'.join([inst, col])
     try:
-        models = json.loads(open('./modelURLs.json','r').read().rstrip())[pub]
+        models = json.loads(open('./modelURLs.json', 'r').read().rstrip())[pub]
         last_url = models[-1]
     except:
         last_url = ''
     return last_url
 
-def buildModel(pubs, pub, lapse):
+
+def buildModel(pubs, pub, lapse, today):
     """Build the JSON model with data about the month for the resource"""
 
     model = {
@@ -77,13 +78,13 @@ def buildModel(pubs, pub, lapse):
     model['inst'] = inst
     model['col'] = col
 
-    report_month_string, report_month = getTimeLapse(lapse)
+    report_month_string, report_month = getTimeLapse(today=today, lapse=lapse)
     model['report_month_string'] = report_month_string
     model['report_month'] = report_month
 
     model['last_report_url'] = findLastReport(inst, col)
 
-    generated = format(datetime.now(), '%Y/%m/%d')
+    generated = format(today, '%Y/%m/%d')
     model['created_at'] = generated
 
     downloads = len(pubs[pub]['download_files'])
@@ -101,8 +102,8 @@ def buildModel(pubs, pub, lapse):
     for i in pubs[pub]['latlon']:
         lat = i[0]
         lon = i[1]
-        geonames_url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(
-            lat, lon)
+        geonames_url = 'http://api.geonames.org/countryCodeJSON?\
+                        formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
         country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
         if country not in countries:
             countries[country] = pubs[pub]['latlon'][i]
@@ -320,9 +321,9 @@ def addInitialHistoryToModel(model):
 def createReport(model):
     """Create txt and html reports based on model values"""
     JINJA_ENVIRONMENT = jinja2.Environment(
-        loader = jinja2.FileSystemLoader(os.path.dirname(__file__)),
-        extensions = ['jinja2.ext.autoescape'],
-        autoescape = True)
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'],
+        autoescape=True)
 
     q_countries = []
     countries = model['month']['countries']
@@ -381,15 +382,15 @@ def createReport(model):
     return report_txt, report_html
 
 
-def main(pubs, lapse):
+def main(pubs, lapse, today):
 
     logging.info('generating reports')
-    created_at = format(datetime.now(), '%Y_%m_%d')
+    created_at = format(today, '%Y_%m_%d')
     reports = {}
     models = {}
 
     for pub in pubs:
-        model = buildModel(pubs, pub, lapse)
+        model = buildModel(pubs, pub, lapse, today)
         model = addPastDataToModel(model)
 
         report_txt, report_html = createReport(model)

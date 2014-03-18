@@ -4,7 +4,6 @@ import json
 import urllib2
 import logging
 import requests
-from datetime import datetime
 
 
 def betaTesting(reports, models, beta = False):
@@ -180,17 +179,17 @@ def putReportInRepo(report, pub, org, repo, key):
     return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
 
-def putAndStoreReports(reports, key, testing = False):
+def putAndStoreReports(reports, key, today, testing = False):
     """Main process to put all reports in GitHub and store the git_urls locally"""
 
     # Put all reports in GitHub
     git_urls = putAll(reports = reports, key = key, testing = testing)
 
     # Store git data on the generated reports locally
-    f = open('./statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
+    f = open('./statReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
     f.write(json.dumps(git_urls))
     f.close()
-    logging.info('GIT URLs stored in local file statReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')))
+    logging.info('GIT URLs stored in local file statReports_{0}.json'.format(format(today, '%Y_%m_%d')))
 
     return git_urls
 
@@ -291,17 +290,17 @@ def storeModels(models, key, testing = False):
     return
 
 
-def main(reports, models, key, testing = False, beta = False):
+def main(reports, models, key, today, testing=False, beta=False):
     # Limit to betatesters
-    reports, models = betaTesting(reports = reports, models = models, beta = beta)
+    reports, models = betaTesting(reports=reports, models=models, beta=beta)
 
     # Add org and repo to models
     models = addOrgRepoToModels(models)
 
     # Put all reports in github
-    git_urls = putAndStoreReports(reports = reports, key = key, testing = testing)
+    git_urls = putAndStoreReports(reports=reports, key=key, today=today, testing=testing)
 
     # Put all models in github
-    storeModels(models = models, key = key, testing = testing)
+    storeModels(models=models, key=key, testing=testing)
 
     return git_urls

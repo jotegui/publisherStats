@@ -1,18 +1,17 @@
 import json
 import logging
 import requests
-from datetime import datetime
 from generateReports import getTimeLapse
 
 __author__ = 'jotegui'
 
 
-def createIssue(git_url, key, testing=False):
+def createIssue(git_url, key, today, testing=False):
     """Create individual issue on repository indicating the new monthly report"""
     org = git_url['org']
     repo = git_url['repo']
 
-    created = getTimeLapse()
+    created = getTimeLapse(today=today)
 
     link_txt = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_txt'])
     link_html = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_html'])
@@ -52,26 +51,26 @@ def createIssue(git_url, key, testing=False):
     return r
 
 
-def createIssues(git_urls, key, testing=False):
+def createIssues(git_urls, key, today, testing=False):
     """Iterate over list of repositories to create individual issues for each one"""
     issues = {}
     for git_url in git_urls:
-        r = createIssue(git_url=git_urls[git_url], key=key, testing=testing)
+        r = createIssue(git_url=git_urls[git_url], key=key, today=today, testing=testing)
         issues[git_url] = json.loads(r.content)
 
     return issues
 
 
-def main(git_urls, key, testing = False):
+def main(git_urls, key, today, testing=False):
     """Main function fro creating and storing monthly stats awareness issues"""
 
     # Create issues in github
-    issues = createIssues(git_urls=git_urls, key=key, testing=testing)
+    issues = createIssues(git_urls=git_urls, key=key, today=today, testing=testing)
 
     # Store git data on the generated issues locally
-    g = open('./issueReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')), 'w')
+    g = open('./issueReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
     g.write(json.dumps(issues))
     g.close()
-    logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(datetime.now(), '%Y_%m_%d')))
+    logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(today, '%Y_%m_%d')))
 
     return

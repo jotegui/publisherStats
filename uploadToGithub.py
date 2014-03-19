@@ -38,8 +38,7 @@ def addOrgRepoToModels(models):
 def getOrgRepoByURL(url):
     """Extract github organization and repository by datasource url"""
     url = sanityCheck(url)
-    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20github_orgname,%20github_reponame%20from%20resource_staging%20where%20url=%27{0}%27'.format(
-        url)
+    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20github_orgname,%20github_reponame%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
     try:
         d = json.loads(urllib2.urlopen(query_url).read())['rows'][0]
         org = d['github_orgname']

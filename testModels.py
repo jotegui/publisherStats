@@ -12,10 +12,9 @@ logging.basicConfig(filename='logs/models_{0}.log'.format(format(today, '%Y_%m_%
                     format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 lapse = 'month'
-testing = True
+testing = False
 key = apikey(testing)
 beta = True
-
 
 pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
 reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)

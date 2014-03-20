@@ -4,6 +4,7 @@ import json
 import urllib2
 import logging
 import requests
+from util import sanityCheck
 
 
 def betaTesting(reports, models, beta = False):
@@ -48,25 +49,6 @@ def getOrgRepoByURL(url):
         org = None
         repo = None
     return org, repo
-
-
-def sanityCheck(url):
-    """Change some modified URLs to match values in CartoDB"""
-    if url == 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=herpetology':
-        new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=herps'
-    elif url == 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=birdspasserines':
-        new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=birdspass'
-    elif url == 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=mammalogyspecimens':
-        new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=mamm'
-    elif url == 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=birdsnonpasserines':
-        new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=birdsnonpass'
-    elif url == 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=vertebratepalaeorecentskeletons':
-        new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=vposteology'
-    # More to be added as needed
-    else:
-        new_url = url
-
-    return new_url
 
 
 def putAll(reports, key, testing = False):
@@ -247,7 +229,7 @@ def storeModels(models, key, testing = False):
         org = 'jotegui'
         repo = 'statReports'
     else:
-        from monthlyStatReports import apikey  # Remove when repo changed to VertNet
+        from util import apikey  # Remove when repo changed to VertNet
 
         key = apikey(True)  # Remove when repo changed to VertNet
         org = 'jotegui'  # Change to VertNet org

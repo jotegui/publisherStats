@@ -1,8 +1,9 @@
 # Any key file
 *.key
 
-# Python Compiled files
+# Python Compiled and Object files
 *.pyc
+*.pk
 
 # Logging and output files
 logs/

@@ -147,8 +147,7 @@ def addPastDataToModel(model):
     """Add year and history cummulative values"""
 
     # First, put the previous month's year and history objects in the month model
-    print model['inst']
-    print model['col']
+
     # If it's the first time, take 2013 and 2014/01 values from files
     if model['last_report_url'] == "":
         model = addInitialYearToModel(model)
@@ -403,7 +402,6 @@ def main(pubs, lapse, today):
     models = {}
 
     for pub in pubs:
-        print pub
         model = buildModel(pubs, pub, lapse, today)
         model = addPastDataToModel(model)
 

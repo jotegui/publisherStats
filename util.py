@@ -1,4 +1,5 @@
 import os
+import json
 
 __author__ = 'jotegui'
 
@@ -30,3 +31,8 @@ def sanityCheck(url):
         new_url = url
 
     return new_url
+
+
+def prettyJSON(d):
+    print json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
+    return

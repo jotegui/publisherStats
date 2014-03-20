@@ -17,12 +17,12 @@ testing = False
 key = apikey(testing)
 beta = True
 
-pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
+# pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
 
 # Piece of code to store pubs in disk (to avoid 1h+ of downloads)
 import pickle
-with open('pubs_2014_02_b.pk', 'wb') as output:
-    pickle.dump(pubs, output, pickle.HIGHEST_PROTOCOL)
+# with open('pubs_2014_02_b.pk', 'wb') as output:
+#     pickle.dump(pubs, output, pickle.HIGHEST_PROTOCOL)
 
 with open('pubs_2014_02_b.pk', 'rb') as input:
     pubs = pickle.load(input)

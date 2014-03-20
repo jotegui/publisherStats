@@ -11,13 +11,13 @@ def createIssue(git_url, key, today, testing=False):
     org = git_url['org']
     repo = git_url['repo']
 
-    created = getTimeLapse(today=today)
+    created = getTimeLapse(today=today)[0]
 
     link_txt = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_txt'])
     link_html = 'https://github.com/{0}/{1}/blob/master/{2}'.format(org, repo, git_url['path_html'])
     link_pretty_html = 'http://htmlpreview.github.io/?' + link_html
 
-    title = 'Monthly VertNet data use report {0}, resource {1}'.format(created, repo)
+    title = 'Monthly VertNet data use report for {0}, resource {1}'.format(created, repo)
     body = ("Your monthly VertNet data use report is ready!\n"
             "\n"
             "You can see and download the report in GitHub as a raw text file ({0}) or as a raw HTML file ({1}), or you can see the rendered HTML version of the report through this link: {2}.\n"

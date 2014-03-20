@@ -2,6 +2,7 @@ import json
 import urllib2
 import logging
 from urllib import urlencode
+from util import sanityCheck
 
 # Global variables
 base_url = 'https://www.googleapis.com/storage/v1beta2'
@@ -118,6 +119,13 @@ def parseDownloadName(download):
     return b, o
 
 
+def getInstColFromURL(url):
+    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20icode%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
+    inst = json.loads(urllib2.urlopen(query_url).read())['rows'][0]['icode']
+    col = url.split('?r=')[1]
+    return inst, col
+
+
 def getCountsForPublishers(file_list):
     """Extract institutioncodes and counts for download files in GCS"""
     pubs = {}
@@ -141,18 +149,24 @@ def getCountsForPublishers(file_list):
 
             tot_recs += 1
 
-            # Option 1 - store by resource
+            # Option 1 - store by resource directly from the file
             this_ins = rec[fieldList.index('institutioncode')]
             if this_ins == "Royal Ontario Museum: ROM":
                 this_ins = "ROM"
             this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
-            this_pub = '{0}-{1}'.format(this_ins, this_col)
             this_url = rec[fieldList.index('datasource_and_rights')]
 
-            # Option 2 - store by institution
-            #this_pub = rec[fieldList.index('institutioncode')]
-            #if this_pub == "Royal Ontario Museum: ROM":
-            #    this_pub = "ROM"
+            if this_ins == '':
+
+                # Option 2 - take inst and col from resource_staging through url
+                # It takes a lot of time, so leaving it for J.I.C.
+                this_url = sanityCheck(this_url)
+                logging.info(this_url)
+                this_ins, this_col = getInstColFromURL(this_url)
+                this_pub = '{0}-{1}'.format(this_ins, this_col)
+            else:
+
+                this_pub = '{0}-{1}'.format(this_ins, this_col)
 
             # Build UUIDs to calculate unique_records
             this_icode = rec[fieldList.index('institutioncode')]

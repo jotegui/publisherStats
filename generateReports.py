@@ -168,7 +168,6 @@ def addPastDataToModel(model):
         #     path = 'data/{0}'.format(path)
 
         url = model['last_report_url']
-        # print url
 
         r = requests.get(url)
 
@@ -188,10 +187,22 @@ def addPastDataToModel(model):
                 model[t][i] = model['month'][i]
         else:
             # Add basic counts
-            model[t]['downloads'] += model['month']['downloads']
-            model[t]['downloads_period'] += model['month']['downloads_period']
-            model[t]['records'] += model['month']['records']
-            model[t]['records_period'] += model['month']['records_period']
+            if 'downloads' in model[t]:
+                model[t]['downloads'] += model['month']['downloads']
+            else:
+                model[t]['downloads'] = model['month']['downloads']
+            if 'downloads_period' in model[t]:
+                model[t]['downloads_period'] += model['month']['downloads_period']
+            else:
+                model[t]['downloads_period'] = model['month']['downloads_period']
+            if 'records' in model[t]:
+                model[t]['records'] += model['month']['records']
+            else:
+                model[t]['records'] = model['month']['records']
+            if 'records_period' in model[t]:
+                model[t]['records_period'] += model['month']['records_period']
+            else:
+                model[t]['records_period'] = model['month']['records_period']
 
             # Append any non-existing country to list
             if 'countries_list' in model[t]:
@@ -281,6 +292,7 @@ def addInitialYearToModel(model):
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except:
+        model['year'] = {"downloads": 0, "records": 0}
         return model
 
     if 'year' not in model:         # "Month" may sound confusing, but it's the name of the element containing
@@ -300,6 +312,7 @@ def addInitialHistoryToModel(model):
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except:
+        model['history'] = {"downloads": 0, "records": 0}
         return model
 
     if 'history' not in model:
@@ -307,8 +320,8 @@ def addInitialHistoryToModel(model):
 
         # Add 2014/01 values to history if present
         if 'year' in model:
-            for i in model['history']:
-                model['history'][i] += model['year'][i]
+            model['history']['downloads'] += model['year']['downloads']
+            model['history']['records'] += model['year']['records']
 
     else:                                        # Shouldn't apply because
         for i in d['year']:                      # this is only called if

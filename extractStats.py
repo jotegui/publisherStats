@@ -40,6 +40,11 @@ fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", 
              "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship",
              "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
+def cartodbQuery(query):
+    cartodb_url = 'https://vertnet.cartodb.com/api/v2/sql'
+    query_url = '?'.join([cartodb_url, urlencode({'q': query})])
+    d = json.loads(urllib2.urlopen(query_url).read())['rows']
+    return d
 
 def getObject(bucket_name, object_name):
     """Get raw content of object in bucket and parse to record-type object"""
@@ -86,7 +91,6 @@ def getObject(bucket_name, object_name):
 def getCDBDownloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
-    cartodb_url = 'https://vertnet.cartodb.com/api/v2/sql'
     query = "select * from query_log where download is not null and download !=''"
     query += " and client='portal-prod'"
 
@@ -104,9 +108,11 @@ def getCDBDownloads(lapse, today):
         limit_string += " and extract(month from created_at)={0}".format(limit_month)
         query += limit_string
 
-    query_url = '?'.join([cartodb_url, urlencode({'q': query})])
+    # query_url = '?'.join([cartodb_url, urlencode({'q': query})])
 
-    d = json.loads(urllib2.urlopen(query_url).read())['rows']
+    # d = json.loads(urllib2.urlopen(query_url).read())['rows']
+
+    d = cartodbQuery(query)
     return d
 
 
@@ -126,8 +132,12 @@ def parseDownloadName(download):
 
 
 def getInstColFromURL(url):
-    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20icode%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
-    inst = json.loads(urllib2.urlopen(query_url).read())['rows'][0]['icode']
+    # cartodb_url = "https://vertnet.cartodb.com/api/v2/sql"
+    query = "select icode from resource_staging where url={0}".format(url)
+    # query_url = '?'.join([cartodb_url, urlencode({'q': query})])
+    # query_url = '?q=select%20icode%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
+    d = cartodbQuery(query)
+    inst = d[0]['icode']
     col = url.split('?r=')[1]
     return inst, col
 

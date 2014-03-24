@@ -85,7 +85,9 @@ def getObject(bucket_name, object_name):
 
 def getCDBDownloads(lapse, today):
     """Download the info in the downloads from CDB"""
-    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20*%20from%20query_log%20where%20download%20is%20not%20null%20and%20download%20!=%27%27'
+
+    cartodb_url = 'https://vertnet.cartodb.com/api/v2/sql'
+    query = "select * from query_log where download is not null and download !='' and client='portal-prod'"
 
     # Default behavior is to extract stats just from the last month
     if lapse == 'month':
@@ -97,8 +99,11 @@ def getCDBDownloads(lapse, today):
         else:
             limit_year = this_year
             limit_month = this_month - 1
-        limit_string = '%20and%20extract%28year%20from%20created_at%29%20=%20{0}%20and%20extract%28month%20from%20created_at%29%20=%20{1}'.format(limit_year, limit_month)
-        query_url += limit_string
+        limit_string = " and extract(year from created_at)={0}".format(limit_year)
+        limit_string += " and extract(month from created_at)={0}".format(limit_month)
+        query += limit_string
+
+    query_url = '?'.join([cartodb_url, urlencode({'q': query})])
 
     d = json.loads(urllib2.urlopen(query_url).read())['rows']
     return d

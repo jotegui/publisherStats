@@ -87,7 +87,8 @@ def getCDBDownloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
     cartodb_url = 'https://vertnet.cartodb.com/api/v2/sql'
-    query = "select * from query_log where download is not null and download !='' and client='portal-prod'"
+    query = "select * from query_log where download is not null and download !=''"
+    query += " and client='portal-prod'"
 
     # Default behavior is to extract stats just from the last month
     if lapse == 'month':

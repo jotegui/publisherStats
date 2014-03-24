@@ -5,8 +5,12 @@ from urllib import urlencode
 from util import sanityCheck
 
 # Global variables
-base_url = 'https://www.googleapis.com/storage/v1beta2'
 
+# API base URLs
+gcs_url = 'https://www.googleapis.com/storage/v1beta2'
+cdb_url = 'https://vertnet.cartodb.com/api/v2/sql'
+
+# Structure of download files
 fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights",
              "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode",
              "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld",
@@ -40,15 +44,16 @@ fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", 
              "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship",
              "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
-def cartodbQuery(query):
-    cartodb_url = 'https://vertnet.cartodb.com/api/v2/sql'
-    query_url = '?'.join([cartodb_url, urlencode({'q': query})])
+
+def cartodb_query(query):
+    query_url = '?'.join([cdb_url, urlencode({'q': query})])
     d = json.loads(urllib2.urlopen(query_url).read())['rows']
     return d
 
-def getObject(bucket_name, object_name):
+
+def get_gcs_object(bucket_name, object_name):
     """Get raw content of object in bucket and parse to record-type object"""
-    url = '/'.join([base_url, 'b', bucket_name, 'o', object_name.replace(' ', '%20')])
+    url = '/'.join([gcs_url, 'b', bucket_name, 'o', object_name.replace(' ', '%20')])
     url_optim = '?'.join([url, urlencode({'alt': 'media'})])
     raw = urllib2.urlopen(url_optim).read()
     d = []
@@ -88,7 +93,7 @@ def getObject(bucket_name, object_name):
     return d
 
 
-def getCDBDownloads(lapse, today):
+def get_cdb_downloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
     query = "select * from query_log where download is not null and download !=''"
@@ -108,52 +113,45 @@ def getCDBDownloads(lapse, today):
         limit_string += " and extract(month from created_at)={0}".format(limit_month)
         query += limit_string
 
-    # query_url = '?'.join([cartodb_url, urlencode({'q': query})])
-
-    # d = json.loads(urllib2.urlopen(query_url).read())['rows']
-
-    d = cartodbQuery(query)
+    d = cartodb_query(query)
     return d
 
 
-def getFileList(downloads_CDB):
+def get_file_list(downloads_cdb):
     """Extract list of download file names in GCS"""
     file_list = []
-    for d in downloads_CDB:
+    for d in downloads_cdb:
         file_list.append(d['download'])
     return file_list
 
 
-def parseDownloadName(download):
+def parse_download_name(download):
     """Parse the download file name"""
     b = download.split('/')[2]
     o = download.split('/')[3]
     return b, o
 
 
-def getInstColFromURL(url):
-    # cartodb_url = "https://vertnet.cartodb.com/api/v2/sql"
+def get_inst_col(url):
     query = "select icode from resource_staging where url={0}".format(url)
-    # query_url = '?'.join([cartodb_url, urlencode({'q': query})])
-    # query_url = '?q=select%20icode%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
-    d = cartodbQuery(query)
+    d = cartodb_query(query)
     inst = d[0]['icode']
     col = url.split('?r=')[1]
     return inst, col
 
 
-def getCountsForPublishers(file_list):
+def get_gcs_counts(file_list):
     """Extract institutioncodes and counts for download files in GCS"""
     pubs = {}
 
     tot_recs = 0  # Total downloaded records in the whole network
 
     for f in file_list:
-        b, o = parseDownloadName(f)
+        b, o = parse_download_name(f)
         logging.info('downloading and parsing %s' % o)
         try:
-            d = getObject(b, o)
-        except:
+            d = get_gcs_object(b, o)
+        except urllib2.HTTPError:
             logging.warning('file {0} not found. It might be creating at the moment. Skipping.'.format(o))
             continue
 
@@ -178,7 +176,7 @@ def getCountsForPublishers(file_list):
                 # It takes a lot of time, so leaving it for J.I.C.
                 this_url = sanityCheck(this_url)
                 logging.info(this_url)
-                this_ins, this_col = getInstColFromURL(this_url)
+                this_ins, this_col = get_inst_col(this_url)
                 this_pub = '{0}-{1}'.format(this_ins, this_col)
             else:
 
@@ -233,10 +231,10 @@ def getCountsForPublishers(file_list):
     return pubs
 
 
-def getCDBStatsForPublishers(pubs, downloads_CDB):
+def get_cdb_stats(pubs, downloads_cdb):
     """Match GCS files with CDB rows"""
     for pub in pubs:
-        for dl in downloads_CDB:
+        for dl in downloads_cdb:
             if dl['download'].split("/")[3] in pubs[pub]['download_files']:
 
                 latlon = (dl['lat'], dl['lon'])
@@ -261,19 +259,19 @@ def getCDBStatsForPublishers(pubs, downloads_CDB):
     return pubs
 
 
-def main(today, lapse='month', testing = False):
+def main(today, lapse='month', testing=False):
     """Extract downloaded files from CartoDB, parse the files in Google Cloud Storage, and build pre-models"""
     logging.info('getting data from CartoDB')
-    downloads_CDB = getCDBDownloads(lapse=lapse, today=today)
-    file_list = getFileList(downloads_CDB)
+    downloads_cdb = get_cdb_downloads(lapse=lapse, today=today)
+    file_list = get_file_list(downloads_cdb)
 
     if testing is True:
         file_list = file_list[:10]
 
     logging.info('getting data from Google Cloud Storage')
-    pubs = getCountsForPublishers(file_list)
+    pubs = get_gcs_counts(file_list)
 
     logging.info('generating stats')
-    pubs = getCDBStatsForPublishers(pubs, downloads_CDB)
+    pubs = get_cdb_stats(pubs, downloads_cdb)
 
     return pubs

@@ -47,8 +47,15 @@ fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", 
 
 def cartodb_query(query):
     query_url = '?'.join([cdb_url, urlencode({'q': query})])
-    d = json.loads(urllib2.urlopen(query_url).read())['rows']
-    return d
+    max_retries = 5
+    retry = 0
+    while retry < max_retries:
+        try:
+            d = json.loads(urllib2.urlopen(query_url).read())['rows']
+            return d
+        except urllib2.HTTPError:
+            retry += 1
+    return []
 
 
 def get_gcs_object(bucket_name, object_name):
@@ -93,13 +100,9 @@ def get_gcs_object(bucket_name, object_name):
     return d
 
 
-def get_cdb_downloads(lapse, today):
-    """Download the info in the downloads from CDB"""
+def add_time_limit(query, today, lapse='month'):
+    """Add time limit to CartoDB query. Default behavior is to extract stats from just the last month"""
 
-    query = "select * from query_log where download is not null and download !=''"
-    query += " and client='portal-prod'"
-
-    # Default behavior is to extract stats just from the last month
     if lapse == 'month':
         this_year = today.year
         this_month = today.month
@@ -112,6 +115,17 @@ def get_cdb_downloads(lapse, today):
         limit_string = " and extract(year from created_at)={0}".format(limit_year)
         limit_string += " and extract(month from created_at)={0}".format(limit_month)
         query += limit_string
+
+    return query
+
+
+def get_cdb_downloads(lapse, today):
+    """Download the info in the downloads from CDB"""
+
+    query = "select * from query_log where download is not null and download !=''"
+    query += " and client='portal-prod'"
+
+    query = add_time_limit(query=query, today=today, lapse=lapse)
 
     d = cartodb_query(query)
     return d
@@ -134,15 +148,23 @@ def parse_download_name(download):
 
 def get_inst_col(url):
     query = "select icode from resource_staging where url={0}".format(url)
-    d = cartodb_query(query)
-    inst = d[0]['icode']
-    col = url.split('?r=')[1]
-    return inst, col
+    max_retries = 3
+    retry = 0
+    while retry < max_retries:
+        d = cartodb_query(query)
+        if len(d) > 0:
+            inst = d[0]['icode']
+            col = url.split('?r=')[1]
+            return inst, col
+        else:
+            retry += 1
+    return None, None
 
 
 def get_gcs_counts(file_list):
     """Extract institutioncodes and counts for download files in GCS"""
     pubs = {}
+    skipped_records = 0
 
     tot_recs = 0  # Total downloaded records in the whole network
 
@@ -177,6 +199,9 @@ def get_gcs_counts(file_list):
                 this_url = sanityCheck(this_url)
                 logging.info(this_url)
                 this_ins, this_col = get_inst_col(this_url)
+                if this_ins is None or this_col is None:
+                    skipped_records += 1
+                    continue
                 this_pub = '{0}-{1}'.format(this_ins, this_col)
             else:
 
@@ -228,6 +253,10 @@ def get_gcs_counts(file_list):
     for pub in pubs:
         pubs[pub]['tot_recs'] = tot_recs
 
+    if skipped_records > 0:
+        logging.warning('{0} skipped records'.format(skipped_records))
+    else:
+        logging.info('{0} skipped records'.format(skipped_records))
     return pubs
 
 
@@ -259,6 +288,26 @@ def get_cdb_stats(pubs, downloads_cdb):
     return pubs
 
 
+def get_cdb_searches(today, lapse='month'):
+    query = "select res_count from query_log where client='portal-prod' and type != 'download' and res_count != '{}'"
+    query = add_time_limit(query=query, today=today, lapse=lapse)
+    searches = cartodb_query(query)
+
+    pubs = {}
+
+    for search in searches:
+        # TODO: debug
+        res_count = json.loads(search['res_count'])
+        for url in res_count:
+            if url not in pubs:
+                pubs[url] = {'searches': 1, 'records_searched': res_count[url]}
+            else:
+                pubs[url]['searches'] += 1
+                pubs[url]['records_searched'] += res_count[url]
+
+    return pubs
+
+
 def main(today, lapse='month', testing=False):
     """Extract downloaded files from CartoDB, parse the files in Google Cloud Storage, and build pre-models"""
     logging.info('getting data from CartoDB')
@@ -273,5 +322,10 @@ def main(today, lapse='month', testing=False):
 
     logging.info('generating stats')
     pubs = get_cdb_stats(pubs, downloads_cdb)
+
+    # logging.info('getting counts for searches')
+    # searches = get_cdb_searches(today=today, lapse=lapse)
+
+    logging.info('integrating searches into stats')
 
     return pubs

@@ -8,7 +8,7 @@ import pickle
 __author__ = 'jotegui'
 
 
-def main(today, lapse='month', testing=False, beta=False, local=False, local_file=None):
+def main(today, lapse='month', testing=False, beta=False, local=False, local_file=None, github=True):
     """Main function"""
 
     # Get API key
@@ -24,10 +24,15 @@ def main(today, lapse='month', testing=False, beta=False, local=False, local_fil
     # Generate reports and models
     reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)
 
-    # Put reports and models in GitHub
-    git_urls = uploadToGithub.main(reports=reports, models=models, key=key, today=today, testing=testing, beta=beta)
+    if github is True:
 
-    # Create issues to notify users
-    addIssueToGithub.main(git_urls=git_urls, key=key, today=today, testing=testing)
+        # Put reports and models in GitHub
+        git_urls = uploadToGithub.main(reports=reports, models=models, key=key, today=today, testing=testing, beta=beta)
 
-    return
+        # Create issues to notify users
+        addIssueToGithub.main(git_urls=git_urls, key=key, today=today, testing=testing)
+
+        return
+
+    else:
+        return reports

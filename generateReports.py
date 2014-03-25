@@ -144,7 +144,7 @@ def buildModel(pubs, pub, lapse, today):
 
 
 def addPastDataToModel(model):
-    """Add year and history cummulative values"""
+    """Add year and history cumulative values"""
 
     # First, put the previous month's year and history objects in the month model
 
@@ -155,17 +155,6 @@ def addPastDataToModel(model):
 
     # Else, take values from last month's json
     else:
-        # org = 'jotegui'  # Comment if JSON files are stored in the resource's repo
-        # repo = 'statReports'  # Comment if JSON files are stored in the resource's repo
-        # org = model['github_org']  # Uncomment if JSON files are stored in the resource's repo
-        # repo = model['github_repo']  # Uncomment if JSON files are stored in the resource's repo
-        #
-        # path = "{0}-{1}_{2}".format(model['inst'], model['col'], model['last_report'].replace('/','_'))
-        #
-        # if org == 'jotegui':
-        #     path = 'data/{0}'.format(path)
-        # else:
-        #     path = 'data/{0}'.format(path)
 
         url = model['last_report_url']
 
@@ -235,54 +224,6 @@ def addPastDataToModel(model):
                         if match is False:
                             model[t][d].append(model['month'][d][m_pos])
     return model
-
-            # for m_pos in range(len(model['month']['countries'])):
-            #     match = False
-            #     for t_pos in range(len(model[t]['countries'])):
-            #         if model['month']['countries'][m_pos]['country'] == model[t]['countries'][t_pos]['country']:
-            #             match = True
-            #             model[t]['countries'][t_pos]['times'] += model['month']['countries'][m_pos]['times']
-            #             break
-            #     if match is False:
-            #         model[t]['countries'].append(model['month']['countries'][m_pos])
-            # for m_pos in range(len(model['month']['dates'])):
-            #     match = False
-            #     for t_pos in range(len(model[t]['dates'])):
-            #         if model['month']['dates'][m_pos]['date'] == model[t]['dates'][t_pos]['date']:
-            #             match = True
-            #             model[t]['dates'][t_pos]['times'] += model['month']['dates'][m_pos]['times']
-            #             break
-            #     if match is False:
-            #         model[t]['dates'].append(model['month']['dates'][m_pos])
-            # model = json.loads(base64.b64decode(json.loads(r.content)['content']))['year']
-            # old_history = json.loads(base64.b64decode(json.loads(r.content)['content']))['history']
-            #
-            # for t in ['year', 'history']:
-            #     old = json.loads(base64.b64decode(json.loads(r.content)['content']))[t]
-            #     if t not in model:  # Shouldn't be necessary, because if year is not present,
-            #         model[t] = old  # it means there's nothing in last_month value, but JIC
-            #     else:
-            #         model[t]['downloads'] += old['downloads']
-            #         model[t]['dowloads_period'] += old['dowloads_period']
-            #         model[t]['records'] += old['records']
-            #         model[t]['records_period'] += old['records_period']
-            #
-            #         if 'countries_list' not in model[t].keys():
-            #             model[t]['countries_list'] = model['month']['countries_list']
-            #         else:
-            #             for c in model['month']['countries_list']:
-            #                 if c not in
-            # if 'history' not in model:
-            #     model['history'] = old_history
-            # else:
-            #     model['history']['downloads'] += old_history['downloads']
-            #     model['history']['dowloads_period'] += old_history['dowloads_period']
-            #     model['history']['records'] += old_history['records']
-            #     model['history']['records_period'] += old_history['records_period']
-
-            # return model
-        # else:
-        #     return model
 
 
 def addInitialYearToModel(model):

@@ -1,22 +1,21 @@
 import time
 import base64
 import json
-import urllib2
 import logging
 import requests
-from util import sanityCheck
+from util import sanityCheck, cartodb_query
 
 
-def betaTesting(reports, models, beta = False):
+def beta_testing(reports, models, beta=False):
     """Store data on betatesters only if in beta mode"""
 
     if beta is True:
         reports2 = {}
         models2 = {}
-        testingInsts = open('./TestingInsts.txt', 'r').read().rstrip().split(' ')
+        testing_insts = open('./TestingInsts.txt', 'r').read().rstrip().split(' ')
         for pub in reports:
             inst = reports[pub]['inst']
-            if inst in testingInsts:
+            if inst in testing_insts:
                 reports2[pub] = reports[pub]
                 models2[pub] = models[pub]
     else:
@@ -26,22 +25,23 @@ def betaTesting(reports, models, beta = False):
     return reports2, models2
 
 
-def addOrgRepoToModels(models):
+def add_org_repo(models):
     """Populate the org and repo fields in the model"""
     for i in models:
-        org, repo = getOrgRepoByURL(models[i]['url'])
+        org, repo = get_org_repo(models[i]['url'])
         if org is not None and repo is not None:
             models[i]['github_org'] = org
             models[i]['github_repo'] = repo
     return models
 
 
-def getOrgRepoByURL(url):
+def get_org_repo(url):
     """Extract github organization and repository by datasource url"""
     url = sanityCheck(url)
-    query_url = 'https://vertnet.cartodb.com/api/v2/sql?q=select%20github_orgname,%20github_reponame%20from%20resource_staging%20where%20url=%27{0}%27'.format(url)
+    query = "select github_orgname, github_reponame from resource_staging where url='{0}'".format(url)
+
     try:
-        d = json.loads(urllib2.urlopen(query_url).read())['rows'][0]
+        d = cartodb_query(query)[0]
         org = d['github_orgname']
         repo = d['github_reponame']
     except IndexError:
@@ -51,7 +51,7 @@ def getOrgRepoByURL(url):
     return org, repo
 
 
-def putAll(reports, key, testing = False):
+def put_all(reports, key, testing=False):
     """Iterate through all reports and store them in GitHub"""
     # Review the iteration to check for errors -- Looks like there's no issue if wait between two PUTs
 
@@ -67,23 +67,23 @@ def putAll(reports, key, testing = False):
             if pub in pubs_to_check:
                 pubs_to_check.pop(pubs_to_check.index(pub))
                 report = reports[pub]
-                org, repo = getOrgRepoByURL(report['url'])
+                org, repo = get_org_repo(report['url'])
 
                 # Testing values
                 if testing is True:
                     org = 'jotegui'
                     repo = 'statReports'
 
-                path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html = putReportInRepo(report, pub, org,
-                                                                                                    repo, key)
+                path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html = put_report(report, pub, org,
+                                                                                               repo, key)
                 if sha_txt == '' and sha_html != '':
                     logging.warning('File {0} failed to upload, deleting {1}'.format(path_txt, path_html))
-                    deleteFileInGithub(org, repo, path_html, sha_html, key)
+                    del_github_file(org, repo, path_html, sha_html, key)
                     pubs_to_check.append(pub)
                 elif sha_html == '' and sha_txt != '':
                     pubs_to_check.append(pub)
                     logging.warning('File {0} failed to upload, deleting {1}'.format(path_html, path_txt))
-                    deleteFileInGithub(org, repo, path_txt, sha_txt, key)
+                    del_github_file(org, repo, path_txt, sha_txt, key)
                 elif sha_txt == '' and sha_html == '':
                     logging.warning('Both files {0} and {1} failed to upload, deleting'.format(path_txt, path_html))
                     pubs_to_check.append(pub)
@@ -103,14 +103,14 @@ def putAll(reports, key, testing = False):
     return git_urls
 
 
-def putReportInRepo(report, pub, org, repo, key):
+def put_report(report, pub, org, repo, key):
     """Upload a single report text to a github repository"""
 
     # Prepare variables
     report_content_txt = report['content_txt']
     report_content_html = report['content_html']
     created_at = report['created_at']
-    path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ', '_'), created_at)
+    path_txt = 'reports/{0}_{1}.txput_allt'.format(pub.replace(' ', '_'), created_at)
     path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ', '_'), created_at)
     message = report_content_txt.split("\n")[1]  # Extract date from report
     content_txt = base64.b64encode(report_content_txt)  # Content has to be base64 encoded
@@ -125,7 +125,7 @@ def putReportInRepo(report, pub, org, repo, key):
     request_url_html = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path_html)
 
     #logging.info('Requesting PUT txt for {0}:{1}:{2}'.format(org, repo, path_txt))
-    r = requests.put(request_url_txt, data = json_input_txt, headers = headers)
+    r = requests.put(request_url_txt, data=json_input_txt, headers=headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -142,7 +142,7 @@ def putReportInRepo(report, pub, org, repo, key):
     time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
 
     #logging.info('Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html))
-    r = requests.put(request_url_html, data = json_input_html, headers = headers)
+    r = requests.put(request_url_html, data=json_input_html, headers=headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -160,11 +160,11 @@ def putReportInRepo(report, pub, org, repo, key):
     return path_txt, sha_txt, git_url_txt, path_html, sha_html, git_url_html
 
 
-def putAndStoreReports(reports, key, today, testing = False):
+def put_store_reports(reports, key, today, testing=False):
     """Main process to put all reports in GitHub and store the git_urls locally"""
 
     # Put all reports in GitHub
-    git_urls = putAll(reports = reports, key = key, testing = testing)
+    git_urls = put_all(reports=reports, key=key, testing=testing)
 
     # Store git data on the generated reports locally
     f = open('./statReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
@@ -175,7 +175,7 @@ def putAndStoreReports(reports, key, today, testing = False):
     return git_urls
 
 
-def deleteFileInGithub(org, repo, path, sha, key):
+def del_github_file(org, repo, path, sha, key):
     """Delete a single report file in GitHub"""
     message = "Deleting file {0}".format(path)
     commiter = {'name': 'VertNet', 'email': 'vertnetinfo@vertnet.org'}
@@ -185,7 +185,7 @@ def deleteFileInGithub(org, repo, path, sha, key):
     headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
 
     logging.info('Requesting DELETE for {0}:{1}:{2}'.format(org, repo, path))
-    r = requests.delete(request_url, data = json_input, headers = headers)
+    r = requests.delete(request_url, data=json_input, headers=headers)
 
     status_code = r.status_code
     response_content = json.loads(r.content)
@@ -203,26 +203,26 @@ def deleteFileInGithub(org, repo, path, sha, key):
     return
 
 
-def deleteAll(git_urls, key):
+def delete_all(git_urls, key):
     """Iterate through a list of files to delete from GitHub"""
     for pub in git_urls:
         org = git_urls[pub]['org']
         repo = git_urls[pub]['repo']
         path = git_urls[pub]['path_txt']
         sha = git_urls[pub]['sha_txt']
-        deleteFileInGithub(org, repo, path, sha, key)
+        del_github_file(org, repo, path, sha, key)
         path = git_urls[pub]['path_html']
         sha = git_urls[pub]['sha_html']
-        deleteFileInGithub(org, repo, path, sha, key)
+        del_github_file(org, repo, path, sha, key)
     logging.info('Finished deleting stats from github repos')
     return
 
 
-def storeModels(models, key, testing = False):
+def store_models(models, key, testing=False):
 
     try:
         model_urls = json.loads(open('./modelURLs.json', 'r').read().rstrip())
-    except:
+    except IOError:
         model_urls = {}
 
     if testing is True:
@@ -230,12 +230,12 @@ def storeModels(models, key, testing = False):
         repo = 'statReports'
     else:
         from util import apikey  # Remove when repo changed to VertNet
-
         key = apikey(True)  # Remove when repo changed to VertNet
         org = 'jotegui'  # Change to VertNet org
         repo = 'statReports'  # Change to VertNet repo
 
     for model in models:
+
         #created_at = models[model]['created_at'].replace('/', '_')
         message = 'Putting JSON data on {0} for {1}, {2}'.format(models[model]['report_month'],
                                                                  models[model]['github_org'],
@@ -248,14 +248,14 @@ def storeModels(models, key, testing = False):
         request_url = 'https://api.github.com/repos/{0}/{1}/contents/{2}'.format(org, repo, path)
         json_input = json.dumps({"message": message, "commiter": commiter, "content": content})
 
-        r = requests.put(request_url, data = json_input, headers = headers)
+        r = requests.put(request_url, data=json_input, headers=headers)
         status_code = r.status_code
 
         if status_code == 201:
             logging.info('SUCCESS - Data model stored for resource {0}'.format(repo))
         else:
             logging.error('DATA MODEL CREATION FAILED for resource {0}'.format(repo))
-        time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
+        time.sleep(2)  # Wait 2 sput_store_reportseconds between insert and insert to avoid 409
 
         if model not in model_urls:
             model_urls[model] = [request_url]
@@ -273,15 +273,15 @@ def storeModels(models, key, testing = False):
 
 def main(reports, models, key, today, testing=False, beta=False):
     # Limit to betatesters
-    reports, models = betaTesting(reports=reports, models=models, beta=beta)
+    reports, models = beta_testing(reports=reports, models=models, beta=beta)
 
     # Add org and repo to models
-    models = addOrgRepoToModels(models)
+    models = add_org_repo(models)
 
     # Put all reports in github
-    git_urls = putAndStoreReports(reports=reports, key=key, today=today, testing=testing)
+    git_urls = put_store_reports(reports=reports, key=key, today=today, testing=testing)
 
     # Put all models in github
-    storeModels(models=models, key=key, testing=testing)
+    store_models(models=models, key=key, testing=testing)
 
     return git_urls

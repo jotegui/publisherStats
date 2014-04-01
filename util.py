@@ -1,7 +1,10 @@
 import os
 import json
+import urllib2
+from urllib import urlencode
 
 __author__ = 'jotegui'
+cdb_url = 'https://vertnet.cartodb.com/api/v2/sql'
 
 def apikey(testing):
     """Return credentials file as a JSON object."""
@@ -36,3 +39,16 @@ def sanityCheck(url):
 def prettyJSON(d):
     print json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
     return
+
+
+def cartodb_query(query):
+    query_url = '?'.join([cdb_url, urlencode({'q': query})])
+    max_retries = 5
+    retry = 0
+    while retry < max_retries:
+        try:
+            d = json.loads(urllib2.urlopen(query_url).read())['rows']
+            return d
+        except urllib2.HTTPError:
+            retry += 1
+    return []

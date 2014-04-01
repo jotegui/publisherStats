@@ -7,6 +7,41 @@
 <i>Usage stats for {{time_lapse}}, generated on {{generated}}</i>
 <p>
 
+<div id="searches">
+<div id="general_counts">
+Number of searches that retrieved data from the resource: {{searches}}<br>
+Number of records retrieved in searches: {{records_searched}}<br>
+</div><p>
+
+<div id="geography">
+Origin of the queries that retrieved data from the resource:<br>
+<table border="1"><tr><td><b>Country</b></td><td><b>Times</b></td></tr>
+{% for country in s_countries %}
+	<tr><td>{{country[0]}}</td><td>{{country[1]}}</td></tr>
+{% endfor %}
+</table>
+</div><p>
+
+<div id="time">
+Dates of the queries that retrieved data from the resource:
+<table border="1"><tr><td><b>Date</b></td><td><b>Times</b></td></tr>
+{% for query_date in s_query_dates %}
+	<tr><td>{{query_date[0]}}</td><td>{{query_date[1]}}</td></tr>
+{% endfor %}
+</table>
+</div><p>
+
+<div id="queries">
+List of queries that retrieved data from the resource:
+<table border="1"><tr><td><b>Query</b></td><td><b>Times</b></td><td><b>Records each time</b></td></tr>
+{% for query in s_queries %}
+	<tr><td>{{query}}</td><td>{{s_queries[query][0]}}</td><td>{{s_queries[query][1]}}</td></tr>
+{% endfor %}
+</table>
+</div><p>
+</div>
+
+<div id="downloads">
 <div id="general_counts">
 Number of download events that retrieved data from the resource: {{downloads}} (out of {{total_downloads}} download events in this period)<br>
 Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)<br>
@@ -40,6 +75,7 @@ List of queries that retrieved data from the resource:
 {% endfor %}
 </table>
 </div><p>
+</div>
 
 <div id="year">
 <h3>Cumulative values for this year</h3>

@@ -1,6 +1,23 @@
 {% autoescape true %}Report for Institution Code {{inst}}, Resource {{resname}}
 Usage stats for {{time_lapse}}, generated on {{generated}}
 
+SEARCHES:
+
+Number of searches that retrieved data from the resource: {{searches}}
+Number of records retrieved in searches: {{records_searched}}
+Number of different countries where searches have been originated: {{ s_len_countries }}
+
+Origin of the queries that retrieved data from the resource: {% for country in s_countries %}
+	Country: {{country[0]}} ; Times: {{country[1]}}{% endfor %}
+
+Dates of the queries that retrieved data from the resource: {% for query_date in s_query_dates %}
+	Date: {{query_date[0]}} ; Times: {{query_date[1]}}{% endfor %}
+
+List of queries that retrieved data from the resource: {% for query in s_queries %}
+	Query: "{{query}}" ; Times: {{s_queries[query][0]}} ; Records each time: {{s_queries[query][1]}} {% endfor %}
+
+DOWNLOADS:
+
 Number of download events that retrieved data from the resource: {{downloads}} (out of {{total_downloads}} download events in this period)
 Total number of records downloaded: {{records}} (out of {{total_records}} records downloaded for all resources in this period)
 Total number of unique records downloaded: {{unique_records}}
@@ -15,12 +32,12 @@ Dates of the queries that retrieved data from the resource: {% for query_date in
 List of queries that retrieved data from the resource: {% for query in queries %}
 	Query: "{{query}}" ; Times: {{queries[query][0]}} ; Records each time: {{queries[query][1]}} {% endfor %}
 
-Cumulative values for this year:
+CUMULATIVE VALUES FOR THIS YEAR:
 
 Number of download events that retrieved data from the resource: {{year_downloads}}
 Total number of records downloaded: {{year_records}}
 
-Cumulative values since the beginning:
+CUMULATIVE VALUES SINCE THE BEGINNING:
 
 Number of download events that retrieved data from the resource: {{history_downloads}}
 Total number of records downloaded: {{history_records}}

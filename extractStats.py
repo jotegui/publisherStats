@@ -2,13 +2,12 @@ import json
 import urllib2
 import logging
 from urllib import urlencode
-from util import sanityCheck
+from util import sanityCheck, cartodb_query
 
 # Global variables
 
 # API base URLs
 gcs_url = 'https://www.googleapis.com/storage/v1beta2'
-cdb_url = 'https://vertnet.cartodb.com/api/v2/sql'
 
 # Structure of download files
 fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights",
@@ -43,19 +42,6 @@ fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", 
              "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus",
              "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship",
              "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
-
-
-def cartodb_query(query):
-    query_url = '?'.join([cdb_url, urlencode({'q': query})])
-    max_retries = 5
-    retry = 0
-    while retry < max_retries:
-        try:
-            d = json.loads(urllib2.urlopen(query_url).read())['rows']
-            return d
-        except urllib2.HTTPError:
-            retry += 1
-    return []
 
 
 def get_gcs_object(bucket_name, object_name):
@@ -147,7 +133,7 @@ def parse_download_name(download):
 
 
 def get_inst_col(url):
-    query = "select icode from resource_staging where url={0}".format(url)
+    query = "select icode from resource_staging where url='{0}'".format(url)
     max_retries = 3
     retry = 0
     while retry < max_retries:
@@ -197,7 +183,7 @@ def get_gcs_counts(file_list):
                 # Option 2 - take inst and col from resource_staging through url
                 # It takes a lot of time, so leaving it for J.I.C.
                 this_url = sanityCheck(this_url)
-                logging.info(this_url)
+                logging.info("Record without institution code, from {0}".format(this_url))
                 this_ins, this_col = get_inst_col(this_url)
                 if this_ins is None or this_col is None:
                     skipped_records += 1
@@ -260,50 +246,82 @@ def get_gcs_counts(file_list):
     return pubs
 
 
-def get_cdb_stats(pubs, downloads_cdb):
+def match_gcs_cdb(pubs, downloads_cdb):
     """Match GCS files with CDB rows"""
     for pub in pubs:
         for dl in downloads_cdb:
             if dl['download'].split("/")[3] in pubs[pub]['download_files']:
-
-                latlon = (dl['lat'], dl['lon'])
-                created = dl['created_at'].split('T')[0]  # remove the time part
-                query = dl['query']
-                idx = pubs[pub]['download_files'].index(dl['download'].split("/")[3])
-
-                if latlon not in pubs[pub]['latlon']:
-                    pubs[pub]['latlon'][latlon] = 1
-                else:
-                    pubs[pub]['latlon'][latlon] += 1
-
-                if created not in pubs[pub]['created']:
-                    pubs[pub]['created'][created] = 1
-                else:
-                    pubs[pub]['created'][created] += 1
-
-                if query not in pubs[pub]['query']:
-                    pubs[pub]['query'][query] = [1, pubs[pub]['this_contrib'][idx]]
-                else:
-                    pubs[pub]['query'][query][0] += 1
+                pubs[pub] = get_cdb_stats(dl=dl, pub=pubs[pub], from_download=True)
     return pubs
 
 
+def get_cdb_stats(dl, pub, from_download=False):
+    """Apply values from CartoDB record to resource stats"""
+
+    latlon = (dl['lat'], dl['lon'])
+    created = dl['created_at'].split('T')[0]  # this removes the time part
+    query = dl['query']
+
+    if 'latlon' not in pub:
+        pub['latlon'] = {latlon: 1}
+    elif latlon not in pub['latlon']:
+        pub['latlon'][latlon] = 1
+    else:
+        pub['latlon'][latlon] += 1
+
+    if 'created' not in pub:
+        pub['created'] = {created: 1}
+    elif created not in pub['created']:
+        pub['created'][created] = 1
+    else:
+        pub['created'][created] += 1
+
+    if from_download is True:
+        idx = pub['download_files'].index(dl['download'].split("/")[3])
+        val = pub['this_contrib'][idx]
+    else:
+        val = pub['list_records_searched'][-1]
+
+    if 'query' not in pub:
+        pub['query'] = {query: [1, val]}
+    elif query not in pub['query']:
+        pub['query'][query] = [1, val]
+    else:
+        pub['query'][query][0] += 1
+
+    return pub
+
+
 def get_cdb_searches(today, lapse='month'):
-    query = "select res_count from query_log where client='portal-prod' and type != 'download' and res_count != '{}'"
-    query = add_time_limit(query=query, today=today, lapse=lapse)
+    query = "select * from query_log"
+
+    query += " where client='portal-prod'"
+    query += " and type != 'download' and results_by_resource != '{}' and results_by_resource != ''"
+
+    query = add_time_limit(query=query, today=today, lapse=lapse)  # TODO: uncomment when in prod
     searches = cartodb_query(query)
 
     pubs = {}
 
     for search in searches:
-        # TODO: debug
-        res_count = json.loads(search['res_count'])
+        res_count = json.loads(search['results_by_resource'])
         for url in res_count:
-            if url not in pubs:
-                pubs[url] = {'searches': 1, 'records_searched': res_count[url]}
+            inst, col = get_inst_col(url)
+            pub = "{0}-{1}".format(inst, col)
+            if pub not in pubs:
+                pubs[pub] = {
+                    'searches': 1,
+                    'records_searched': res_count[url],
+                    'list_records_searched': [res_count[url]],
+                    'url': url,
+                    'inst': inst,
+                    'col': col
+                }
             else:
-                pubs[url]['searches'] += 1
-                pubs[url]['records_searched'] += res_count[url]
+                pubs[pub]['searches'] += 1
+                pubs[pub]['records_searched'] += res_count[url]
+                pubs[pub]['list_records_searched'].append(res_count[url])
+            pubs[pub] = get_cdb_stats(search, pubs[pub], from_download=False)
 
     return pubs
 
@@ -314,18 +332,26 @@ def main(today, lapse='month', testing=False):
     downloads_cdb = get_cdb_downloads(lapse=lapse, today=today)
     file_list = get_file_list(downloads_cdb)
 
-    if testing is True:
-        file_list = file_list[:10]
+    # if testing is True:
+    #     file_list = file_list[:10]
 
     logging.info('getting data from Google Cloud Storage')
     pubs = get_gcs_counts(file_list)
 
-    logging.info('generating stats')
-    pubs = get_cdb_stats(pubs, downloads_cdb)
+    logging.info('generating download stats')
+    pubs = match_gcs_cdb(pubs, downloads_cdb)
 
-    # logging.info('getting counts for searches')
-    # searches = get_cdb_searches(today=today, lapse=lapse)
+    logging.info('getting counts for searches')
+    searches = get_cdb_searches(today=today, lapse=lapse)
 
-    logging.info('integrating searches into stats')
+    logging.info('integrating searches stats')
+    for pub in searches:
+        if pub not in pubs:
+            pubs[pub] = {'searches': searches[pub]}
+            pubs[pub]['url'] = searches[pub]['url']
+            pubs[pub]['inst'] = searches[pub]['inst']
+            pubs[pub]['col'] = searches[pub]['col']
+        else:
+            pubs[pub]['searches'] = searches[pub]
 
     return pubs

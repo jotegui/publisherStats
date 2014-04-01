@@ -35,11 +35,16 @@ def getTimeLapse(today, lapse='month'):
     return report_month_string, report_month
 
 
-def findLastReport(inst, col):
+def findLastReport(inst, col, today):
     pub = '-'.join([inst, col])
     try:
         models = json.loads(open('./modelURLs.json', 'r').read().rstrip())[pub]
         last_url = models[-1]
+        last_report_month = getTimeLapse(datetime.strptime(getTimeLapse(today=today)[1], '%Y/%m'))[1]
+        if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
+            pass
+        else:
+            last_url = ''
     except:
         last_url = ''
     return last_url
@@ -58,12 +63,20 @@ def buildModel(pubs, pub, lapse, today):
         "report_month": "",  # Compact mode of report_month, something like "2014/02"
         "last_report_url": "",  # link to last existing report in GitHub, or empty if first time
         "created_at": "",  # Full date of creation, like "2014/03/17"
-        "month": {  # Monthly values
+        "downloads": {  # Monthly values for downloads
             "downloads": 0,
             "downloads_period": 0,
             "records": 0,
             "records_period": 0,
             "records_unique": 0,
+            "countries_list": [],
+            "countries": [],
+            "dates": [],
+            "queries": []
+        },
+        "searches": {  # Monthly values for searches
+            "searches": 0,
+            "records": 0,
             "countries_list": [],
             "countries": [],
             "dates": [],
@@ -82,63 +95,122 @@ def buildModel(pubs, pub, lapse, today):
     model['report_month_string'] = report_month_string
     model['report_month'] = report_month
 
-    model['last_report_url'] = findLastReport(inst, col)
+    model['last_report_url'] = findLastReport(inst, col, today)
 
     generated = format(today, '%Y/%m/%d')
     model['created_at'] = generated
 
-    downloads = len(pubs[pub]['download_files'])
-    model['month']['downloads'] = downloads
-    total_downloads = pubs[pub]['downloads_in_period']
-    model['month']['downloads_period'] = total_downloads
-    records = pubs[pub]['records_downloaded']
-    model['month']['records'] = records
-    total_records = pubs[pub]['tot_recs']
-    model['month']['records_period'] = total_records
-    unique_records = len(pubs[pub]['unique_records'])
-    model['month']['records_unique'] = unique_records
+    # DOWNLOADS
+    try:  # Try adding download values
+        downloads = len(pubs[pub]['download_files'])
+        model['downloads']['downloads'] = downloads
+        total_downloads = pubs[pub]['downloads_in_period']
+        model['downloads']['downloads_period'] = total_downloads
+        records = pubs[pub]['records_downloaded']
+        model['downloads']['records'] = records
+        total_records = pubs[pub]['tot_recs']
+        model['downloads']['records_period'] = total_records
+        unique_records = len(pubs[pub]['unique_records'])
+        model['downloads']['records_unique'] = unique_records
 
-    countries = {}
-    for i in pubs[pub]['latlon']:
-        lat = i[0]
-        lon = i[1]
-        geonames_url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
-        country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
-        if country not in countries:
-            countries[country] = pubs[pub]['latlon'][i]
-        else:
-            countries[country] += pubs[pub]['latlon'][i]
-    or_countries = countries.keys()
-    or_countries.sort()
-    for i in or_countries:
-        model['month']['countries_list'].append(i)
-        model['month']['countries'].append({"country": i, "times": countries[i]})
+        countries = {}
+        for i in pubs[pub]['latlon']:
+            lat = i[0]
+            lon = i[1]
+            geonames_url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
+            country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
+            if country not in countries:
+                countries[country] = pubs[pub]['latlon'][i]
+            else:
+                countries[country] += pubs[pub]['latlon'][i]
+        or_countries = countries.keys()
+        or_countries.sort()
+        for i in or_countries:
+            model['downloads']['countries_list'].append(i)
+            model['downloads']['countries'].append({"country": i, "times": countries[i]})
 
-    query_dates = {}
-    for i in pubs[pub]['created']:
-        this_date = i
-        this_times = pubs[pub]['created'][i]
-        if this_date not in query_dates:
-            query_dates[this_date] = this_times
-        else:
-            query_dates[this_date] += this_times
-    or_query_dates = query_dates.keys()
-    or_query_dates.sort()
-    for i in or_query_dates:
-        model['month']['dates'].append({"date": i, "times": query_dates[i]})
+        query_dates = {}
+        for i in pubs[pub]['created']:
+            this_date = i
+            this_times = pubs[pub]['created'][i]
+            if this_date not in query_dates:
+                query_dates[this_date] = this_times
+            else:
+                query_dates[this_date] += this_times
+        or_query_dates = query_dates.keys()
+        or_query_dates.sort()
+        for i in or_query_dates:
+            model['downloads']['dates'].append({"date": i, "times": query_dates[i]})
 
-    queries = {}
-    for i in pubs[pub]['query']:
-        this_query = i
-        this_values = pubs[pub]['query'][i]
-        this_times = this_values[0]
-        this_records = this_values[1]
-        if this_query not in queries:
-            queries[this_query] = [this_times, this_records]
-        else:
-            queries[this_query][0] += this_times
-    for i in queries:
-        model['month']['queries'].append({"query": i, "times": queries[i][0], "records": queries[i][1]})
+        queries = {}
+        for i in pubs[pub]['query']:
+            this_query = i
+            this_values = pubs[pub]['query'][i]
+            this_times = this_values[0]
+            this_records = this_values[1]
+            if this_query not in queries:
+                queries[this_query] = [this_times, this_records]
+            else:
+                queries[this_query][0] += this_times
+        for i in queries:
+            model['downloads']['queries'].append({"query": i, "times": queries[i][0], "records": queries[i][1]})
+
+    except KeyError:  # If fails, it means there have been no downloads in the period, so use default values
+        pass
+
+    # SEARCHES
+
+    try:  # Try adding download values
+        searches = pubs[pub]['searches']['searches']
+        model['searches']['searches'] = searches
+        records = pubs[pub]['searches']['records_searched']
+        model['searches']['records'] = records
+
+        countries = {}
+        for i in pubs[pub]['searches']['latlon']:
+            lat = i[0]
+            lon = i[1]
+            geonames_url = 'http://api.geonames.org/countryCodeJSON'
+            geonames_url += '?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
+            country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
+            if country not in countries:
+                countries[country] = pubs[pub]['searches']['latlon'][i]
+            else:
+                countries[country] += pubs[pub]['searches']['latlon'][i]
+        or_countries = countries.keys()
+        or_countries.sort()
+        for i in or_countries:
+            model['searches']['countries_list'].append(i)
+            model['searches']['countries'].append({"country": i, "times": countries[i]})
+
+        query_dates = {}
+        for i in pubs[pub]['searches']['created']:
+            this_date = i
+            this_times = pubs[pub]['searches']['created'][i]
+            if this_date not in query_dates:
+                query_dates[this_date] = this_times
+            else:
+                query_dates[this_date] += this_times
+        or_query_dates = query_dates.keys()
+        or_query_dates.sort()
+        for i in or_query_dates:
+            model['searches']['dates'].append({"date": i, "times": query_dates[i]})
+
+        queries = {}
+        for i in pubs[pub]['searches']['query']:
+            this_query = i
+            this_values = pubs[pub]['searches']['query'][i]
+            this_times = this_values[0]
+            this_records = this_values[1]
+            if this_query not in queries:
+                queries[this_query] = [this_times, this_records]
+            else:
+                queries[this_query][0] += this_times
+        for i in queries:
+            model['searches']['queries'].append({"query": i, "times": queries[i][0], "records": queries[i][1]})
+
+    except KeyError:  # If fails, it means there have been no searches in the period, so use default values
+        pass
 
     return model
 
@@ -172,39 +244,39 @@ def addPastDataToModel(model):
 
         # If report for first month of year, reset counts to monthly values
         if t == 'year' and model['report_month'][-2:] == '01':
-            for i in model['month']:
-                model[t][i] = model['month'][i]
+            for i in model['downloads']:
+                model[t][i] = model['downloads'][i]
         else:
             # Add basic counts
             if 'downloads' in model[t]:
-                model[t]['downloads'] += model['month']['downloads']
+                model[t]['downloads'] += model['downloads']['downloads']
             else:
-                model[t]['downloads'] = model['month']['downloads']
+                model[t]['downloads'] = model['downloads']['downloads']
             if 'downloads_period' in model[t]:
-                model[t]['downloads_period'] += model['month']['downloads_period']
+                model[t]['downloads_period'] += model['downloads']['downloads_period']
             else:
-                model[t]['downloads_period'] = model['month']['downloads_period']
+                model[t]['downloads_period'] = model['downloads']['downloads_period']
             if 'records' in model[t]:
-                model[t]['records'] += model['month']['records']
+                model[t]['records'] += model['downloads']['records']
             else:
-                model[t]['records'] = model['month']['records']
+                model[t]['records'] = model['downloads']['records']
             if 'records_period' in model[t]:
-                model[t]['records_period'] += model['month']['records_period']
+                model[t]['records_period'] += model['downloads']['records_period']
             else:
-                model[t]['records_period'] = model['month']['records_period']
+                model[t]['records_period'] = model['downloads']['records_period']
 
             # Append any non-existing country to list
             if 'countries_list' in model[t]:
-                for c in model['month']['countries_list']:
+                for c in model['downloads']['countries_list']:
                     if c not in model[t]['countries_list']:
                         model[t]['countries_list'].append(c)
             else:
-                model[t]['countries_list'] = model['month']['countries_list']
+                model[t]['countries_list'] = model['downloads']['countries_list']
 
             # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
             for d in ['countries', 'dates', 'queries']:
                 if d not in model[t]:
-                    model[t][d] = model['month'][d]
+                    model[t][d] = model['downloads'][d]
                 else:
                     if d == 'countries':
                         d0 = 'country'
@@ -212,17 +284,17 @@ def addPastDataToModel(model):
                         d0 = 'date'
                     elif d == 'queries':
                         d0 = 'query'
-                    for m_pos in range(len(model['month'][d])):
+                    for m_pos in range(len(model['downloads'][d])):
                         match = False
                         for t_pos in range(len(model[t][d])):
-                            if model['month'][d][m_pos][d0] == model[t][d][t_pos][d0]:
+                            if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
                                 match = True
-                                model[t][d][t_pos]['times'] += model['month'][d][m_pos]['times']
-                                if d == 'queries' and model[t][d][t_pos]['records'] != model['month'][d][m_pos]['records']:
-                                    model[t][d][t_pos]['records'] = model['month'][d][m_pos]['records']
+                                model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
+                                if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
+                                    model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
                                 break
                         if match is False:
-                            model[t][d].append(model['month'][d][m_pos])
+                            model[t][d].append(model['downloads'][d][m_pos])
     return model
 
 
@@ -278,21 +350,31 @@ def createReport(model):
         extensions=['jinja2.ext.autoescape'],
         autoescape=True)
 
-    q_countries = []
-    countries = model['month']['countries']
-    for i in countries:
-        q_countries.append([i['country'], i['times']])
+    for t in ['downloads', 'searches']:
+        t_countries = []
+        countries = model[t]['countries']
+        for i in countries:
+            t_countries.append([i['country'], i['times']])
 
-    q_dates = []
-    dates = model['month']['dates']
-    for i in dates:
-        q_dates.append([i['date'], i['times']])
+        t_dates = []
+        dates = model[t]['dates']
+        for i in dates:
+            t_dates.append([i['date'], i['times']])
 
-    q_queries = {}
-    queries = model['month']['queries']
-    for i in queries:
-        if i['query'] not in q_queries:
-            q_queries[i['query']] = [i['times'], i['records']]
+        t_queries = {}
+        queries = model[t]['queries']
+        for i in queries:
+            if i['query'] not in t_queries:
+                t_queries[i['query']] = [i['times'], i['records']]
+
+        if t == 'downloads':
+            q_countries = t_countries
+            q_dates = t_dates
+            q_queries = t_queries
+        elif t == 'searches':
+            s_countries = t_countries
+            s_dates = t_dates
+            s_queries = t_queries
 
     try:
         m_year_downloads = model['year']['downloads']
@@ -308,19 +390,29 @@ def createReport(model):
         m_hist_records = 'No data'
 
     template_values = {
+        # General values
         'inst': model['inst'],
         'resname': model['col'],
         'time_lapse': model['report_month_string'],
         'generated': model['created_at'],
-        'downloads': model['month']['downloads'],
-        'total_downloads': model['month']['downloads_period'],
-        'records': model['month']['records'],
-        'total_records': model['month']['records_period'],
-        'unique_records': model['month']['records_unique'],
-        'len_countries': len(model['month']['countries_list']),
+        # Downloads
+        'downloads': model['downloads']['downloads'],
+        'total_downloads': model['downloads']['downloads_period'],
+        'records': model['downloads']['records'],
+        'total_records': model['downloads']['records_period'],
+        'unique_records': model['downloads']['records_unique'],
+        'len_countries': len(model['downloads']['countries_list']),
         'countries': q_countries,
         'query_dates': q_dates,
         'queries': q_queries,
+        # Searches
+        'searches': model['searches']['searches'],
+        'records_searched': model['searches']['records'],
+        's_len_countries': len(model['searches']['countries_list']),
+        's_countries': s_countries,
+        's_query_dates': s_dates,
+        's_queries': s_queries,
+        # Cumulative data
         'year_downloads': m_year_downloads,
         'year_records': m_year_records,
         'history_downloads': m_hist_downloads,

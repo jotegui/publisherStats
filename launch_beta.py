@@ -20,7 +20,7 @@ stat_reports_path = './statReports2014_03_04.json'
 #except:
 #    logging.warning('File not found, avoiding deletion.')
 
-monthlyStatReports.main(today=ini, lapse='month', testing=False, beta=True)
+monthlyStatReports.main(today=ini, lapse='month', testing=True, beta=True, github=True)
 
 end = datetime.now()
 dif = end - ini

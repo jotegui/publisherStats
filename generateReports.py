@@ -343,14 +343,11 @@ def addInitialHistoryToModel(model):
     return model
 
 
-def createReport(model):
-    """Create txt and html reports based on model values"""
-    JINJA_ENVIRONMENT = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-        extensions=['jinja2.ext.autoescape'],
-        autoescape=True)
+def countries_dates_queries(model, t):
 
-    for t in ['downloads', 'searches']:
+    if t != 'downloads' and t != 'searches':
+        return
+    else:
         t_countries = []
         countries = model[t]['countries']
         for i in countries:
@@ -367,14 +364,18 @@ def createReport(model):
             if i['query'] not in t_queries:
                 t_queries[i['query']] = [i['times'], i['records']]
 
-        if t == 'downloads':
-            q_countries = t_countries
-            q_dates = t_dates
-            q_queries = t_queries
-        elif t == 'searches':
-            s_countries = t_countries
-            s_dates = t_dates
-            s_queries = t_queries
+        return t_countries, t_dates, t_queries
+
+
+def createReport(model):
+    """Create txt and html reports based on model values"""
+    JINJA_ENVIRONMENT = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'],
+        autoescape=True)
+
+    q_countries, q_dates, q_queries = countries_dates_queries(model, 'downloads')
+    s_countries, s_dates, s_queries = countries_dates_queries(model, 'searches')
 
     try:
         m_year_downloads = model['year']['downloads']

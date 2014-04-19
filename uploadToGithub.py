@@ -3,7 +3,7 @@ import base64
 import json
 import logging
 import requests
-from util import sanityCheck, cartodb_query
+from util import get_org_repo
 
 
 def beta_testing(reports, models, beta=False):
@@ -23,32 +23,6 @@ def beta_testing(reports, models, beta=False):
         models2 = models
 
     return reports2, models2
-
-
-def add_org_repo(models):
-    """Populate the org and repo fields in the model"""
-    for i in models:
-        org, repo = get_org_repo(models[i]['url'])
-        if org is not None and repo is not None:
-            models[i]['github_org'] = org
-            models[i]['github_repo'] = repo
-    return models
-
-
-def get_org_repo(url):
-    """Extract github organization and repository by datasource url"""
-    url = sanityCheck(url)
-    query = "select github_orgname, github_reponame from resource_staging where url='{0}'".format(url)
-
-    try:
-        d = cartodb_query(query)[0]
-        org = d['github_orgname']
-        repo = d['github_reponame']
-    except IndexError:
-        logging.error('Getting Org and Repo by URL failed with url {0}'.format(url))
-        org = None
-        repo = None
-    return org, repo
 
 
 def put_all(reports, key, testing=False):
@@ -110,7 +84,7 @@ def put_report(report, pub, org, repo, key):
     report_content_txt = report['content_txt']
     report_content_html = report['content_html']
     created_at = report['created_at']
-    path_txt = 'reports/{0}_{1}.txput_allt'.format(pub.replace(' ', '_'), created_at)
+    path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ', '_'), created_at)
     path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ', '_'), created_at)
     message = report_content_txt.split("\n")[1]  # Extract date from report
     content_txt = base64.b64encode(report_content_txt)  # Content has to be base64 encoded
@@ -228,7 +202,7 @@ def store_models(models, key, testing=False):
     if testing is True:
         org = 'jotegui'
         repo = 'statReports'
-    else:
+    else:  # TODO: Update this block
         from util import apikey  # Remove when repo changed to VertNet
         key = apikey(True)  # Remove when repo changed to VertNet
         org = 'jotegui'  # Change to VertNet org
@@ -275,13 +249,11 @@ def main(reports, models, key, today, testing=False, beta=False):
     # Limit to betatesters
     reports, models = beta_testing(reports=reports, models=models, beta=beta)
 
-    # Add org and repo to models
-    models = add_org_repo(models)
-
     # Put all reports in github
     git_urls = put_store_reports(reports=reports, key=key, today=today, testing=testing)
 
     # Put all models in github
-    store_models(models=models, key=key, testing=testing)
+    if testing is False:
+        store_models(models=models, key=key, testing=testing)
 
     return git_urls

@@ -14,7 +14,7 @@ Dates of the queries that retrieved data from the resource: {% for query_date in
 	Date: {{query_date[0]}} ; Times: {{query_date[1]}}{% endfor %}
 
 List of queries that retrieved data from the resource: {% for query in s_queries %}
-	Query: "{{query}}" ; Times: {{s_queries[query][0]}} ; Records each time: {{s_queries[query][1]}} {% endfor %}
+	Query: "{{query}}" ; Times: {{s_queries[query]}}{% endfor %}
 
 DOWNLOADS:
 
@@ -30,7 +30,7 @@ Dates of the queries that retrieved data from the resource: {% for query_date in
 	Date: {{query_date[0]}} ; Times: {{query_date[1]}}{% endfor %}
 
 List of queries that retrieved data from the resource: {% for query in queries %}
-	Query: "{{query}}" ; Times: {{queries[query][0]}} ; Records each time: {{queries[query][1]}} {% endfor %}
+	Query: "{{query}}" ; Times: {{queries[query]}}{% endfor %}
 
 CUMULATIVE VALUES FOR THIS YEAR:
 

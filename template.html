@@ -33,9 +33,9 @@ Dates of the queries that retrieved data from the resource:
 
 <div id="queries">
 List of queries that retrieved data from the resource:
-<table border="1"><tr><td><b>Query</b></td><td><b>Times</b></td><td><b>Records each time</b></td></tr>
+<table border="1"><tr><td><b>Query</b></td><td><b>Times</b></td></tr>
 {% for query in s_queries %}
-	<tr><td>{{query}}</td><td>{{s_queries[query][0]}}</td><td>{{s_queries[query][1]}}</td></tr>
+	<tr><td>{{query}}</td><td>{{s_queries[query]}}</td></tr>
 {% endfor %}
 </table>
 </div><p>
@@ -69,9 +69,9 @@ Dates of the queries that retrieved data from the resource:
 
 <div id="queries">
 List of queries that retrieved data from the resource:
-<table border="1"><tr><td><b>Query</b></td><td><b>Times</b></td><td><b>Records each time</b></td></tr>
+<table border="1"><tr><td><b>Query</b></td><td><b>Times</b></td></tr>
 {% for query in queries %}
-	<tr><td>{{query}}</td><td>{{queries[query][0]}}</td><td>{{queries[query][1]}}</td></tr>
+	<tr><td>{{query}}</td><td>{{queries[query]}}</td></tr>
 {% endfor %}
 </table>
 </div><p>

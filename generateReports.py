@@ -2,15 +2,15 @@ import os
 import json
 import base64
 import jinja2
-import urllib2
+#import urllib2
 import logging
 import requests
 from datetime import datetime
+from util import get_org_repo, geonames_query
 
 
 def unescape(s):
-    """Jinja2 is html-oriented, so characters such as < or > appear html-encoded.
-This function decodes he string when the output is not html, but txt."""
+    """Replace encoded characters"""
     s = s.replace("&lt;", "<")
     s = s.replace("&gt;", ">")
     s = s.replace("&#34;", "\"")
@@ -19,7 +19,8 @@ This function decodes he string when the output is not html, but txt."""
     return s
 
 
-def getTimeLapse(today, lapse='month'):
+def get_time_lapse(today, lapse='month'):
+    """Build "February, 2014" and "2014/02" strings for the specified month"""
     if lapse == 'full':
         report_month_string = 'ever since February, 2014'
         report_month = '2014/02'
@@ -35,12 +36,13 @@ def getTimeLapse(today, lapse='month'):
     return report_month_string, report_month
 
 
-def findLastReport(inst, col, today):
+def find_last_report(inst, col, today):
+    """Check if there is a previous report for the resource"""
     pub = '-'.join([inst, col])
     try:
-        models = json.loads(open('./modelURLs.json', 'r').read().rstrip())[pub]
+        models = json.loads(open('./modelURLs.json', 'r').read().rstrip())[pub]  # TODO: Update with final location
         last_url = models[-1]
-        last_report_month = getTimeLapse(datetime.strptime(getTimeLapse(today=today)[1], '%Y/%m'))[1]
+        last_report_month = get_time_lapse(datetime.strptime(get_time_lapse(today=today)[1], '%Y/%m'))[1]
         if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
             pass
         else:
@@ -50,7 +52,7 @@ def findLastReport(inst, col, today):
     return last_url
 
 
-def buildModel(pubs, pub, lapse, today):
+def build_model(pubs, pub, lapse, today):
     """Build the JSON model with data about the month for the resource"""
 
     model = {
@@ -91,14 +93,14 @@ def buildModel(pubs, pub, lapse, today):
     model['inst'] = inst
     model['col'] = col
 
-    report_month_string, report_month = getTimeLapse(today=today, lapse=lapse)
+    report_month_string, report_month = get_time_lapse(today=today, lapse=lapse)
     model['report_month_string'] = report_month_string
     model['report_month'] = report_month
 
-    model['last_report_url'] = findLastReport(inst, col, today)
+    model['last_report_url'] = find_last_report(inst, col, today)
 
-    generated = format(today, '%Y/%m/%d')
-    model['created_at'] = generated
+    created_at = format(today, '%Y/%m/%d')
+    model['created_at'] = created_at
 
     # DOWNLOADS
     try:  # Try adding download values
@@ -117,8 +119,7 @@ def buildModel(pubs, pub, lapse, today):
         for i in pubs[pub]['latlon']:
             lat = i[0]
             lon = i[1]
-            geonames_url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
-            country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
+            country = geonames_query(lat, lon)
             if country not in countries:
                 countries[country] = pubs[pub]['latlon'][i]
             else:
@@ -170,9 +171,10 @@ def buildModel(pubs, pub, lapse, today):
         for i in pubs[pub]['searches']['latlon']:
             lat = i[0]
             lon = i[1]
-            geonames_url = 'http://api.geonames.org/countryCodeJSON'
-            geonames_url += '?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
-            country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
+            #geonames_url = 'http://api.geonames.org/countryCodeJSON'
+            #geonames_url += '?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
+            #country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
+            country = geonames_query(lat, lon)
             if country not in countries:
                 countries[country] = pubs[pub]['searches']['latlon'][i]
             else:
@@ -215,21 +217,16 @@ def buildModel(pubs, pub, lapse, today):
     return model
 
 
-def addPastDataToModel(model):
-    """Add year and history cumulative values"""
-
-    # First, put the previous month's year and history objects in the month model
-
+def load_previous_model(model):
     # If it's the first time, take 2013 and 2014/01 values from files
     if model['last_report_url'] == "":
-        model = addInitialYearToModel(model)
-        model = addInitialHistoryToModel(model)
+        model = add_initial_year(model)
+        model = add_initial_history(model)
 
     # Else, take values from last month's json
     else:
 
         url = model['last_report_url']
-
         r = requests.get(url)
 
         if r.status_code == 200:
@@ -238,73 +235,88 @@ def addPastDataToModel(model):
             model['year'] = prev_model['year']
             model['history'] = prev_model['history']
 
-    # Now, add monthly values to history and to year if still in same year
-
-    for t in ['history', 'year']:
-
-        # If report for first month of year, reset counts to monthly values
-        if t == 'year' and model['report_month'][-2:] == '01':
-            for i in model['downloads']:
-                model[t][i] = model['downloads'][i]
-        else:
-            # Add basic counts
-            if 'downloads' in model[t]:
-                model[t]['downloads'] += model['downloads']['downloads']
-            else:
-                model[t]['downloads'] = model['downloads']['downloads']
-            if 'downloads_period' in model[t]:
-                model[t]['downloads_period'] += model['downloads']['downloads_period']
-            else:
-                model[t]['downloads_period'] = model['downloads']['downloads_period']
-            if 'records' in model[t]:
-                model[t]['records'] += model['downloads']['records']
-            else:
-                model[t]['records'] = model['downloads']['records']
-            if 'records_period' in model[t]:
-                model[t]['records_period'] += model['downloads']['records_period']
-            else:
-                model[t]['records_period'] = model['downloads']['records_period']
-
-            # Append any non-existing country to list
-            if 'countries_list' in model[t]:
-                for c in model['downloads']['countries_list']:
-                    if c not in model[t]['countries_list']:
-                        model[t]['countries_list'].append(c)
-            else:
-                model[t]['countries_list'] = model['downloads']['countries_list']
-
-            # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
-            for d in ['countries', 'dates', 'queries']:
-                if d not in model[t]:
-                    model[t][d] = model['downloads'][d]
-                else:
-                    if d == 'countries':
-                        d0 = 'country'
-                    elif d == 'dates':
-                        d0 = 'date'
-                    elif d == 'queries':
-                        d0 = 'query'
-                    for m_pos in range(len(model['downloads'][d])):
-                        match = False
-                        for t_pos in range(len(model[t][d])):
-                            if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
-                                match = True
-                                model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
-                                if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
-                                    model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
-                                break
-                        if match is False:
-                            model[t][d].append(model['downloads'][d][m_pos])
     return model
 
 
-def addInitialYearToModel(model):
+def add_history_year_data(model, t):
+
+    # If report for first month of year, reset year counts to monthly values
+    if t == 'year' and model['report_month'][-2:] == '01':
+        for i in model['downloads']:
+            model[t][i] = model['downloads'][i]
+    else:
+        # Add basic counts
+        if 'downloads' in model[t]:
+            model[t]['downloads'] += model['downloads']['downloads']
+        else:
+            model[t]['downloads'] = model['downloads']['downloads']
+        if 'downloads_period' in model[t]:
+            model[t]['downloads_period'] += model['downloads']['downloads_period']
+        else:
+            model[t]['downloads_period'] = model['downloads']['downloads_period']
+        if 'records' in model[t]:
+            model[t]['records'] += model['downloads']['records']
+        else:
+            model[t]['records'] = model['downloads']['records']
+        if 'records_period' in model[t]:
+            model[t]['records_period'] += model['downloads']['records_period']
+        else:
+            model[t]['records_period'] = model['downloads']['records_period']
+
+        # Append any non-existing country to list
+        if 'countries_list' in model[t]:
+            for c in model['downloads']['countries_list']:
+                if c not in model[t]['countries_list']:
+                    model[t]['countries_list'].append(c)
+        else:
+            model[t]['countries_list'] = model['downloads']['countries_list']
+
+        # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
+        for d in ['countries', 'dates', 'queries']:
+            if d not in model[t]:
+                model[t][d] = model['downloads'][d]
+            else:
+                if d == 'countries':
+                    d0 = 'country'
+                elif d == 'dates':
+                    d0 = 'date'
+                elif d == 'queries':
+                    d0 = 'query'
+                for m_pos in range(len(model['downloads'][d])):
+                    match = False
+                    for t_pos in range(len(model[t][d])):
+                        if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
+                            match = True
+                            model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
+                            if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
+                                model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
+                            break
+                    if match is False:
+                        model[t][d].append(model['downloads'][d][m_pos])
+
+    return model
+
+
+def add_past_data(model):
+    """Add year and history cumulative values"""
+
+    # First, put the previous month's year and history objects in the month model
+    model = load_previous_model(model)
+
+    # Now, add monthly values to history and to year if still in same year
+    for t in ['history', 'year']:
+        model = add_history_year_data(model, t)
+
+    return model
+
+
+def add_initial_year(model):
     """Add values for January 2014"""
 
     path = './reports_2014_01/{0}-{1}.json'.format(model['inst'], model['col'])
     try:
         d = json.loads(open(path, 'r').read().rstrip())
-    except:
+    except IOError:
         model['year'] = {"downloads": 0, "records": 0}
         return model
 
@@ -318,13 +330,13 @@ def addInitialYearToModel(model):
     return model
 
 
-def addInitialHistoryToModel(model):
+def add_initial_history(model):
     """Add values for 2013 and add January 2014 values"""
 
     path = './reports_2013/{0}-{1}.json'.format(model['inst'], model['col'])
     try:
         d = json.loads(open(path, 'r').read().rstrip())
-    except:
+    except IOError:
         model['history'] = {"downloads": 0, "records": 0}
         return model
 
@@ -362,14 +374,14 @@ def countries_dates_queries(model, t):
         queries = model[t]['queries']
         for i in queries:
             if i['query'] not in t_queries:
-                t_queries[i['query']] = [i['times'], i['records']]
+                t_queries[i['query']] = i['times']
 
         return t_countries, t_dates, t_queries
 
 
-def createReport(model):
+def create_report(model):
     """Create txt and html reports based on model values"""
-    JINJA_ENVIRONMENT = jinja2.Environment(
+    jinja_environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
         extensions=['jinja2.ext.autoescape'],
         autoescape=True)
@@ -380,13 +392,13 @@ def createReport(model):
     try:
         m_year_downloads = model['year']['downloads']
         m_year_records = model['year']['records']
-    except:
+    except KeyError:
         m_year_downloads = 'No data'
         m_year_records = 'No data'
     try:
         m_hist_downloads = model['history']['downloads']
         m_hist_records = model['history']['records']
-    except:
+    except KeyError:
         m_hist_downloads = 'No data'
         m_hist_records = 'No data'
 
@@ -420,12 +432,22 @@ def createReport(model):
         'history_records': m_hist_records
     }
 
-    template_txt = JINJA_ENVIRONMENT.get_template('template.txt')
+    template_txt = jinja_environment.get_template('template.txt')
     report_txt = unescape(template_txt.render(template_values))
-    template_html = JINJA_ENVIRONMENT.get_template('template.html')
+    template_html = jinja_environment.get_template('template.html')
     report_html = template_html.render(template_values)
 
     return report_txt, report_html
+
+
+def add_org_repo(models):
+    """Populate the org and repo fields in the model"""
+    for i in models:
+        org, repo = get_org_repo(models[i]['url'])
+        if org is not None and repo is not None:
+            models[i]['github_org'] = org
+            models[i]['github_repo'] = repo
+    return models
 
 
 def main(pubs, lapse, today):
@@ -436,13 +458,16 @@ def main(pubs, lapse, today):
     models = {}
 
     for pub in pubs:
-        model = buildModel(pubs, pub, lapse, today)
-        model = addPastDataToModel(model)
+        model = build_model(pubs, pub, lapse, today)
+        model = add_past_data(model)
 
-        report_txt, report_html = createReport(model)
+        report_txt, report_html = create_report(model)
 
         models[pub] = model
         reports[pub] = {'url': pubs[pub]['url'], 'inst': pubs[pub]['inst'], 'col': pubs[pub]['col'],
                         'created_at': created_at, 'content_txt': report_txt, 'content_html': report_html}
+
+    # Add org and repo to models
+    models = add_org_repo(models)
 
     return reports, models

@@ -2,7 +2,7 @@ import json
 import urllib2
 import logging
 from urllib import urlencode
-from util import sanityCheck, cartodb_query
+from util import sanity_check, cartodb_query
 
 # Global variables
 
@@ -46,12 +46,19 @@ fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", 
 
 def get_gcs_object(bucket_name, object_name):
     """Get raw content of object in bucket and parse to record-type object"""
+
+    # Build API url
     url = '/'.join([gcs_url, 'b', bucket_name, 'o', object_name.replace(' ', '%20')])
     url_optim = '?'.join([url, urlencode({'alt': 'media'})])
+
+    # Download object
     raw = urllib2.urlopen(url_optim).read()
+
+    # Prepare storage variables
     d = []
     lines = raw.split("\n")
     pos = 0
+
     while pos < len(lines):
 
         splitline = lines[pos].split("\t")
@@ -109,9 +116,9 @@ def get_cdb_downloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
     query = "select * from query_log where download is not null and download !=''"
-    query += " and client='portal-prod'"
+    query += " and client='portal-prod'"  # Just production portal downloads
 
-    query = add_time_limit(query=query, today=today, lapse=lapse)
+    query = add_time_limit(query=query, today=today, lapse=lapse)  # Just from the specific month
 
     d = cartodb_query(query)
     return d
@@ -127,8 +134,8 @@ def get_file_list(downloads_cdb):
 
 def parse_download_name(download):
     """Parse the download file name"""
-    b = download.split('/')[2]
-    o = download.split('/')[3]
+    b = download.split('/')[2]  # Get Bucket name
+    o = download.split('/')[3]  # Get Object name
     return b, o
 
 
@@ -155,12 +162,15 @@ def get_gcs_counts(file_list):
     tot_recs = 0  # Total downloaded records in the whole network
 
     for f in file_list:
+        # Parse name from download field (i.e. remove the gs://vn-downloads part)
         b, o = parse_download_name(f)
+
+        # Download the object or throw a warning and skip
         logging.info('downloading and parsing %s' % o)
         try:
             d = get_gcs_object(b, o)
         except urllib2.HTTPError:
-            logging.warning('file {0} not found. It might be creating at the moment. Skipping.'.format(o))
+            logging.warning('file {0} not found. Skipping.'.format(o))
             continue
 
         # Remove headers
@@ -178,20 +188,17 @@ def get_gcs_counts(file_list):
             this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
             this_url = rec[fieldList.index('datasource_and_rights')]
 
+            # If institutioncode field is empty, take inst and col from resource_staging through url
             if this_ins == '':
-
-                # Option 2 - take inst and col from resource_staging through url
-                # It takes a lot of time, so leaving it for J.I.C.
-                this_url = sanityCheck(this_url)
+                this_url = sanity_check(this_url)
                 logging.info("Record without institution code, from {0}".format(this_url))
                 this_ins, this_col = get_inst_col(this_url)
                 if this_ins is None or this_col is None:
                     skipped_records += 1
                     continue
-                this_pub = '{0}-{1}'.format(this_ins, this_col)
-            else:
 
-                this_pub = '{0}-{1}'.format(this_ins, this_col)
+            # Build internal identifier
+            this_pub = '{0}-{1}'.format(this_ins, this_col)
 
             # Build UUIDs to calculate unique_records
             this_icode = rec[fieldList.index('institutioncode')]
@@ -202,18 +209,18 @@ def get_gcs_counts(file_list):
             if this_pub not in pubs:
                 # Initialize stats for resource if resource does not exist yet
                 pubs[this_pub] = {
-                    'url': this_url,
-                    'inst': this_ins,
-                    'col': this_col,
-                    'download_files': [o],  # Array of individual files
-                    'records_downloaded': 1,
-                    'unique_records': [this_uuid],
-                    'latlon': {},
-                    'query': {},
-                    'created': {},
-                    'downloads_in_period': len(file_list),
-                    'this_contrib_count': 1,
-                    'this_contrib': []
+                    'url': this_url,  # To extract github org and repo from resource_staging
+                    'inst': this_ins,  # Institution code
+                    'col': this_col,  # Collection code
+                    'download_files': [o],  # Array of individual files, for further calculations
+                    'records_downloaded': 1,  # Initial count of records
+                    'unique_records': [this_uuid],  # Array of unique records
+                    'latlon': {},  # Dictionary of latlon counts. TODO: Update to store country from headers
+                    'query': {},  # Dictionary of query terms counts
+                    'created': {},  # Dictionary of query dates counts
+                    'downloads_in_period': len(file_list),  # Total number of downloads in the given period
+                    'this_contrib_count': 1,  # Initial number of retrieved records for this query
+                    'this_contrib': []  # Array to store number of records retrieved by each query
                 }
             else:
                 # If resource exists, add 1 to the record count
@@ -239,6 +246,7 @@ def get_gcs_counts(file_list):
     for pub in pubs:
         pubs[pub]['tot_recs'] = tot_recs
 
+    # Log any skipped record
     if skipped_records > 0:
         logging.warning('{0} skipped records'.format(skipped_records))
     else:
@@ -259,9 +267,10 @@ def get_cdb_stats(dl, pub, from_download=False):
     """Apply values from CartoDB record to resource stats"""
 
     latlon = (dl['lat'], dl['lon'])
-    created = dl['created_at'].split('T')[0]  # this removes the time part
+    created = dl['created_at'].split('T')[0]  # Remove the time part, keep just date
     query = dl['query']
 
+    # Store latlon counts
     if 'latlon' not in pub:
         pub['latlon'] = {latlon: 1}
     elif latlon not in pub['latlon']:
@@ -269,6 +278,7 @@ def get_cdb_stats(dl, pub, from_download=False):
     else:
         pub['latlon'][latlon] += 1
 
+    # Store query date counts
     if 'created' not in pub:
         pub['created'] = {created: 1}
     elif created not in pub['created']:
@@ -276,6 +286,7 @@ def get_cdb_stats(dl, pub, from_download=False):
     else:
         pub['created'][created] += 1
 
+    # Store query terms and records retrieved for this particular query
     if from_download is True:
         idx = pub['download_files'].index(dl['download'].split("/")[3])
         val = pub['this_contrib'][idx]
@@ -328,22 +339,28 @@ def get_cdb_searches(today, lapse='month'):
 
 def main(today, lapse='month', testing=False):
     """Extract downloaded files from CartoDB, parse the files in Google Cloud Storage, and build pre-models"""
+
+    # Extract the list of download files for the period
     logging.info('getting data from CartoDB')
     downloads_cdb = get_cdb_downloads(lapse=lapse, today=today)
     file_list = get_file_list(downloads_cdb)
 
-    # if testing is True:
-    #     file_list = file_list[:10]
+    if testing is True:
+        file_list = file_list[:10]
 
+    # Extract the GCS stats for each download file in file_list
     logging.info('getting data from Google Cloud Storage')
     pubs = get_gcs_counts(file_list)
 
+    # Extract the CDB stats for each resource in pubs
     logging.info('generating download stats')
     pubs = match_gcs_cdb(pubs, downloads_cdb)
 
+    # Extract CDB stats for searches
     logging.info('getting counts for searches')
     searches = get_cdb_searches(today=today, lapse=lapse)
 
+    # Integrate searches and downloads
     logging.info('integrating searches stats')
     for pub in searches:
         if pub not in pubs:

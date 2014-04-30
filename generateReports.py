@@ -171,9 +171,6 @@ def build_model(pubs, pub, lapse, today):
         for i in pubs[pub]['searches']['latlon']:
             lat = i[0]
             lon = i[1]
-            #geonames_url = 'http://api.geonames.org/countryCodeJSON'
-            #geonames_url += '?formatted=true&lat={0}&lng={1}&username=jotegui&style=full'.format(lat, lon)
-            #country = json.loads(urllib2.urlopen(geonames_url).read())['countryName']
             country = geonames_query(lat, lon)
             if country not in countries:
                 countries[country] = pubs[pub]['searches']['latlon'][i]

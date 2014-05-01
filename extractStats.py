@@ -57,10 +57,11 @@ def get_gcs_object(bucket_name, object_name):
     # Prepare storage variables
     d = []
     lines = raw.split("\n")
+    if len(lines[-1]) <= 1:
+        lines = lines[:-1]
     pos = 0
 
     while pos < len(lines):
-
         splitline = lines[pos].split("\t")
 
         # Regular line

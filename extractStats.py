@@ -184,8 +184,12 @@ def get_gcs_counts(file_list):
 
             # Option 1 - store by resource directly from the file
             this_ins = rec[fieldList.index('institutioncode')]
-            if this_ins == "Royal Ontario Museum: ROM":
+            if this_ins.startswith("Royal Ontario Museum"):
                 this_ins = "ROM"
+            elif this_ins.startswith('Borror Laboratory of Bioacoustics'):
+                this_ins = 'BLB'
+            elif this_ins.startswith('Ohio State University'):
+                this_ins = 'OSUM'
             this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
             this_url = rec[fieldList.index('datasource_and_rights')]
 
@@ -310,7 +314,7 @@ def get_cdb_searches(today, lapse='month'):
     query += " where client='portal-prod'"
     query += " and type != 'download' and results_by_resource != '{}' and results_by_resource != ''"
 
-    query = add_time_limit(query=query, today=today, lapse=lapse)  # TODO: uncomment when in prod
+    query = add_time_limit(query=query, today=today, lapse=lapse)
     searches = cartodb_query(query)
 
     pubs = {}

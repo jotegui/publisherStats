@@ -455,6 +455,11 @@ def main(pubs, lapse, today):
     models = {}
 
     for pub in pubs:
+
+        # Sanity check
+        if pubs[pub]['inst'] is None:
+            continue
+
         model = build_model(pubs, pub, lapse, today)
         model = add_past_data(model)
 

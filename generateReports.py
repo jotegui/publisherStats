@@ -119,7 +119,10 @@ def build_model(pubs, pub, lapse, today):
         for i in pubs[pub]['latlon']:
             lat = i[0]
             lon = i[1]
-            country = geonames_query(lat, lon)
+            try:
+                country = geonames_query(lat, lon)
+            except KeyError:
+                country = "Unknown"
             if country not in countries:
                 countries[country] = pubs[pub]['latlon'][i]
             else:
@@ -171,7 +174,10 @@ def build_model(pubs, pub, lapse, today):
         for i in pubs[pub]['searches']['latlon']:
             lat = i[0]
             lon = i[1]
-            country = geonames_query(lat, lon)
+            try:
+                country = geonames_query(lat, lon)
+            except KeyError:
+                country = "Unknown"
             if country not in countries:
                 countries[country] = pubs[pub]['searches']['latlon'][i]
             else:
@@ -215,9 +221,11 @@ def build_model(pubs, pub, lapse, today):
 
 
 def load_previous_model(model):
-    # If it's the first time, take 2013 and 2014/01 values from files
+    # If it's the first time, take 2013 and 2014/01-03 values from files
     if model['last_report_url'] == "":
-        model = add_initial_year(model)
+        model = add_initial_year(model, month="03")
+        model = add_initial_year(model, month="02")
+        model = add_initial_year(model, month="01")
         model = add_initial_history(model)
 
     # Else, take values from last month's json
@@ -247,49 +255,58 @@ def add_history_year_data(model, t):
             model[t]['downloads'] += model['downloads']['downloads']
         else:
             model[t]['downloads'] = model['downloads']['downloads']
-        if 'downloads_period' in model[t]:
-            model[t]['downloads_period'] += model['downloads']['downloads_period']
-        else:
-            model[t]['downloads_period'] = model['downloads']['downloads_period']
         if 'records' in model[t]:
             model[t]['records'] += model['downloads']['records']
         else:
             model[t]['records'] = model['downloads']['records']
-        if 'records_period' in model[t]:
-            model[t]['records_period'] += model['downloads']['records_period']
+        if 'searches' in model[t]:
+            model[t]['searches'] += model['searches']['searches']
         else:
-            model[t]['records_period'] = model['downloads']['records_period']
-
-        # Append any non-existing country to list
-        if 'countries_list' in model[t]:
-            for c in model['downloads']['countries_list']:
-                if c not in model[t]['countries_list']:
-                    model[t]['countries_list'].append(c)
+            model[t]['searches'] = model['searches']['searches']
+        if 's_records' in model[t]:
+            model[t]['s_records'] += model['searches']['records']
         else:
-            model[t]['countries_list'] = model['downloads']['countries_list']
-
-        # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
-        for d in ['countries', 'dates', 'queries']:
-            if d not in model[t]:
-                model[t][d] = model['downloads'][d]
-            else:
-                if d == 'countries':
-                    d0 = 'country'
-                elif d == 'dates':
-                    d0 = 'date'
-                elif d == 'queries':
-                    d0 = 'query'
-                for m_pos in range(len(model['downloads'][d])):
-                    match = False
-                    for t_pos in range(len(model[t][d])):
-                        if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
-                            match = True
-                            model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
-                            if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
-                                model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
-                            break
-                    if match is False:
-                        model[t][d].append(model['downloads'][d][m_pos])
+            model[t]['s_records'] = model['searches']['records']
+        # if 'downloads_period' in model[t]:
+        #     model[t]['downloads_period'] += model['downloads']['downloads_period']
+        # else:
+        #     model[t]['downloads_period'] = model['downloads']['downloads_period']
+        #
+        # if 'records_period' in model[t]:
+        #     model[t]['records_period'] += model['downloads']['records_period']
+        # else:
+        #     model[t]['records_period'] = model['downloads']['records_period']
+        #
+        # # Append any non-existing country to list
+        # if 'countries_list' in model[t]:
+        #     for c in model['downloads']['countries_list']:
+        #         if c not in model[t]['countries_list']:
+        #             model[t]['countries_list'].append(c)
+        # else:
+        #     model[t]['countries_list'] = model['downloads']['countries_list']
+        #
+        # # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
+        # for d in ['countries', 'dates', 'queries']:
+        #     if d not in model[t]:
+        #         model[t][d] = model['downloads'][d]
+        #     else:
+        #         if d == 'countries':
+        #             d0 = 'country'
+        #         elif d == 'dates':
+        #             d0 = 'date'
+        #         elif d == 'queries':
+        #             d0 = 'query'
+        #         for m_pos in range(len(model['downloads'][d])):
+        #             match = False
+        #             for t_pos in range(len(model[t][d])):
+        #                 if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
+        #                     match = True
+        #                     model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
+        #                     if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
+        #                         model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
+        #                     break
+        #             if match is False:
+        #                 model[t][d].append(model['downloads'][d][m_pos])
 
     return model
 
@@ -307,35 +324,38 @@ def add_past_data(model):
     return model
 
 
-def add_initial_year(model):
-    """Add values for January 2014"""
+def add_initial_year(model, month='01'):
+    """Add values for Jan, Feb and Mar 2014"""
 
-    path = './reports_2014_01/{0}-{1}.json'.format(model['inst'], model['col'])
+    path = './reports_2014_{2}/{0}-{1}.json'.format(model['inst'], model['col'], month)
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:
-        model['year'] = {"downloads": 0, "records": 0}
+        if 'year' not in model:
+            model['year'] = {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}
         return model
 
     if 'year' not in model:         # "Month" may sound confusing, but it's the name of the element containing
         model['year'] = d['month']  # year-round cumulative values
 
-    else:                                       # Shouldn't apply because
-        for i in d['month']:                    # this is only called if
-            model['year'][i] += d['month'][i]   # there's no previous data
+    else:
+        for i in d['month']:
+            model['year'][i] += d['month'][i]
 
     return model
 
 
 def add_initial_history(model):
-    """Add values for 2013 and add January 2014 values"""
+    """Add values for 2013 values"""
 
     path = './reports_2013/{0}-{1}.json'.format(model['inst'], model['col'])
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:
-        model['history'] = {"downloads": 0, "records": 0}
-        return model
+        #if 'history' not in model:
+        #    model['history'] = {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}
+        #return model
+        d = {"year": {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}}
 
     if 'history' not in model:
         model['history'] = d['year']
@@ -344,10 +364,12 @@ def add_initial_history(model):
         if 'year' in model:
             model['history']['downloads'] += model['year']['downloads']
             model['history']['records'] += model['year']['records']
+            model['history']['downloads_period'] += model['year']['downloads_period']
+            model['history']['records_period'] += model['year']['records_period']
 
     else:                                        # Shouldn't apply because
-        for i in d['year']:                      # this is only called if
-            model['history'][i] += d['year'][i]  # there's no previous data
+        for i in d['year']:                      # this function is only called
+            model['history'][i] += d['year'][i]  # if there's no previous data
 
     return model
 
@@ -393,11 +415,23 @@ def create_report(model):
         m_year_downloads = 'No data'
         m_year_records = 'No data'
     try:
+        m_year_searches = model['year']['searches']
+        m_year_s_records = model['year']['s_records']
+    except KeyError:
+        m_year_searches = 'No data'
+        m_year_s_records = 'No data'
+    try:
         m_hist_downloads = model['history']['downloads']
         m_hist_records = model['history']['records']
     except KeyError:
         m_hist_downloads = 'No data'
         m_hist_records = 'No data'
+    try:
+        m_hist_searches = model['history']['searches']
+        m_hist_s_records = model['history']['s_records']
+    except KeyError:
+        m_hist_searches = 'No data'
+        m_hist_s_records = 'No data'
 
     template_values = {
         # General values
@@ -425,8 +459,12 @@ def create_report(model):
         # Cumulative data
         'year_downloads': m_year_downloads,
         'year_records': m_year_records,
+        'year_searches': m_year_searches,
+        'year_s_records': m_year_s_records,
         'history_downloads': m_hist_downloads,
-        'history_records': m_hist_records
+        'history_records': m_hist_records,
+        'history_searches': m_hist_searches,
+        'history_s_records': m_hist_s_records
     }
 
     template_txt = jinja_environment.get_template('template.txt')

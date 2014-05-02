@@ -21,10 +21,9 @@ def create_issue(git_url, key, today, testing=False):
     body = """Your monthly VertNet data use report is ready!
 You can see and download the report in GitHub as a raw text file ({0}) or as a raw HTML file ({1}), or you can see the rendered HTML version of the report through this link: {2}.
 To download the report, please log in to your GitHub account and view either the text or html document linked above.  Next, click the "Raw" button to save the page.  You can also right-click on "Raw" and use the "Save link as..." option. The txt file can be opened with any text editor. To correctly view the HTML file, you will need to open it with a web browser.
-Please post any comments or questions to http://www.vertnet.org/feedback/contact.html.
+You can find more information on the reporting system here: http://www.vertnet.org/resources/usagereportingguide.html
+Please post any comments or questions to http://www.vertnet.org/feedback/contact.html
 Thank you for being a part of VertNet.
-
-IMPORTANT NOTICE: The report generating system is currently in beta. You will likely receive more than one report for this month. This message will no longer appear when we leave the beta status. Thanks for your patience.
 """.format(link_txt, link_html, link_pretty_html)
     labels = ['report']
 

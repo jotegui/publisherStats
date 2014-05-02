@@ -34,11 +34,15 @@ List of queries that retrieved data from the resource: {% for query in queries %
 
 CUMULATIVE VALUES FOR THIS YEAR:
 
+Number of search events that retrieved data from the resource: {{year_searches}}
+Total number of records retrieved from searches: {{year_s_records}}
 Number of download events that retrieved data from the resource: {{year_downloads}}
 Total number of records downloaded: {{year_records}}
 
 CUMULATIVE VALUES SINCE THE BEGINNING:
 
+Number of search events that retrieved data from the resource: {{history_searches}}
+Total number of records retrieved from searches: {{history_s_records}}
 Number of download events that retrieved data from the resource: {{history_downloads}}
 Total number of records downloaded: {{history_records}}
 
@@ -46,21 +50,5 @@ Total number of records downloaded: {{history_records}}
 End of report.
 
 
-Brief explanation of each stat:
-
-1) Number of download events that retrieved data from the resource. The amount of times any record from your institution has appeared in a download. The number in parenthesis is how many result sets have been downloaded in total in the network, in the given period. We believe this is helpful to see the proportion of all the download events that have records from a particular institution.
-
-2) Total number of records downloaded. The amount of times any record from your institution has been downloaded. The number in parenthesis is the total amount of records that have been downloaded from the VertNet network in the given period.
-
-3) Total number of unique records downloaded. The number of individual records from your collection that have been downloaded. We believe this is helpful to calculate the proportion of your collection that has been downloaded.
-
-The main difference between (3) and (2) can be better explained with an example: If your collection has 3 records, 'a', 'b' and 'c', and 'a' is downloaded 3 times and 'b' is downloaded once, (2) would be 4, because there have been 4 downloaded records, but (3) would be 2, because only records 'a' and 'b' have been downloaded.
-
-4) Number of different countries. The amount of individual countries that have downloaded data from your institution in the given period.
-
-5) Breakdown of the individual countries, counting how many times they have downloaded records from your institution.
-
-6) Breakdown of dates when queries where made, with the number of downloads each day.
-
-7) Breakdown of query terms. These are the actual queries that were performed and which retrieved data,  from your institution. It also shows the number of times that query has been performed and the number of records pulled from your institution each time.
+Please visit http://www.vertnet.org/resources/usagereportingguide.html to see a complete list, with explanations, of these metrics.
 {% endautoescape %}

@@ -1,6 +1,10 @@
 # Any key file
 *.key
 
+# Backup files
+*.bak
+*.old
+
 # Python Compiled and Object files
 *.pyc
 *.pk
@@ -9,6 +13,7 @@
 logs/
 *.log*
 *.out
+*.err
 
 # Locally stored reports folder
 reports*/

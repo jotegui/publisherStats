@@ -3,9 +3,11 @@ import urllib2
 from urllib import urlencode
 from datetime import datetime
 from extractStats import get_gcs_counts
+import logging
 
 base_url = 'https://www.googleapis.com/storage/v1beta2'
 downloads_bucket = 'vn-downloads'
+
 
 
 # Extract list of files in bucket
@@ -32,6 +34,10 @@ def filterByDate(object_list, year, month = None):
 
 
 def main(year, month = None):
+    ini = datetime.now()
+    logging.basicConfig(filename='logs/legacy_{0}.log'.format(format(ini, '%Y_%m_%d')),
+                        format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
+
     object_list = getObjectList(downloads_bucket)
     filtered_list = filterByDate(object_list, year, month)
     
@@ -49,12 +55,12 @@ def main(year, month = None):
         doc[lapse]['records'] = pubs[pub]['records_downloaded']
         doc[lapse]['records_period'] = pubs[pub]['tot_recs']
         docs[pub] = doc
-        # json.dump(doc, open('./reports_2013/{0}.json'.format(pub),'w'))
+        json.dump(doc, open('./reports_2014_03/{0}.json'.format(pub),'w'))
     
     return docs
 
 if __name__ == "__main__":
     
-    year = 2013
-    month = 12
-    doc = main(year, month)
+    year = 2014
+    month = 3
+    foo = main(year, month)

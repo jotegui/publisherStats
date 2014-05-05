@@ -108,12 +108,22 @@ def put_report(report, pub, org, repo, key):
         logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_txt = response_content['content']['git_url']
         sha_txt = response_content['content']['sha']
+    elif status_code == 422:
+        logging.info('File {0} already exists. Skipping.'.format(request_url_txt))
+        r2 = requests.get(request_url_txt, headers=headers)
+        if r2.status_code == 200:
+            sha_txt = json.loads(r2.content)['sha']
+            git_url_txt = json.loads(r2.content)['git_url']
+        else:
+            logging.error('Something went wrong. The file {0} already exists but could not be retrieved.'.format(request_url_txt))
+            sha_txt = ''
+            git_url_txt = ''
     else:
         logging.error('PUT {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path_txt, status_code,
                                                                                      response_content['message']))
         git_url_txt = ''
         sha_txt = ''
-    time.sleep(2)  # Wait 2 seconds between insert and insert to avoid 409
+    time.sleep(2)  # Wait 2 seconds between insert and insert to avoid HTTP 409
 
     #logging.info('Requesting PUT html for {0}:{1}:{2}'.format(org, repo, path_html))
     r = requests.put(request_url_html, data=json_input_html, headers=headers)
@@ -125,6 +135,16 @@ def put_report(report, pub, org, repo, key):
         #logging.info('SUCCESS (Status Code {0}) - SHA: {1}'.format(status_code, response_content['content']['sha']))
         git_url_html = response_content['content']['git_url']
         sha_html = response_content['content']['sha']
+    elif status_code == 422:
+        logging.info('File {0} already exists. Skipping.'.format(request_url_html))
+        r2 = requests.get(request_url_txt, headers=headers)
+        if r2.status_code == 200:
+            sha_html = json.loads(r2.content)['sha']
+            git_url_html = json.loads(r2.content)['git_url']
+        else:
+            logging.error('Something went wrong. The file {0} already exists but could not be retrieved.'.format(request_url_html))
+            sha_html = ''
+            git_url_html = ''
     else:
         logging.error('PUT {0}:{1}:{2} Failed. Status Code {3}. Message: {4}'.format(org, repo, path_html, status_code,
                                                                                      response_content['message']))

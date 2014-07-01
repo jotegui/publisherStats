@@ -2,11 +2,11 @@ import os
 import json
 import base64
 import jinja2
-#import urllib2
+import time
 import logging
 import requests
 from datetime import datetime
-from util import get_org_repo, geonames_query
+from util import get_org_repo, geonames_query, apikey
 
 
 def unescape(s):
@@ -222,6 +222,8 @@ def build_model(pubs, pub, lapse, today):
 
 def load_previous_model(model):
     # If it's the first time, take 2013 and 2014/01-03 values from files
+    key = apikey(testing=False)
+
     if model['last_report_url'] == "":
         model = add_initial_year(model, month="03")
         model = add_initial_year(model, month="02")
@@ -230,15 +232,33 @@ def load_previous_model(model):
 
     # Else, take values from last month's json
     else:
-
+        retries = 5
+        cont = 0
+        success = False
         url = model['last_report_url']
-        r = requests.get(url)
+        headers = {'User-Agent': 'VertNet', 'Authorization': 'token {0}'.format(key)}
 
-        if r.status_code == 200:
+        while cont < retries:
+            r = requests.get(url, headers=headers)
 
-            prev_model = json.loads(base64.b64decode(json.loads(r.content)['content']))
-            model['year'] = prev_model['year']
-            model['history'] = prev_model['history']
+            if r.status_code == 200:
+
+                prev_model = json.loads(base64.b64decode(json.loads(r.content)['content']))
+                model['year'] = prev_model['year']
+                model['history'] = prev_model['history']
+                success = True
+                break
+            else:
+                cont += 1
+                logging.warning("Attempt failed with status {0}")
+                logging.warning(r.content['message'])
+                logging.warning("Will retry in 5 seconds".format(r.status_code))
+                time.sleep(5)
+
+        if success is False:
+            logging.error("Something went wrong retrieving past data for {0} in {1}".format(model["url"], url))
+            model['year'] = {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}
+            model['history'] = {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}
 
     return model
 

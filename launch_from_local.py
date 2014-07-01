@@ -12,7 +12,7 @@ logging.basicConfig(filename='logs/local_{0}.log'.format(format(ini, '%Y_%m_%d')
 
 logging.info('Initiated at {0}'.format(ini))
 
-monthlyStatReports.main(today=ini, lapse='month', testing=False, beta=False, local=True, local_file='pubs_2014_05_01.pk')
+monthlyStatReports.main(today=ini, lapse='month', testing=False, beta=False, local=True, local_file='pubs_2014_06_02.pk')
 
 end = datetime.now()
 dif = end - ini

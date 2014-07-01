@@ -59,7 +59,7 @@ def put_all(reports, key, testing=False):
                     logging.warning('File {0} failed to upload, deleting {1}'.format(path_html, path_txt))
                     del_github_file(org, repo, path_txt, sha_txt, key)
                 elif sha_txt == '' and sha_html == '':
-                    logging.warning('Both files {0} and {1} failed to upload, deleting'.format(path_txt, path_html))
+                    logging.warning('Both files {0} and {1} failed to upload'.format(path_txt, path_html))
                     pubs_to_check.append(pub)
                 else:
                     git_urls[pub] = {

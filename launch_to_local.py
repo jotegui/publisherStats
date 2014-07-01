@@ -20,7 +20,8 @@ pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
 
 # Piece of code to store pubs in disk (to avoid 1h+ of downloads)
 import pickle
-with open('pubs_2014_05_01.pk', 'wb') as output:
+logging.info('Writing to local file pubs_{0}.pk'.format(format(today, '%Y_%m_%d')))
+with open('pubs_{0}.pk'.format(format(today, '%Y_%m_%d')), 'wb') as output:
     pickle.dump(pubs, output, pickle.HIGHEST_PROTOCOL)
 
 # reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)

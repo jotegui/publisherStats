@@ -18,6 +18,7 @@ def main(today, lapse='month', testing=False, beta=False, local=False, local_fil
     if local is False:
         pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
     else:
+        logging.info("Loading from local file {0}".format(local_file))
         with open(local_file, 'rb') as inp_file:
             pubs = pickle.load(inp_file)
 

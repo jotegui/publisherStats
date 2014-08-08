@@ -32,7 +32,7 @@ def sanity_check(url):
         new_url = 'http://gbif.rom.on.ca:8180/ipt/resource.do?r=vposteology'
     elif url == 'http://ipt.vertnet.org:8080/ipt/resource.do?r=ncsmvertpaleo':
         new_url = 'http://ipt.vertnet.org:8080/ipt/resource.do?r=ncsm_vertpaleo'
-    elif url == 'http://ipt.vertnet.org:8080/ipt/resource.do?r=ncsm_vertpaleo':
+    elif url == 'http://ipt.vertnet.org:8080/ipt/resource.do?r=ncsm-mammals':
         new_url = 'http://ipt.vertnet.org:8080/ipt/resource.do?r=ncsm_mammals'
     # More to be added as needed
     else:

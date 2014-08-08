@@ -40,7 +40,7 @@ def find_last_report(inst, col, today):
     """Check if there is a previous report for the resource"""
     pub = '-'.join([inst, col])
     try:
-        models = json.loads(open('./modelURLs.json', 'r').read().rstrip())[pub]  # TODO: Update with final location
+        models = json.loads(open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'r').read().rstrip())[pub]  # TODO: Update with final location
         last_url = models[-1]
         last_report_month = get_time_lapse(datetime.strptime(get_time_lapse(today=today)[1], '%Y/%m'))[1]
         if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
@@ -347,7 +347,7 @@ def add_past_data(model):
 def add_initial_year(model, month='01'):
     """Add values for Jan, Feb and Mar 2014"""
 
-    path = './reports_2014_{2}/{0}-{1}.json'.format(model['inst'], model['col'], month)
+    path = '/home/jotegui/VertNet/PublisherStats/reports_2014_{2}/{0}-{1}.json'.format(model['inst'], model['col'], month)
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:
@@ -368,7 +368,7 @@ def add_initial_year(model, month='01'):
 def add_initial_history(model):
     """Add values for 2013 values"""
 
-    path = './reports_2013/{0}-{1}.json'.format(model['inst'], model['col'])
+    path = '/home/jotegui/VertNet/PublisherStats/reports_2013/{0}-{1}.json'.format(model['inst'], model['col'])
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:

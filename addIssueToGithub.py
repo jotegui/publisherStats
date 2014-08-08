@@ -63,7 +63,7 @@ def main(git_urls, key, today, testing=False):
     issues = create_issues(git_urls=git_urls, key=key, today=today, testing=testing)
 
     # Store git data on the generated issues locally
-    g = open('./issueReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
+    g = open('/home/jotegui/VertNet/PublisherStats/issueReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
     g.write(json.dumps(issues))
     g.close()
     logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(today, '%Y_%m_%d')))

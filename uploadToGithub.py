@@ -12,7 +12,7 @@ def beta_testing(reports, models, beta=False):
     if beta is True:
         reports2 = {}
         models2 = {}
-        testing_insts = open('./TestingInsts.txt', 'r').read().rstrip().split(' ')
+        testing_insts = open('/home/jotegui/VertNet/PublisherStats/TestingInsts.txt', 'r').read().rstrip().split(' ')
         for pub in reports:
             inst = reports[pub]['inst']
             if inst in testing_insts:
@@ -161,7 +161,7 @@ def put_store_reports(reports, key, today, testing=False):
     git_urls = put_all(reports=reports, key=key, testing=testing)
 
     # Store git data on the generated reports locally
-    f = open('./statReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
+    f = open('/home/jotegui/VertNet/PublisherStats/statReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
     f.write(json.dumps(git_urls))
     f.close()
     logging.info('GIT URLs stored in local file statReports_{0}.json'.format(format(today, '%Y_%m_%d')))
@@ -215,7 +215,7 @@ def delete_all(git_urls, key):
 def store_models(models, key, testing=False):
 
     try:
-        model_urls = json.loads(open('./modelURLs.json', 'r').read().rstrip())
+        model_urls = json.loads(open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'r').read().rstrip())
     except IOError:
         model_urls = {}
 
@@ -257,7 +257,7 @@ def store_models(models, key, testing=False):
             model_urls[model].append(request_url)
 
     # Store urls on the generated models
-    f = open('./modelURLs.json', 'w')
+    f = open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'w')
     f.write(json.dumps(model_urls))
     f.close()
     logging.info('MODEL URLs stored in local file modelURLs.json')

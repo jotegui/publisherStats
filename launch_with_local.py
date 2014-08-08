@@ -3,18 +3,17 @@
 import logging
 from datetime import datetime
 import extractStats
-# from monthlyStatReports import apikey
+import monthlyStatReports
 
 __author__ = 'jotegui'
 
 today = datetime.now()
-logging.basicConfig(filename='/home/jotegui/VertNet/PublisherStats/logs/to_local_{0}.log'.format(format(today, '%Y_%m_%d')),
+logging.basicConfig(filename='/home/jotegui/VertNet/PublisherStats/logs/with_local_{0}.log'.format(format(today, '%Y_%m_%d')),
                     format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 lapse = 'month'
 testing = False
-# key = apikey(testing)
-# beta = True
+beta = False
 
 pubs = extractStats.main(today=today, lapse=lapse, testing=testing)
 
@@ -24,8 +23,12 @@ logging.info('Writing to local file pubs_{0}.pk'.format(format(today, '%Y_%m_%d'
 with open('/home/jotegui/VertNet/PublisherStats/pubs_{0}.pk'.format(format(today, '%Y_%m_%d')), 'wb') as output:
     pickle.dump(pubs, output, pickle.HIGHEST_PROTOCOL)
 
-# reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)
-#
-# reports, models = betaTesting(reports=reports, models=models, beta=beta)
-# models = addOrgRepoToModels(models)
-# storeModels(models = models, key = key, testing = testing)
+# After saving output, continue
+monthlyStatReports.main(today=today, lapse=lapse, testing=testing, beta=beta, local=True, local_file='/home/jotegui/VertNet/PublisherStats/pubs_{0}.pk'.format(format(today, '%Y_%m_%d')))
+
+end = datetime.now()
+dif = end - today
+
+logging.info('elapsed {0}'.format(dif))
+logging.info('done')
+

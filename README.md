@@ -2,6 +2,7 @@ Usage Report Generation
 =======================
 
 A VertNet tool for creating and delivering Data Usage Reports.
+
 Author: Javier Otegui.
 
 Requirements
@@ -17,7 +18,9 @@ In order to work, the following python modules must be installed and available:
 Besides, GitHub API requires an authentication token for the VertNet-related repositories. This token (a string of numbers and letters) must be stored in the same folder as the utils.py module, and must be named 'VN.key'. For security reasons, I am not uploading it to the repository.
 
 See more about this:
+
 https://developer.github.com/v3/oauth/
+
 https://developer.github.com/v3/oauth_authorizations/#create-a-new-authorization
 
 Installation

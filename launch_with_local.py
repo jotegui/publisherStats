@@ -6,8 +6,7 @@ import pickle
 import extractStats
 import monthlyStatReports
 
-
-__author__ = 'jotegui'
+__author__ = '@jotegui'
 
 today = datetime.now()
 

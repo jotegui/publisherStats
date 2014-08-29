@@ -4,6 +4,8 @@ import logging
 import monthlyStatReports
 from datetime import datetime
 
+__author__ = '@jotegui'
+
 ini = datetime.now()
 
 logging.basicConfig(filename='logs/test_{0}.log'.format(format(ini, '%Y_%m_%d')),

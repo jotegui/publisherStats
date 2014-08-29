@@ -4,7 +4,7 @@ import urllib2
 import logging
 from urllib import urlencode
 
-__author__ = 'jotegui'
+__author__ = '@jotegui'
 
 
 def apikey(testing):
@@ -99,3 +99,13 @@ def get_org_repo(url):
         org = None
         repo = None
     return org, repo
+
+
+def unescape(s):
+    """Replace encoded characters"""
+    s = s.replace("&lt;", "<")
+    s = s.replace("&gt;", ">")
+    s = s.replace("&#34;", "\"")
+    # Add more as they appear
+    s = s.replace("&amp;", "&")
+    return s

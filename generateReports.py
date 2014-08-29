@@ -6,22 +6,12 @@ import time
 import logging
 import requests
 from datetime import datetime
-from util import get_org_repo, geonames_query, apikey
+from util import get_org_repo, geonames_query, apikey, unescape
 
 __author__ = '@jotegui'
 
 # Must match same variable in generateReports
-model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'  # TODO: Update with final location
-
-
-def unescape(s):
-    """Replace encoded characters"""
-    s = s.replace("&lt;", "<")
-    s = s.replace("&gt;", ">")
-    s = s.replace("&#34;", "\"")
-    # Add more as they appear
-    s = s.replace("&amp;", "&")
-    return s
+model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'
 
 
 def get_time_lapse(today, lapse='month'):
@@ -52,13 +42,6 @@ def find_last_report(inst, col, today):
         models = json.loads(open(model_url_path, 'r').read().rstrip())[pub]
         # Get the last one
         last_url = models[-1]
-
-#        # DEPRECATED: only allow models from the immediately previous month
-#        last_report_month = get_time_lapse(datetime.strptime(get_time_lapse(today=today)[1], '%Y/%m'))[1]
-#        if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
-#            pass
-#        else:
-#            last_url = ''
     
     # If there is no model for the identifier, return empty
     except IndexError:
@@ -346,9 +329,6 @@ def add_initial_history(model):
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:
-        #if 'history' not in model:
-        #    model['history'] = {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}
-        #return model
         d = {"year": {"downloads": 0, "records": 0, "downloads_period": 0, "records_period": 0}}
 
     if 'history' not in model:

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-__author__ = '@jotegui'
-
 import logging
 import monthlyStatReports
 from datetime import datetime
+
+__author__ = '@jotegui'
 
 # Get start time
 ini = datetime.now()

@@ -4,6 +4,8 @@ import logging
 import monthlyStatReports
 from datetime import datetime
 
+__author__ = '@jotegui'
+
 file_name = '/home/jotegui/VertNet/PublisherStats/pubs_2014_08_02.pk'
 
 y, m, d = file_name[:-3].split("_")[1:4]

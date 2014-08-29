@@ -4,9 +4,8 @@ import logging
 from datetime import datetime
 import extractStats
 import pickle
-# from monthlyStatReports import apikey
 
-__author__ = 'jotegui'
+__author__ = '@jotegui'
 
 today = datetime.now()
 
@@ -27,8 +26,8 @@ logging.info('Writing to local file pubs_{0}.pk'.format(format(today, '%Y_%m_%d'
 with open(file_name, 'wb') as output:
     pickle.dump(pubs, output, pickle.HIGHEST_PROTOCOL)
 
-# reports, models = generateReports.main(pubs=pubs, lapse=lapse, today=today)
-#
-# reports, models = betaTesting(reports=reports, models=models, beta=beta)
-# models = addOrgRepoToModels(models)
-# storeModels(models = models, key = key, testing = testing)
+end = datetime.now()
+dif = end - today
+
+logging.info('elapsed {0}'.format(dif))
+logging.info('done')

@@ -1,10 +1,10 @@
-__author__ = '@jotegui'
-
 import json
 import urllib2
 import logging
 from urllib import urlencode
 from util import sanity_check, cartodb_query
+
+__author__ = '@jotegui'
 
 
 # Global variables

@@ -24,5 +24,8 @@ reports*/
 # except the model
 !model.json
 
+# Custom scripts
+*.sh
+
 # Other stuff
 .idea/

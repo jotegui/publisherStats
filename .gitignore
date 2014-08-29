@@ -4,6 +4,7 @@
 # Backup files
 *.bak
 *.old
+old/
 
 # Python Compiled and Object files
 *.pyc

@@ -1,8 +1,11 @@
+__author__ = '@jotegui'
+
 import json
 import urllib2
 import logging
 from urllib import urlencode
 from util import sanity_check, cartodb_query
+
 
 # Global variables
 
@@ -10,39 +13,7 @@ from util import sanity_check, cartodb_query
 gcs_url = 'https://www.googleapis.com/storage/v1beta2'
 
 # Structure of download files
-fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights",
-             "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode",
-             "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld",
-             "datageneralizations", "dynamicproperties", "occurrenceid", "catalognumber", "occurrenceremarks",
-             "recordnumber", "recordedby", "individualid", "individualcount", "sex", "lifestage",
-             "reproductivecondition", "behavior", "establishmentmeans", "occurrencestatus", "preparations",
-             "disposition", "othercatalognumbers", "previousidentifications", "associatedmedia", "associatedreferences",
-             "associatedoccurrences", "associatedsequences", "associatedtaxa", "eventid", "samplingprotocol",
-             "samplingeffort", "eventdate", "eventtime", "startdayofyear", "enddayofyear", "year", "month", "day",
-             "verbatimeventdate", "habitat", "fieldnumber", "fieldnotes", "eventremarks", "locationid",
-             "highergeographyid", "highergeography", "continent", "waterbody", "islandgroup", "island", "country",
-             "countrycode", "stateprovince", "county", "municipality", "locality", "verbatimlocality",
-             "verbatimelevation", "minimumelevationinmeters", "maximumelevationinmeters", "verbatimdepth",
-             "minimumdepthinmeters", "maximumdepthinmeters", "minimumdistanceabovesurfaceinmeters",
-             "maximumdistanceabovesurfaceinmeters", "locationaccordingto", "locationremarks", "verbatimcoordinates",
-             "verbatimlatitude", "verbatimlongitude", "verbatimcoordinatesystem", "verbatimsrs", "decimallatitude",
-             "decimallongitude", "geodeticdatum", "coordinateuncertaintyinmeters", "coordinateprecision",
-             "pointradiusspatialfit", "footprintwkt", "footprintsrs", "footprintspatialfit", "georeferencedby",
-             "georeferenceddate", "georeferenceprotocol", "georeferencesources", "georeferenceverificationstatus",
-             "georeferenceremarks", "geologicalcontextid", "earliesteonorlowesteonothem", "latesteonorhighesteonothem",
-             "earliesteraorlowesterathem", "latesteraorhighesterathem", "earliestperiodorlowestsystem",
-             "latestperiodorhighestsystem", "earliestepochorlowestseries", "latestepochorhighestseries",
-             "earliestageorloweststage", "latestageorhigheststage", "lowestbiostratigraphiczone",
-             "highestbiostratigraphiczone", "lithostratigraphicterms", "group", "formation", "member", "bed",
-             "identificationid", "identifiedby", "dateidentified", "identificationreferences",
-             "identificationverificationstatus", "identificationremarks", "identificationqualifier", "typestatus",
-             "taxonid", "scientificnameid", "acceptednameusageid", "parentnameusageid", "originalnameusageid",
-             "nameaccordingtoid", "namepublishedinid", "taxonconceptid", "scientificname", "acceptednameusage",
-             "parentnameusage", "originalnameusage", "nameaccordingto", "namepublishedin", "namepublishedinyear",
-             "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus",
-             "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship",
-             "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
-
+fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights", "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode", "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld", "datageneralizations", "dynamicproperties", "occurrenceid", "catalognumber", "occurrenceremarks", "recordnumber", "recordedby", "individualid", "individualcount", "sex", "lifestage", "reproductivecondition", "behavior", "establishmentmeans", "occurrencestatus", "preparations", "disposition", "othercatalognumbers", "previousidentifications", "associatedmedia", "associatedreferences", "associatedoccurrences", "associatedsequences", "associatedtaxa", "eventid", "samplingprotocol", "samplingeffort", "eventdate", "eventtime", "startdayofyear", "enddayofyear", "year", "month", "day", "verbatimeventdate", "habitat", "fieldnumber", "fieldnotes", "eventremarks", "locationid", "highergeographyid", "highergeography", "continent", "waterbody", "islandgroup", "island", "country", "countrycode", "stateprovince", "county", "municipality", "locality", "verbatimlocality", "verbatimelevation", "minimumelevationinmeters", "maximumelevationinmeters", "verbatimdepth", "minimumdepthinmeters", "maximumdepthinmeters", "minimumdistanceabovesurfaceinmeters", "maximumdistanceabovesurfaceinmeters", "locationaccordingto", "locationremarks", "verbatimcoordinates", "verbatimlatitude", "verbatimlongitude", "verbatimcoordinatesystem", "verbatimsrs", "decimallatitude", "decimallongitude", "geodeticdatum", "coordinateuncertaintyinmeters", "coordinateprecision", "pointradiusspatialfit", "footprintwkt", "footprintsrs", "footprintspatialfit", "georeferencedby", "georeferenceddate", "georeferenceprotocol", "georeferencesources", "georeferenceverificationstatus", "georeferenceremarks", "geologicalcontextid", "earliesteonorlowesteonothem", "latesteonorhighesteonothem", "earliesteraorlowesterathem", "latesteraorhighesterathem", "earliestperiodorlowestsystem", "latestperiodorhighestsystem", "earliestepochorlowestseries", "latestepochorhighestseries", "earliestageorloweststage", "latestageorhigheststage", "lowestbiostratigraphiczone", "highestbiostratigraphiczone", "lithostratigraphicterms", "group", "formation", "member", "bed", "identificationid", "identifiedby", "dateidentified", "identificationreferences", "identificationverificationstatus", "identificationremarks", "identificationqualifier", "typestatus", "taxonid", "scientificnameid", "acceptednameusageid", "parentnameusageid", "originalnameusageid", "nameaccordingtoid", "namepublishedinid", "taxonconceptid", "scientificname", "acceptednameusage", "parentnameusage", "originalnameusage", "nameaccordingto", "namepublishedin", "namepublishedinyear", "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus", "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship", "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
 def get_gcs_object(bucket_name, object_name):
     """Get raw content of object in bucket and parse to record-type object"""
@@ -192,10 +163,10 @@ def get_gcs_counts(file_list):
                 this_ins = 'OSUM'
             this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
             this_url = rec[fieldList.index('datasource_and_rights')]
-
+            this_url = sanity_check(this_url)
+            
             # If institutioncode field is empty, take inst and col from resource_staging through url
             if this_ins == '':
-                this_url = sanity_check(this_url)
                 logging.info("Record without institution code, from {0}".format(this_url))
                 this_ins, this_col = get_inst_col(this_url)
                 if this_ins is None or this_col is None:
@@ -349,7 +320,8 @@ def main(today, lapse='month', testing=False):
     logging.info('getting data from CartoDB')
     downloads_cdb = get_cdb_downloads(lapse=lapse, today=today)
     file_list = get_file_list(downloads_cdb)
-
+    
+    # Limit to the first ten downloads if on testing mode
     if testing is True:
         file_list = file_list[:10]
 

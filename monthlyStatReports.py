@@ -1,3 +1,4 @@
+import checkNameConsistency
 import extractStats
 import generateReports
 import uploadToGithub
@@ -5,12 +6,15 @@ import addIssueToGithub
 from util import *
 import pickle
 
-__author__ = 'jotegui'
+__author__ = '@jotegui'
 
 
 def main(today, lapse='month', testing=False, beta=False, local=False, local_file=None, github=True):
     """Main function"""
-
+    
+    # Check repository name consistency between CartoDB and GitHub
+    checkNameConsistency.main()
+    
     # Get API key, depending on whether or not it is in testing mode
     key = apikey(testing=testing)
 

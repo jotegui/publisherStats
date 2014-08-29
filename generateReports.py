@@ -8,6 +8,11 @@ import requests
 from datetime import datetime
 from util import get_org_repo, geonames_query, apikey
 
+__author__ = '@jotegui'
+
+# Must match same variable in generateReports
+model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'  # TODO: Update with final location
+
 
 def unescape(s):
     """Replace encoded characters"""
@@ -38,16 +43,25 @@ def get_time_lapse(today, lapse='month'):
 
 def find_last_report(inst, col, today):
     """Check if there is a previous report for the resource"""
+    
+    # Build the internal ID
     pub = '-'.join([inst, col])
+    
     try:
-        models = json.loads(open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'r').read().rstrip())[pub]  # TODO: Update with final location
+        # Open the file with the URLs for each model
+        models = json.loads(open(model_url_path, 'r').read().rstrip())[pub]
+        # Get the last one
         last_url = models[-1]
-        last_report_month = get_time_lapse(datetime.strptime(get_time_lapse(today=today)[1], '%Y/%m'))[1]
-        if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
-            pass
-        else:
-            last_url = ''
-    except:
+
+#        # DEPRECATED: only allow models from the immediately previous month
+#        last_report_month = get_time_lapse(datetime.strptime(get_time_lapse(today=today)[1], '%Y/%m'))[1]
+#        if last_url.endswith('{0}_{1}.json'.format(last_report_month.split('/')[0], last_report_month.split('/')[1])):
+#            pass
+#        else:
+#            last_url = ''
+    
+    # If there is no model for the identifier, return empty
+    except IndexError:
         last_url = ''
     return last_url
 
@@ -287,46 +301,6 @@ def add_history_year_data(model, t):
             model[t]['s_records'] += model['searches']['records']
         else:
             model[t]['s_records'] = model['searches']['records']
-        # if 'downloads_period' in model[t]:
-        #     model[t]['downloads_period'] += model['downloads']['downloads_period']
-        # else:
-        #     model[t]['downloads_period'] = model['downloads']['downloads_period']
-        #
-        # if 'records_period' in model[t]:
-        #     model[t]['records_period'] += model['downloads']['records_period']
-        # else:
-        #     model[t]['records_period'] = model['downloads']['records_period']
-        #
-        # # Append any non-existing country to list
-        # if 'countries_list' in model[t]:
-        #     for c in model['downloads']['countries_list']:
-        #         if c not in model[t]['countries_list']:
-        #             model[t]['countries_list'].append(c)
-        # else:
-        #     model[t]['countries_list'] = model['downloads']['countries_list']
-        #
-        # # Add Countries and Dates counts. Same for Queries, but if record count is modified, update it
-        # for d in ['countries', 'dates', 'queries']:
-        #     if d not in model[t]:
-        #         model[t][d] = model['downloads'][d]
-        #     else:
-        #         if d == 'countries':
-        #             d0 = 'country'
-        #         elif d == 'dates':
-        #             d0 = 'date'
-        #         elif d == 'queries':
-        #             d0 = 'query'
-        #         for m_pos in range(len(model['downloads'][d])):
-        #             match = False
-        #             for t_pos in range(len(model[t][d])):
-        #                 if model['downloads'][d][m_pos][d0] == model[t][d][t_pos][d0]:
-        #                     match = True
-        #                     model[t][d][t_pos]['times'] += model['downloads'][d][m_pos]['times']
-        #                     if d == 'queries' and model[t][d][t_pos]['records'] != model['downloads'][d][m_pos]['records']:
-        #                         model[t][d][t_pos]['records'] = model['downloads'][d][m_pos]['records']
-        #                     break
-        #             if match is False:
-        #                 model[t][d].append(model['downloads'][d][m_pos])
 
     return model
 

@@ -5,6 +5,11 @@ import logging
 import requests
 from util import get_org_repo
 
+__author__ = '@jotegui'
+
+model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'  # Must match same variable in generateReports
+specific_institutions_path = '/home/jotegui/VertNet/PublisherStats/TestingInsts.txt'
+report_path = '/home/jotegui/VertNet/PublisherStats/statReports_{0}.json'  # {0} will be replaced by report date
 
 def beta_testing(reports, models, beta=False):
     """Store data on betatesters only if in beta mode"""
@@ -12,7 +17,7 @@ def beta_testing(reports, models, beta=False):
     if beta is True:
         reports2 = {}
         models2 = {}
-        testing_insts = open('/home/jotegui/VertNet/PublisherStats/TestingInsts.txt', 'r').read().rstrip().split(' ')
+        testing_insts = open(specific_institutions_path, 'r').read().rstrip().split(' ')
         for pub in reports:
             inst = reports[pub]['inst']
             if inst in testing_insts:
@@ -161,7 +166,7 @@ def put_store_reports(reports, key, today, testing=False):
     git_urls = put_all(reports=reports, key=key, testing=testing)
 
     # Store git data on the generated reports locally
-    f = open('/home/jotegui/VertNet/PublisherStats/statReports_{0}.json'.format(format(today, '%Y_%m_%d')), 'w')
+    f = open(report_path.format(format(today, '%Y_%m_%d')), 'w')
     f.write(json.dumps(git_urls))
     f.close()
     logging.info('GIT URLs stored in local file statReports_{0}.json'.format(format(today, '%Y_%m_%d')))
@@ -215,7 +220,7 @@ def delete_all(git_urls, key):
 def store_models(models, key, testing=False):
 
     try:
-        model_urls = json.loads(open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'r').read().rstrip())
+        model_urls = json.loads(open(model_url_path, 'r').read().rstrip())
     except IOError:
         model_urls = {}
 
@@ -257,7 +262,7 @@ def store_models(models, key, testing=False):
             model_urls[model].append(request_url)
 
     # Store urls on the generated models
-    f = open('/home/jotegui/VertNet/PublisherStats/modelURLs.json', 'w')
+    f = open(model_url_path, 'w')
     f.write(json.dumps(model_urls))
     f.close()
     logging.info('MODEL URLs stored in local file modelURLs.json')

@@ -5,9 +5,11 @@ import monthlyStatReports
 from datetime import datetime
 
 file_name = '/home/jotegui/VertNet/PublisherStats/pubs_2014_08_02.pk'
+
 y, m, d = file_name[:-3].split("_")[1:4]
 ini = datetime(int(y), int(m), int(d))
 
+# ini = datetime.today()
 
 logging.basicConfig(filename='/home/jotegui/VertNet/PublisherStats/logs/local_{0}.log'.format(format(ini, '%Y_%m_%d')),
                     format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)

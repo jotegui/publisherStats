@@ -122,7 +122,7 @@ def get_all_repos():
 def check_empty_repos(git_urls, all_repos):
     """Extract a list of github repositories for which there is no data this month."""
     empty_repos = []
-    existing_repos = [{'github_orgname': d[x]['org'], 'github_reponame':d[x]['repo']} for x in d.keys()]
+    existing_repos = [{'github_orgname': git_urls[x]['org'], 'github_reponame':git_urls[x]['repo']} for x in git_urls.keys()]
     for i in all_repos:
         if i not in existing_repos:
             empty_repos.append(i)
@@ -135,6 +135,11 @@ def main(git_urls, key, today, testing=False):
     # Create issues in github
     issues = create_issues(git_urls=git_urls, key=key, today=today, testing=testing)
     
+    # Store git data on the generated issues locally
+    with open(issue_reports_path.format(format(today, '%Y_%m_%d')), 'w') as g:
+        g.write(json.dumps(issues))
+    logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(today, '%Y_%m_%d')))
+    
     # Get all github repos from cartodb
     all_repos = get_all_repos()
     
@@ -143,11 +148,6 @@ def main(git_urls, key, today, testing=False):
     
     # Create an issue for each empty resource
     empty_issues = create_empty_issues(empty_repos=empty_repos, key=key, today=today, testing=testing)
-    
-    # Store git data on the generated issues locally
-    with open(issue_reports_path.format(format(today, '%Y_%m_%d')), 'w') as g:
-        g.write(json.dumps(issues))
-    logging.info('GIT ISSUES stored in local file issueReports_{0}.json'.format(format(today, '%Y_%m_%d')))
     
     with open(empty_issue_report_path.format(format(today, '%Y_%m_%d')), 'w') as g:
         g.write(json.dumps(empty_issues))

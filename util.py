@@ -58,6 +58,8 @@ def api_query(api_url, params, res_field):
             return d
         except urllib2.HTTPError:
             retry += 1
+        except ValueError:
+            return []
     return []
 
 

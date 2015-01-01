@@ -46,6 +46,8 @@ def find_last_report(inst, col, today):
     # If there is no model for the identifier, return empty
     except KeyError:
         last_url = ''
+    except IndexError:
+        last_url = ''
     return last_url
 
 

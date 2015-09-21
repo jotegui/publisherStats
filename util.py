@@ -7,10 +7,11 @@ from urllib import urlencode
 __author__ = '@jotegui'
 
 
-def apikey(testing):
+def apikey(testing, keyname=None):
     """Return credentials file as a JSON object."""
     if testing is False:
-        keyname = 'api.key'  # If not in testing mode, get VertNet repo API key
+        if keyname is None:
+            keyname = 'gh.key'  # If not in testing mode, get VertNet repo API key
     else:
         keyname = 'JOT.key'  # If in testing mode, get jotegui repo API key
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), keyname)
@@ -66,7 +67,7 @@ def api_query(api_url, params, res_field):
 def cartodb_query(query):
     """Build parameters for launching a query to the CartoDB API."""
     api_url = 'https://vertnet.cartodb.com/api/v2/sql'
-    params = {'q': query}
+    params = {'q': query, 'api_key': apikey(testing=False, keyname="cdb.key")}
     res_field = 'rows'
     d = api_query(api_url=api_url, params=params, res_field=res_field)
     return d

@@ -1,3 +1,4 @@
+import time
 import json
 import logging
 import requests
@@ -79,7 +80,8 @@ Thank you for being a part of VertNet.
         logging.info('SUCCESS - Issue created for resource {0}'.format(repo))
     else:
         logging.error('ISSUE CREATION FAILED for resource {0}'.format(repo))
-
+    
+    time.sleep(5)  # Wait 5 secs to avoid abuse triggers
     return r
 
 

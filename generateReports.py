@@ -122,6 +122,9 @@ def build_model(pubs, pub, lapse, today):
                 country = geonames_query(lat, lon)
             except KeyError:
                 country = "Unknown"
+            if country == []:
+                country = "Unknown"
+            
             if country not in countries:
                 countries[country] = pubs[pub]['latlon'][i]
             else:
@@ -177,6 +180,12 @@ def build_model(pubs, pub, lapse, today):
                 country = geonames_query(lat, lon)
             except KeyError:
                 country = "Unknown"
+            if country == []:
+                country = "Unknown"
+            
+#            print pub
+#            print lat, lon, country, countries
+            
             if country not in countries:
                 countries[country] = pubs[pub]['searches']['latlon'][i]
             else:

@@ -38,6 +38,10 @@ def get_gcs_object(bucket_name, object_name):
         # Regular line
         if len(splitline) == 160:
             d.append(splitline)
+        
+        # Regular, new-schema-like line
+        if len(splitline) == 176:
+            d.append(splitline)
 
         # Two records in one line
         elif len(splitline) == 319:
@@ -87,11 +91,10 @@ def add_time_limit(query, today, lapse='month'):
 def get_cdb_downloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
-    query = "select * from query_log where download is not null and download !=''"
+    query = "select * from query_log_master where download is not null and download !=''"
     query += " and client='portal-prod'"  # Just production portal downloads
 
     query = add_time_limit(query=query, today=today, lapse=lapse)  # Just from the specific month
-
     d = cartodb_query(query)
     return d
 
@@ -106,8 +109,18 @@ def get_file_list(downloads_cdb):
 
 def parse_download_name(download):
     """Parse the download file name"""
-    b = download.split('/')[2]  # Get Bucket name
-    o = download.split('/')[3]  # Get Object name
+    elements = download.split('/')
+    try:
+        if elements[1] == u'gs':
+            bucket_idx = 2
+            object_idx = 3
+        elif elements[1].startswith("vn-"):
+            bucket_idx = 1
+            object_idx = 2
+    except IndexError:
+        return None, None
+    b = download.split('/')[bucket_idx]  # Get Bucket name
+    o = download.split('/')[object_idx]  # Get Object name
     return b, o
 
 
@@ -136,6 +149,9 @@ def get_gcs_counts(file_list):
     for f in file_list:
         # Parse name from download field (i.e. remove the gs://vn-downloads part)
         b, o = parse_download_name(f)
+        if b is None or o is None:
+            logging.warning('bucket and/or object name missing in record. Skipping')
+            continue
 
         # Download the object or throw a warning and skip
         logging.info('downloading and parsing %s' % o)
@@ -143,6 +159,9 @@ def get_gcs_counts(file_list):
             d = get_gcs_object(b, o)
         except urllib2.HTTPError:
             logging.warning('file {0} not found. Skipping.'.format(o))
+            continue
+        except MemoryError:
+            logging.warning('file {0} too large to download. Skipping'.format(o))
             continue
 
         # Remove headers
@@ -280,7 +299,7 @@ def get_cdb_stats(dl, pub, from_download=False):
 
 
 def get_cdb_searches(today, lapse='month'):
-    query = "select * from query_log"
+    query = "select * from query_log_master"
 
     query += " where client='portal-prod'"
     query += " and type != 'download' and results_by_resource != '{}' and results_by_resource != ''"

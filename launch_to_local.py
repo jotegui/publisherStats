@@ -4,14 +4,15 @@ import logging
 from datetime import datetime
 import extractStats
 import pickle
+import os
 
 __author__ = '@jotegui'
 
 today = datetime.now()
 
-file_name = '/home/jotegui/VertNet/PublisherStats/pubs_{0}.pk'.format(format(today, '%Y_%m_%d'))
+file_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'pubs_{0}.pk'.format(format(today, '%Y_%m_%d')))
 
-logging.basicConfig(filename='/home/jotegui/VertNet/PublisherStats/logs/to_local_{0}.log'.format(format(today, '%Y_%m_%d')),
+logging.basicConfig(filename=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'logs', 'to_local_{0}.log'.format(format(today, '%Y_%m_%d'))),
                     format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 lapse = 'month'

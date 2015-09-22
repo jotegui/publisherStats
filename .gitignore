@@ -9,6 +9,7 @@ old/
 # Python Compiled and Object files
 *.pyc
 *.pk
+samples/
 
 # Logging and output files
 logs/
@@ -29,3 +30,4 @@ reports*/
 
 # Other stuff
 .idea/
+*sublime*

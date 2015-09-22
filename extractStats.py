@@ -3,6 +3,7 @@ import urllib2
 import logging
 from urllib import urlencode
 from util import sanity_check, cartodb_query
+from fieldLists import fieldList_160, fieldList_176
 
 __author__ = '@jotegui'
 
@@ -12,14 +13,13 @@ __author__ = '@jotegui'
 # API base URLs
 gcs_url = 'https://www.googleapis.com/download/storage/v1'
 
-# Structure of download files
-fieldList = ["datasource_and_rights", "type", "modified", "language", "rights", "rightsholder", "accessrights", "bibliographiccitation", "references", "institutionid", "collectionid", "datasetid", "institutioncode", "collectioncode", "datasetname", "ownerinstitutioncode", "basisofrecord", "informationwithheld", "datageneralizations", "dynamicproperties", "occurrenceid", "catalognumber", "occurrenceremarks", "recordnumber", "recordedby", "individualid", "individualcount", "sex", "lifestage", "reproductivecondition", "behavior", "establishmentmeans", "occurrencestatus", "preparations", "disposition", "othercatalognumbers", "previousidentifications", "associatedmedia", "associatedreferences", "associatedoccurrences", "associatedsequences", "associatedtaxa", "eventid", "samplingprotocol", "samplingeffort", "eventdate", "eventtime", "startdayofyear", "enddayofyear", "year", "month", "day", "verbatimeventdate", "habitat", "fieldnumber", "fieldnotes", "eventremarks", "locationid", "highergeographyid", "highergeography", "continent", "waterbody", "islandgroup", "island", "country", "countrycode", "stateprovince", "county", "municipality", "locality", "verbatimlocality", "verbatimelevation", "minimumelevationinmeters", "maximumelevationinmeters", "verbatimdepth", "minimumdepthinmeters", "maximumdepthinmeters", "minimumdistanceabovesurfaceinmeters", "maximumdistanceabovesurfaceinmeters", "locationaccordingto", "locationremarks", "verbatimcoordinates", "verbatimlatitude", "verbatimlongitude", "verbatimcoordinatesystem", "verbatimsrs", "decimallatitude", "decimallongitude", "geodeticdatum", "coordinateuncertaintyinmeters", "coordinateprecision", "pointradiusspatialfit", "footprintwkt", "footprintsrs", "footprintspatialfit", "georeferencedby", "georeferenceddate", "georeferenceprotocol", "georeferencesources", "georeferenceverificationstatus", "georeferenceremarks", "geologicalcontextid", "earliesteonorlowesteonothem", "latesteonorhighesteonothem", "earliesteraorlowesterathem", "latesteraorhighesterathem", "earliestperiodorlowestsystem", "latestperiodorhighestsystem", "earliestepochorlowestseries", "latestepochorhighestseries", "earliestageorloweststage", "latestageorhigheststage", "lowestbiostratigraphiczone", "highestbiostratigraphiczone", "lithostratigraphicterms", "group", "formation", "member", "bed", "identificationid", "identifiedby", "dateidentified", "identificationreferences", "identificationverificationstatus", "identificationremarks", "identificationqualifier", "typestatus", "taxonid", "scientificnameid", "acceptednameusageid", "parentnameusageid", "originalnameusageid", "nameaccordingtoid", "namepublishedinid", "taxonconceptid", "scientificname", "acceptednameusage", "parentnameusage", "originalnameusage", "nameaccordingto", "namepublishedin", "namepublishedinyear", "higherclassification", "kingdom", "phylum", "class", "order", "family", "genus", "subgenus", "specificepithet", "infraspecificepithet", "taxonrank", "verbatimtaxonrank", "scientificnameauthorship", "vernacularname", "nomenclaturalcode", "taxonomicstatus", "nomenclaturalstatus", "taxonremarks"]
 
-def get_gcs_object(bucket_name, object_name):
+
+def get_gcs_object(b, o):
     """Get raw content of object in bucket and parse to record-type object"""
 
     # Build API url
-    url = '/'.join([gcs_url, 'b', bucket_name, 'o', object_name.replace(' ', '%20')])
+    url = '/'.join([gcs_url, 'b', b, 'o', o.replace(' ', '%20')])
     url_optim = '?'.join([url, urlencode({'alt': 'media'})])
 
     # Download object
@@ -35,12 +35,16 @@ def get_gcs_object(bucket_name, object_name):
     while pos < len(lines):
         splitline = lines[pos].split("\t")
 
+        # Ignore empty lines
+        if len(splitline) == 1 and splitline[0] == "":
+            pass
+
         # Regular line
-        if len(splitline) == 160:
+        elif len(splitline) == 160:
             d.append(splitline)
         
         # Regular, new-schema-like line
-        if len(splitline) == 176:
+        elif len(splitline) == 176:
             d.append(splitline)
 
         # Two records in one line
@@ -64,6 +68,8 @@ def get_gcs_object(bucket_name, object_name):
             line2 = lines[pos + 1].split("\t")[(160 - len(splitline)):-1] + lines[pos + 2].split("\t")
             d.append(line2)
             pos += 2
+
+        # Ignore the rest!
 
         pos += 1
     return d
@@ -91,7 +97,7 @@ def add_time_limit(query, today, lapse='month'):
 def get_cdb_downloads(lapse, today):
     """Download the info in the downloads from CDB"""
 
-    query = "select * from query_log_master where download is not null and download !=''"
+    query = "select * from query_log_master where type='download' and download is not null and download !=''"
     query += " and client='portal-prod'"  # Just production portal downloads
 
     query = add_time_limit(query=query, today=today, lapse=lapse)  # Just from the specific month
@@ -139,113 +145,206 @@ def get_inst_col(url):
     return None, None
 
 
-def get_gcs_counts(file_list):
-    """Extract institutioncodes and counts for download files in GCS"""
+def extract_file_content(f):
+    # Parse name from download field
+    b, o = parse_download_name(f)
+    if b is None or o is None:
+        logging.warning('bucket and/or object name missing in record. Skipping')
+        return None, None
+    elif b == 'vn-dltest':
+        logging.info('file {0} was for testing purposes. Not existing anymore. Skipping'.format(f))
+        return None, None
+
+    # Download the object or throw a warning and skip
+    logging.info('downloading and parsing %s' % o)
+    try:
+        d = get_gcs_object(b, o)
+    except urllib2.HTTPError:
+        logging.warning('file {0} not found. Skipping.'.format(f))
+        return None, None
+    except MemoryError:
+        logging.warning('file {0} too large to download. Skipping'.format(f))
+        return None, None
+
+    # Ignore empty files (failed tests)
+    if len(d) == 0:
+        logging.info('file {0} does not correspond to any valid schema. Ignoring'.format(f))
+        return None, None
+
+    # Remove headers
+    if len(d[0]) == 160:
+        fieldList = fieldList_160
+    elif len(d[0]) == 176:
+        fieldList = fieldList_176
+
+    if d[0][0] == fieldList[0]:
+        d = d[1:]
+
+    return fieldList, d
+
+def process_record(rec, headers):
+    res = {}
+
+    if len(headers) == 160:
+        url_field = 'datasource_and_rights'
+    elif len(headers) == 176 :
+        url_field = 'dataset_url'
+
+    # Extract and sanitize URL
+    url = rec[headers.index(url_field)]
+    if url == "" and len(headers) == 176:
+        q = "select url from resource_staging where gbifdatasetid='{0}'".format(rec[headers.index('gbifdatasetid')])
+        url = cartodb_query(q)[0]['url']
+    url = sanity_check(url)
+
+    # Store by resource directly from the file
+    this_ins = rec[headers.index('institutioncode')]
+    if this_ins.startswith("Royal Ontario Museum"):
+        this_ins = "ROM"
+    elif this_ins.startswith('Borror Laboratory of Bioacoustics'):
+        this_ins = 'BLB'
+    elif this_ins.startswith('Ohio State University'):
+        this_ins = 'OSUM'
+    this_col = url.split('=')[1]
+    
+    # If institutioncode field is empty, take inst and col from resource_staging through url
+    if this_ins == '':
+        logging.info("record without institution code, from {0}".format(url))
+        this_ins, this_col = get_inst_col(url)
+        if this_ins is None or this_col is None:
+            logging.warning("could not identify resource. Skipping record")
+            return None
+
+    # Build internal identifier
+    pub = '{0}-{1}'.format(this_ins, this_col)
+
+    # Build UUIDs to calculate unique_records
+    icode = rec[headers.index('institutioncode')]
+    ccode = rec[headers.index('collectioncode')]
+    cnumb = rec[headers.index('catalognumber')]
+    uuid = '{0}/{1}/{2}'.format(icode, ccode, cnumb)
+
+    if 'gbifdatasetid' in headers:
+        gbifdatasetid = rec[headers.index('gbifdatasetid')]
+    else:
+        gbifdatasetid = None
+
+    res['id'] = pub
+    res['icode'] = icode
+    res['ccode'] = ccode
+    res['cnumb'] = cnumb
+    res['uuid'] = uuid
+    res['url'] = url
+    res['gbifdatasetid'] = gbifdatasetid
+
+    return res
+
+
+def process_file(f):
+    
     pubs = {}
     skipped_records = 0
+    file_records = 0
 
-    tot_recs = 0  # Total downloaded records in the whole network
+    # Extract the content of the file or return None
+    h, d = extract_file_content(f)
+    if d is None:
+        return None, None, None
+
+    # Process each record
+    for rec in d:
+        res = process_record(rec, h)
+        if res is None:
+            skipped_records += 1
+            continue
+
+        if res['id'] not in pubs:
+            # Initialize stats for resource if resource does not exist yet
+            pubs[res['id']] = {
+                'gbifdatasetid': res['gbifdatasetid'],
+                'url': res['url'],  # To extract github org and repo from resource_staging
+                'inst': res['icode'],  # Institution code
+                'col': res['ccode'],  # Collection code
+                'download_files': [f],  # Array of individual files, for further calculations
+                'records_downloaded': 1,  # Initial count of records
+                'unique_records': set([res['uuid']]),  # Array of unique records
+                'latlon': {},  # Dictionary of latlon counts. TODO: Update to store country from headers
+                'query': {},  # Dictionary of query terms counts
+                'created': {},  # Dictionary of query dates counts
+                # 'this_contrib_count': 1,  # Initial number of retrieved records for this query
+                'this_contrib': []  # Array to store number of records retrieved by each query
+            }
+        else:
+            # If resource exists, add 1 to the record count
+            pubs[res['id']]['records_downloaded'] += 1
+
+            # # If new download file, append file name and restart this_contrib_count
+            # if f not in pubs[res['id']]['download_files']:
+            #     pubs[res['id']]['download_files'].append(f)
+            #     pubs[res['id']]['this_contrib_count'] = 1
+            # # If same download file, just add 1 to this_contrib_count
+            # else:
+            #     pubs[res['id']]['this_contrib_count'] += 1
+
+            # If UUID not in list of UUIDs, add it
+            # if res['uuid'] not in pubs[res['id']]['unique_records']:
+            pubs[res['id']]['unique_records'] = pubs[res['id']]['unique_records'].union([res['uuid']])
+
+        file_records += 1
+
+        
+    # Once all records from file have been parsed, store records_downloaded in this_contrib
+    for pubid in pubs:
+        pubs[pubid]['this_contrib'].append(pubs[pubid]['records_downloaded'])
+
+    return pubs, file_records, skipped_records
+
+
+def get_gcs_counts(file_list):
+    """Extract institutioncodes and counts for download files in GCS"""
+    
+    pubs = {}
+    total_skipped_records = 0
+    total_records = 0  # Total downloaded records in the whole network
 
     for f in file_list:
-        # Parse name from download field (i.e. remove the gs://vn-downloads part)
-        b, o = parse_download_name(f)
-        if b is None or o is None:
-            logging.warning('bucket and/or object name missing in record. Skipping')
+        # Extract data from file
+        p, file_records, skipped_records = process_file(f)
+        if p is None:
             continue
 
-        # Download the object or throw a warning and skip
-        logging.info('downloading and parsing %s' % o)
-        try:
-            d = get_gcs_object(b, o)
-        except urllib2.HTTPError:
-            logging.warning('file {0} not found. Skipping.'.format(o))
-            continue
-        except MemoryError:
-            logging.warning('file {0} too large to download. Skipping'.format(o))
-            continue
-
-        # Remove headers
-        if d[0][0] == fieldList[0]:
-            d = d[1:]
-
-        for rec in d:
-
-            tot_recs += 1
-
-            # Option 1 - store by resource directly from the file
-            this_ins = rec[fieldList.index('institutioncode')]
-            if this_ins.startswith("Royal Ontario Museum"):
-                this_ins = "ROM"
-            elif this_ins.startswith('Borror Laboratory of Bioacoustics'):
-                this_ins = 'BLB'
-            elif this_ins.startswith('Ohio State University'):
-                this_ins = 'OSUM'
-            this_col = rec[fieldList.index('datasource_and_rights')].split('=')[1]
-            this_url = rec[fieldList.index('datasource_and_rights')]
-            this_url = sanity_check(this_url)
-            
-            # If institutioncode field is empty, take inst and col from resource_staging through url
-            if this_ins == '':
-                logging.info("Record without institution code, from {0}".format(this_url))
-                this_ins, this_col = get_inst_col(this_url)
-                if this_ins is None or this_col is None:
-                    skipped_records += 1
-                    continue
-
-            # Build internal identifier
-            this_pub = '{0}-{1}'.format(this_ins, this_col)
-
-            # Build UUIDs to calculate unique_records
-            this_icode = rec[fieldList.index('institutioncode')]
-            this_ccode = rec[fieldList.index('collectioncode')]
-            this_cnumb = rec[fieldList.index('catalognumber')]
-            this_uuid = '{0}/{1}/{2}'.format(this_icode, this_ccode, this_cnumb)
-
-            if this_pub not in pubs:
-                # Initialize stats for resource if resource does not exist yet
-                pubs[this_pub] = {
-                    'url': this_url,  # To extract github org and repo from resource_staging
-                    'inst': this_ins,  # Institution code
-                    'col': this_col,  # Collection code
-                    'download_files': [o],  # Array of individual files, for further calculations
-                    'records_downloaded': 1,  # Initial count of records
-                    'unique_records': [this_uuid],  # Array of unique records
-                    'latlon': {},  # Dictionary of latlon counts. TODO: Update to store country from headers
-                    'query': {},  # Dictionary of query terms counts
-                    'created': {},  # Dictionary of query dates counts
-                    'downloads_in_period': len(file_list),  # Total number of downloads in the given period
-                    'this_contrib_count': 1,  # Initial number of retrieved records for this query
-                    'this_contrib': []  # Array to store number of records retrieved by each query
-                }
+        # Merge with already parsed files
+        for pubid in p:
+            # If first time of the resource
+            if pubid not in pubs:
+                pubs[pubid] = p[pubid]
+            # Otherwise
             else:
-                # If resource exists, add 1 to the record count
-                pubs[this_pub]['records_downloaded'] += 1
+                # Append download file to download_files
+                pubs[pubid]['download_files'].append(f)
+                # Append record count to this_contrib
+                pubs[pubid]['this_contrib'].append(p[pubid]['records_downloaded'])
+                # Add unique records to set
+                pubs[pubid]['unique_records'] = pubs[pubid]['unique_records'].union(p[pubid]['unique_records'])
+                # Try to add gbifdatasetid
+                if pubs[pubid]['gbifdatasetid'] is None and p[pubid]['gbifdatasetid'] is not None:
+                    pubs[pubid]['gbifdatasetid'] = p[pubid]['gbifdatasetid']
 
-                # If new download file, append file name and restart this_contrib_count
-                if o not in pubs[this_pub]['download_files']:
-                    pubs[this_pub]['download_files'].append(o)
-                    pubs[this_pub]['this_contrib_count'] = 1
-                # If same download file, just add 1 to this_contrib_count
-                else:
-                    pubs[this_pub]['this_contrib_count'] += 1
 
-                # If UUID not in list of UUIDs, add it
-                if this_uuid not in pubs[this_pub]['unique_records']:
-                    pubs[this_pub]['unique_records'].append(this_uuid)
+        total_skipped_records += skipped_records
+        total_records += file_records
 
-        # Once all records from file have been parsed, store this_contrib_count in this_contrib
-        for pub in pubs:
-            pubs[pub]['this_contrib'].append(pubs[pub]['this_contrib_count'])
-
-    # Once all files have been parsed, store tot_recs
+    # Once all files have been parsed, store total_records and downloads_in_period and calculate records_downloaded
     for pub in pubs:
-        pubs[pub]['tot_recs'] = tot_recs
+        pubs[pub]['tot_recs'] = total_records
+        pubs[pub]['downloads_in_period'] = len(file_list)
+        pubs[pub]['records_downloaded'] = sum(pubs[pub]['this_contrib'])
 
     # Log any skipped record
-    if skipped_records > 0:
-        logging.warning('{0} skipped records'.format(skipped_records))
+    if total_skipped_records > 0:
+        logging.warning('{0} skipped records'.format(total_skipped_records))
     else:
-        logging.info('{0} skipped records'.format(skipped_records))
+        logging.info('{0} skipped records'.format(total_skipped_records))
     return pubs
 
 
@@ -253,7 +352,7 @@ def match_gcs_cdb(pubs, downloads_cdb):
     """Match GCS files with CDB rows"""
     for pub in pubs:
         for dl in downloads_cdb:
-            if dl['download'].split("/")[3] in pubs[pub]['download_files']:
+            if dl['download'] in pubs[pub]['download_files']:
                 pubs[pub] = get_cdb_stats(dl=dl, pub=pubs[pub], from_download=True)
     return pubs
 
@@ -283,7 +382,7 @@ def get_cdb_stats(dl, pub, from_download=False):
 
     # Store query terms and records retrieved for this particular query
     if from_download is True:
-        idx = pub['download_files'].index(dl['download'].split("/")[3])
+        idx = pub['download_files'].index(dl['download'])
         val = pub['this_contrib'][idx]
     else:
         val = pub['list_records_searched'][-1]
@@ -302,31 +401,42 @@ def get_cdb_searches(today, lapse='month'):
     query = "select * from query_log_master"
 
     query += " where client='portal-prod'"
-    query += " and type != 'download' and results_by_resource != '{}' and results_by_resource != ''"
+    query += " and type != 'download'"
+    query += " and results_by_resource != '{}' and results_by_resource != ''"
 
     query = add_time_limit(query=query, today=today, lapse=lapse)
+
     searches = cartodb_query(query)
 
     pubs = {}
 
     for search in searches:
         res_count = json.loads(search['results_by_resource'])
+        
         for url in res_count:
-            inst, col = get_inst_col(url)
+            if not url.startswith('http'):
+                gbifdatasetid = url
+                q = "select url from resource_staging where gbifdatasetid='{0}'".format(gbifdatasetid)
+                ident = (gbifdatasetid, cartodb_query(q)[0]['url'])
+            else:
+                ident = (url, url)
+
+            inst, col = get_inst_col(ident[1])
             pub = "{0}-{1}".format(inst, col)
             if pub not in pubs:
                 pubs[pub] = {
                     'searches': 1,
-                    'records_searched': res_count[url],
-                    'list_records_searched': [res_count[url]],
-                    'url': url,
+                    'records_searched': res_count[ident[0]],
+                    'list_records_searched': [res_count[ident[0]]],
+                    'url': ident[1],
+                    'gbifdatasetid': ident[0] if ident[0]!=ident[1] else None,
                     'inst': inst,
                     'col': col
                 }
             else:
                 pubs[pub]['searches'] += 1
-                pubs[pub]['records_searched'] += res_count[url]
-                pubs[pub]['list_records_searched'].append(res_count[url])
+                pubs[pub]['records_searched'] += res_count[ident[0]]
+                pubs[pub]['list_records_searched'].append(res_count[ident[0]])
             pubs[pub] = get_cdb_stats(search, pubs[pub], from_download=False)
 
     return pubs

@@ -8,7 +8,7 @@ import os
 
 __author__ = '@jotegui'
 
-today = datetime.now()
+today = datetime(2015, 9, 2)
 
 file_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'pubs_{0}.pk'.format(format(today, '%Y_%m_%d')))
 

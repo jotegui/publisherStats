@@ -1,19 +1,21 @@
 #!/usr/bin/python
 
+import os.path
 import logging
 import monthlyStatReports
 from datetime import datetime
 
 __author__ = '@jotegui'
 
-file_name = '/home/jotegui/VertNet/PublisherStats/pubs_2014_12_23.pk'
+pickle_name = "pubs_2015_09_02.pk"
+file_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), pickle_name)
 
 y, m, d = file_name[:-3].split("_")[1:4]
 ini = datetime(int(y), int(m), int(d))
 
 # ini = datetime.today()
 
-logging.basicConfig(filename='/home/jotegui/VertNet/PublisherStats/logs/local_{0}.log'.format(format(ini, '%Y_%m_%d')),
+logging.basicConfig(filename=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'logs', 'local_{0}.log'.format(format(ini, '%Y_%m_%d'))),
                     format='%(levelname)s:%(asctime)s %(message)s', level=logging.DEBUG)
 
 

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import logging
 from datetime import datetime
 import pickle

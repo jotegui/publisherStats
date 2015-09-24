@@ -7,9 +7,9 @@ from util import get_org_repo
 
 __author__ = '@jotegui'
 
-model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'  # Must match same variable in generateReports
-specific_institutions_path = '/home/jotegui/VertNet/PublisherStats/TestingInsts.txt'
-report_path = '/home/jotegui/VertNet/PublisherStats/statReports_{0}.json'  # {0} will be replaced by report date
+model_url_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'modelURLs.json')  # Must match same variable in generateReports
+specific_institutions_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'TestingInsts.txt')
+report_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'statReports_{0}.json')  # {0} will be replaced by report date
 
 def beta_testing(reports, models, beta=False):
     """Store data on betatesters only if in beta mode"""

@@ -11,7 +11,7 @@ from util import get_org_repo, geonames_query, apikey, unescape
 __author__ = '@jotegui'
 
 # Must match same variable in generateReports
-model_url_path = '/home/jotegui/VertNet/PublisherStats/modelURLs.json'
+model_url_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'modelURLs.json')
 
 
 def get_time_lapse(today, lapse='month'):
@@ -315,7 +315,7 @@ def add_past_data(model):
 def add_initial_year(model, month='01'):
     """Add values for Jan, Feb and Mar 2014"""
 
-    path = '/home/jotegui/VertNet/PublisherStats/reports_2014_{2}/{0}-{1}.json'.format(model['inst'], model['col'], month)
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'reports_2014_{0}'.format(month), '{0}-{1}.json'.format(model['inst'], model['col']))
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:
@@ -336,7 +336,7 @@ def add_initial_year(model, month='01'):
 def add_initial_history(model):
     """Add values for 2013 values"""
 
-    path = '/home/jotegui/VertNet/PublisherStats/reports_2013/{0}-{1}.json'.format(model['inst'], model['col'])
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'reports_2013', '{0}-{1}.json'.format(model['inst'], model['col']))
     try:
         d = json.loads(open(path, 'r').read().rstrip())
     except IOError:

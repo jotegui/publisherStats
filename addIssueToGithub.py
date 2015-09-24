@@ -6,8 +6,8 @@ from generateReports import get_time_lapse
 
 __author__ = '@jotegui'
 
-issue_reports_path = '/home/jotegui/VertNet/PublisherStats/issueReports_{0}.json'
-#empty_issue_reports_path = '/home/jotegui/VertNet/PublisherStats/emptyIssueReports_{0}.json'
+issue_reports_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'issueReports_{0}.json')
+#empty_issue_reports_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'emptyIssueReports_{0}.json')
 
 
 #def create_empty_issue(git_url, key, today, testing=False):

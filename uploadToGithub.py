@@ -93,8 +93,8 @@ def put_report(report, pub, org, repo, key):
     path_txt = 'reports/{0}_{1}.txt'.format(pub.replace(' ', '_'), created_at)
     path_html = 'reports/{0}_{1}.html'.format(pub.replace(' ', '_'), created_at)
     message = report_content_txt.split("\n")[1]  # Extract date from report
-    content_txt = base64.b64encode(report_content_txt)  # Content has to be base64 encoded
-    content_html = base64.b64encode(report_content_html)  # Content has to be base64 encoded
+    content_txt = base64.b64encode(report_content_txt.encode('utf-8'))  # Content has to be base64 encoded
+    content_html = base64.b64encode(report_content_html.encode('utf-8'))  # Content has to be base64 encoded
     commiter = {'name': 'VertNet', 'email': 'vertnetinfo@vertnet.org'}  # I think API token overrides this
     json_input_txt = json.dumps({"message": message, "commiter": commiter, "content": content_txt})
     json_input_html = json.dumps({"message": message, "commiter": commiter, "content": content_html})

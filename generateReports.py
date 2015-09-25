@@ -420,8 +420,8 @@ def create_report(model):
 
     template_values = {
         # General values
-        'inst': model['inst'],
-        'resname': model['col'],
+        'inst': model['inst'].decode('utf-8'),
+        'resname': model['col'].decode('utf-8'),
         'time_lapse': model['report_month_string'],
         'generated': model['created_at'],
         # Downloads
